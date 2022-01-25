@@ -1,0 +1,42 @@
+/* 
+selector {
+    property: value
+}
+
+/* universal selector */
+* {
+    font-family: "Calibri Light";
+}
+
+/* tag selector */
+img {
+    cursor: pointer;
+    transition: transform 0.4s ease;
+
+    margin: 5px;
+    max-width: 265px;
+}
+/* pseudo class selector */
+img:hover {
+    transform: scale(1.5);
+}
+
+/* selector list */
+h1, 
+p {
+    margin: 0px;
+}
+
+/* class selector */
+.round { /* anything with this class gets this attribute */
+    border-radius: 10px;
+}
+.center {
+    text-align: center;
+    display: block;
+}
+/* ID selector */
+#gallery {
+    padding: 50px;
+    text-align: center;
+}
