@@ -14,4 +14,4 @@ client.on("message", msg => {
 })
 
 
-client.login("ODQ4MjA5NzMxNDc0ODE3MDk0.YLJS3g.-W1Fg-wt9qljJdAxO8OoI4BE2Ko");
+client.login("no auth code for you !");
