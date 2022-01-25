@@ -18,6 +18,19 @@ applyall
 """
 
 
+async def handleError(error, message):
+  if isinstance(error, commands.CommandOnCooldown):
+    msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
+    await message.channel.send(msg)
+  elif isinstance(error, commands.MissingPermissions):
+      await message.send("You cant do that!")
+  elif isinstance(error, commands.MissingRequiredArgument):
+    await message.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
+    raise error
+  else:
+    raise error
+
+
 #--------------------------------------------------------------------------------------------------------------------------
 class Admin(commands.Cog):
   def __init__(self, bot):
@@ -26,12 +39,11 @@ class Admin(commands.Cog):
 
 
   @commands.group(
-    help="Edits a role"
+    help="Edits a role" 
   )
   async def editrole(self, ctx):
     if ctx.invoked_subcommand is None:
       await ctx.channel.send("Command can't be used without subcommand.")
-
 
 #--------------------------------------------------------------------------------------------------------------------------
   #colour
@@ -46,21 +58,12 @@ class Admin(commands.Cog):
     colour = int(colour, base=16)
     colour = discord.Colour(colour)
     await role.edit(colour=colour)
-    await ctx.channel.send("Role colour changed to " + str(colour))
-
+    await ctx.channel.send(f"Role colour changed to {str(colour)}")
 
 
   @colour.error
   async def colour_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    handleError(error, ctx)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -76,28 +79,14 @@ class Admin(commands.Cog):
     actualName = list(name)
     realActualName = " ".join(actualName)
     await role.edit(name=str(realActualName))
-    await ctx.channel.send("Role name changed to " + str(realActualName))
+    await ctx.channel.send(f"Role name changed to {realActualName}")
 
   @name.error
   async def name_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-
-    else:
-        raise error
+    handleError(error, ctx)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-
-
-
 
 
 
