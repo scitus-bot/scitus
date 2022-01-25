@@ -27,41 +27,25 @@ class copypastas:
 class userIDS:
 	porlUserID = 409821972026097667 #porl's user ID
 
-	botUserIDS = [811565707178672189, #Frick Coinse
-        	848209731474817094, #scitus
-          234395307759108106, #groovy bot
-          235088799074484224, #rhithm
-          155149108183695360, #dyno
-          339254240012664832, #amari bot
-          298822483060981760, #logger bot
-          491769129318088714, #stat bot
-          719806770133991434, #epic games bot
-          649604306596528138, #eli
-          847164104161361921, #amongus cock
-          737236600878137363, #anisearch
-          709825657206603908, #beholder
-          240732567744151553, #fate 
-          115385224119975941, #discord servers
-          369208607126061057 #24/7 music bot
-          ] 
+  # there is no point to having a list of bot users bc you can just check if they are a bot
 
 #--------------------------------------------------------------------------------------------------------------------------
 #IDs for various roles
 class roleIDS:
 	modRoleID = 735110195528597506 #lords role
-
 	adminRoleID = 735110195528597506 #admin
 
 	porlRoleID = 844834544947167252 #"porl"
 
 	mutedRoleID = 819697679146942534 #muted
 
+
 #--------------------------------------------------------------------------------------------------------------------------
 #Not going to make a class for the help copypastas, due to the fact that they will need to be randomly chose, so adding a class will just slow things down in the long run
 #It will not slow things down, I am now going to make a class for lists
 class listsPas:
     helpPastas = ["Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
-	"wanker"
+	  "wanker"
     ]
 
     autoDelPas = []
