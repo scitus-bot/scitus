@@ -16,6 +16,15 @@ def rqget(gamemode, p1):
         hjs = apirq.json()
         return hjs
 
+async def handleError(error, ctx):
+  if isinstance(error, commands.CommandOnCooldown):
+    msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
+    await ctx.channel.send(msg)
+  else:
+    raise error
+
+
+
 #--------------------------------------------------------------------------------------------------------------------------
 class hive(commands.Cog):
   def __init__(self, bot):
@@ -66,7 +75,11 @@ class hive(commands.Cog):
     superstring = twstring + swstring + sgstring
 
     await ctx.channel.send(superstring)
+  
 
+  @stats.error
+  async def stats_error(self, ctx, error):
+    await handleError(error, ctx)
 
 #necesseties
 def setup(bot):

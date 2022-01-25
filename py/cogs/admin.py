@@ -18,7 +18,7 @@ applyall
 """
 
 
-async def handleError(error, message):
+async def handleError(error, message): # im glad this works
   if isinstance(error, commands.CommandOnCooldown):
     msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
     await message.channel.send(msg)
@@ -63,7 +63,7 @@ class Admin(commands.Cog):
 
   @colour.error
   async def colour_error(self, ctx, error):
-    handleError(error, ctx)
+    await handleError(error, ctx)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ class Admin(commands.Cog):
 
   @name.error
   async def name_error(self, ctx, error):
-    handleError(error, ctx)
+    await handleError(error, ctx)
 
 
 #--------------------------------------------------------------------------------------------------------------------------

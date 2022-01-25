@@ -5,6 +5,7 @@ from discord.ext import commands
 import random
 from discord.ext.commands import cooldown, BucketType
 from pasta import *
+from py.cogs.admin import handleError
 #--------------------------------------------------------------------------------------------------------------------------
 
 
@@ -20,7 +21,7 @@ List of commands:
 
 # im going to use this function as a general error handling thing
 
-async def errorHandle(error, ctx): 
+async def handleError(error, ctx): 
   # idk if doing this asynchronously will make any errors or not but im willing to find out
   if isinstance(error, commands.CommandOnCooldown):
     msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
@@ -68,7 +69,7 @@ class Moderator(commands.Cog):
 
   @eject.error
   async def eject_error(self, ctx, error):
-    errorHandle(error, ctx)
+    await handleError(error, ctx)
 
 
   #end of command
@@ -100,7 +101,7 @@ class Moderator(commands.Cog):
   
   @unmute.error
   async def unmute_error(self, ctx, error):
-    errorHandle(error, ctx)
+    await handleError(error, ctx)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -132,16 +133,8 @@ class Moderator(commands.Cog):
   #error thing
   @someone.error #this is when the cooldown error shows up
   async def someone_error(self, ctx, error):
-            if isinstance(error, commands.CommandOnCooldown):
-                    msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-                    await ctx.channel.send(msg)
-            elif isinstance(error, commands.MissingPermissions):
-                await ctx.send("You cant do that!")
-            elif isinstance(error, commands.MissingRole):
-                await ctx.channel.send("You cant do that!")
-            else:
-                raise error
-  
+    await handleError(error, ctx)
+    
 
   #end of command
 
@@ -166,17 +159,7 @@ class Moderator(commands.Cog):
   #error thing
   @sudo.error
   async def sudo_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRole):
-        await ctx.channel.send("You cant do that!")
-    elif isinstance(error, commands.CommandInvokeError):
-        await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    await handleError(error, ctx)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -198,15 +181,7 @@ class Moderator(commands.Cog):
 
   @kick.error
   async def kick_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    await handleError(error, ctx)
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -225,15 +200,7 @@ class Moderator(commands.Cog):
 
   @ban.error
   async def ban_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    await handleError(error, ctx)
     
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -255,13 +222,7 @@ class Moderator(commands.Cog):
 
   @purge.error
   async def clear_error(self, ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
+    await handleError(error, ctx)
       
 #--------------------------------------------------------------------------------------------------------------------------
 #nick command
@@ -284,7 +245,7 @@ class Moderator(commands.Cog):
   #errors for nick
   @nick.error
   async def nick_error(self, ctx, error):
-    errorHandle(error, ctx)
+    await handleError(error, ctx)
 
 
 
@@ -303,7 +264,7 @@ class Moderator(commands.Cog):
 
   @warn.error
   async def warn_error(self, ctx, error):
-    errorHandle(error, ctx)
+    await handleError(error, ctx)
 #--------------------------------------------------------------------------------------------------------------------------
 
 

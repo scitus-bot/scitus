@@ -1,6 +1,5 @@
 #This is a file that contains copypastas/user IDs/role IDs
 #first time using classes myself lol
-#I feel like classes are just lists that can contain variables along with their values.
 
 #this was a test, this works
 #"copypastas" is a class from the file pasta.py

@@ -12,6 +12,15 @@ Sus  -- Has Cooldown Error
 remindme
 """
 
+# making a function to handle the errors bc i didnt do that before for some reason
+async def handleError(error, ctx):
+  if isinstance(error, commands.CommandOnCooldown):
+    msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
+    await ctx.channel.send(msg)
+  else:
+    raise error
+
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 class Everyone(commands.Cog):
@@ -32,11 +41,7 @@ class Everyone(commands.Cog):
 
   @ping.error
   async def ping_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    else:
-        raise error
+    await handleError(error, ctx)
   
   #end of command
 
@@ -55,11 +60,8 @@ class Everyone(commands.Cog):
   #error thing
   @sus.error
   async def sus_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    else:
-      raise error
+    await handleError(error, ctx)
+
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -129,17 +131,7 @@ class Everyone(commands.Cog):
 
   @remindme.error
   async def remindme_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRole):
-      await ctx.channel.send("You cant do that!")
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    await handleError(error, ctx)
 
 #--------------------------------------------------------------------------------------------------------------------------
   @commands.command(case_insensitive = True,
@@ -163,18 +155,11 @@ class Everyone(commands.Cog):
 
   @report.error
   async def report_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRole):
-      await ctx.channel.send("You cant do that!")
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    await handleError(error, ctx)
   
+#----------------------------------------------------------------------------------------------------------------
+
+
   @commands.command(case_insensitive=True)
   @commands.cooldown(1, 20, commands.BucketType.user)
   async def encrypt(self, ctx, code, *mes):
@@ -211,17 +196,7 @@ class Everyone(commands.Cog):
 
   @encrypt.error
   async def encrypt_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
-    elif isinstance(error, commands.MissingRole):
-      await ctx.channel.send("You cant do that!")
-    elif isinstance(error, commands.MissingRequiredArgument):
-      await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
-    else:
-        raise error
+    await handleError(error, ctx)
 
 #necesseties
 def setup(bot):

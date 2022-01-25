@@ -17,6 +17,13 @@ class Porl(commands.Cog):
     self.bot = bot
 
 
+async def handleError(error, ctx):
+  if isinstance(error, commands.CommandOnCooldown):
+    msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
+    await ctx.channel.send(msg)
+  else:
+    raise error
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 #respawn command (when i inevitably lose all my roles)
@@ -44,11 +51,7 @@ class Porl(commands.Cog):
 
   @respawn.error
   async def respawn_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    else:
-        raise error
+    await handleError(error, ctx)
     #except CommandOnCooldown(bucket, retry_after):
     #  await ctx.channel.send("bro calm down")
 
@@ -84,11 +87,8 @@ class Porl(commands.Cog):
 
   @die.error
   async def die_error(self, ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-      msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-      await ctx.channel.send(msg)
-    else:
-        raise error
+    await handleError(error, ctx)
+
 
 #end of command
 #--------------------------------------------------------------------------------------------------------------------------
