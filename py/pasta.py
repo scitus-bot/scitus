@@ -44,7 +44,7 @@ class roleIDS:
 #It will not slow things down, I am now going to make a class for lists
 class listsPas:
     helpPastas = ["Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
-	  "wanker"
+	  "wanker", "holy fucking shit, are you genuinely blind? no? then how about you fucking use the fucking help command huh? \ndipshit ass"
     ]
 
     autoDelPas = []
