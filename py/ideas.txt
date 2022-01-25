@@ -1,0 +1,27 @@
+Ideas:
+    editrole change perms
+
+    dad bot that changes the nickname as well
+        this will probably get hated and bcs there wont be a way to disable it it will just have to get removed.
+        ill add it when peoples minds have changed theyve been changed
+ 
+    MAKE A DASHBOARD
+
+    make it so i cant be banned/kicked :troll:
+
+
+Fix:
+
+Copypasta triggers:
+  meow 
+  gaming laptop
+  vaporeon
+  downvote
+  doggo
+
+
+All the perms for the coding:
+https://discordpy.readthedocs.io/en/stable/api.html#discord.Permissions
+
+
+
