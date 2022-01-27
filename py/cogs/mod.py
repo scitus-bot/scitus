@@ -1,11 +1,12 @@
 #importing
+from multiprocessing.sharedctypes import Value
 import discord
 from discord.utils import get
 from discord.ext import commands
 import random
 from discord.ext.commands import cooldown, BucketType
 from pasta import *
-from py.cogs.admin import handleError
+from time import sleep
 #--------------------------------------------------------------------------------------------------------------------------
 
 
@@ -19,8 +20,8 @@ List of commands:
   -nick
 """
 
-# im going to use this function as a general error handling thing
 
+# im going to use this function as a general error handling thing
 async def handleError(error, ctx): 
   # idk if doing this asynchronously will make any errors or not but im willing to find out
   if isinstance(error, commands.CommandOnCooldown):
@@ -52,19 +53,48 @@ class Moderator(commands.Cog):
   )
   @commands.has_role(roleIDS.modRoleID) #mod role
   @commands.cooldown(1, 3, commands.BucketType.guild)
-  async def eject(self, ctx, member : discord.Member): #arguments in the command
-        if ctx.author == member: #prevent users from muting themselves
-          await ctx.channel.send("You are not the imposter.")
-        else:
-          
-          role = get(ctx.author.guild.roles, id=roleIDS.mutedRoleID) #getting the role (doesnt work)
-          #wouldnt it be so fucking funny if this worked
+  async def eject(self, ctx, member : discord.Member, time = ""): #arguments in the command
 
-          if role in member.roles:
-            await ctx.channel.send("This person is already ejected.")
-          else:
-            await member.add_roles(role) #meant to add the role to the meember
-            await ctx.channel.send(str(member) + " was the imposter.")
+    if ctx.author == member: #prevent users from muting themselves
+      await ctx.channel.send("You are not the imposter.")
+    else:
+      role = get(ctx.author.guild.roles, id=roleIDS.mutedRoleID) #getting the role (doesnt work)
+      #wouldnt it be so fucking funny if this worked
+      if role in member.roles:
+        await ctx.channel.send("This person is already ejected.")
+      else:
+        await member.add_roles(role) #meant to add the role to the meember
+        await ctx.channel.send(str(member) + " was the imposter.")
+
+    # s - second, m - minute, h - hour
+    async def unmute():
+      if role in member.roles:
+        await member.remove_roles(role)
+    
+    async def waitTime(sent : str, unit, multiplier : int):
+      sentence = int(sent.replace(unit, ""))
+
+      sleep(sentence*multiplier)
+      
+      await unmute()
+
+    try:  
+      if time[-1] == "s":
+        await waitTime(time, "s", 1)
+
+      elif time[-1] == "m":
+        await waitTime(time, "m", 60)
+
+      elif time [-1] == "h":
+        await waitTime(time, "h", 3600)
+
+      else:
+        raise ValueError
+
+    except ValueError:
+      pass
+    
+
 
 
   @eject.error
