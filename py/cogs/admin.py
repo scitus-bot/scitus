@@ -96,7 +96,7 @@ class Admin(commands.Cog):
   async def delete(self, ctx, role : discord.Role):
     roleName = role.name()
     await role.delete()
-    await ctx.channel.send(f"{roleName} has been deleted.")
+    await ctx.channel.send(f"@{roleName} has been deleted.")
 
 
 #necessities
