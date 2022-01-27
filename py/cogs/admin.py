@@ -87,7 +87,16 @@ class Admin(commands.Cog):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-
+  @editrole.command(
+    help = "Deletes a role >:)",
+    case_insensitive = True 
+  )
+  @commands.has_guild_permissions(manage_roles=True)
+  @commands.cooldown(1, 20, commands.BucketType.user)
+  async def delete(self, ctx, role : discord.Role):
+    roleName = role.name()
+    await role.delete()
+    await ctx.channel.send(f"{roleName} has been deleted.")
 
 
 #necessities
