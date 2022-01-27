@@ -98,6 +98,10 @@ class Admin(commands.Cog):
     await role.delete()
     await ctx.channel.send(f"@{roleName} has been deleted.")
 
+  @delete.error
+  async def delete_error(self, ctx, error):
+    await handleError(error, ctx)
+
 
 #necessities
 def setup(bot):
