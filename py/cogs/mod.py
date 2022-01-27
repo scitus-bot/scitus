@@ -5,7 +5,7 @@ from discord.utils import get
 from discord.ext import commands
 import random
 from discord.ext.commands import cooldown, BucketType
-from pasta import *
+from pasta import * # pretty sure this is bad coding whatever 
 from time import sleep
 #--------------------------------------------------------------------------------------------------------------------------
 
