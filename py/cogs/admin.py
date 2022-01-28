@@ -16,8 +16,8 @@ editrole
 -name
 applyall
 """
-
 cdown = 20 # cooldown time
+
 
 # there fucking has to be a better way to do this
 
