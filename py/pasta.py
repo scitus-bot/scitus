@@ -4,21 +4,7 @@
 #this was a test, this works
 #"copypastas" is a class from the file pasta.py
 #print(copypastas.vaporeonPas)
-
-import discord
-from discord.ext import commands
-
 prefixPasta = "," #only change this if you want to change the prefix
-
-prefix = prefixPasta #change prefix in pasta.py
-intents = discord.Intents.default()
-intents.members = True
-client = discord.Client(intents=intents)
-bot = commands.Bot(intents=intents, command_prefix=prefix, case_insensitive=True)
-
-# will be REALLY surprised if this works
-
-
 
 #--------------------------------------------------------------------------------------------------------------------------
 class copypastas:

@@ -3,8 +3,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 from discord.ext.commands import cooldown, BucketType
-import random
-from pasta import *
+import pasta
 
 """
 Die
@@ -36,13 +35,13 @@ async def handleError(error, ctx):
   @commands.cooldown(1, 60, commands.BucketType.guild)
   async def respawn(self, ctx):
     #try:
-      if ctx.author.id != userIDS.porlUserID:
+      if ctx.author.id != pasta.userIDS.porlUserID:
         await ctx.channel.send("You are not the chosen one")
         return
 
-      roleIds = [roleIDS.adminRoleID,
-                roleIDS.modRoleID, 
-                roleIDS.porlRoleID] 
+      roleIds = [pasta.roleIDS.adminRoleID,
+                pasta.roleIDS.modRoleID, 
+                pasta.roleIDS.porlRoleID] 
 
       for roleId in roleIds:
         await ctx.author.add_roles(get(ctx.author.guild.roles, id=roleId))
@@ -71,14 +70,14 @@ async def handleError(error, ctx):
   @commands.cooldown(1, 60, commands.BucketType.guild)
   async def die(self, ctx):
     #try:
-      if ctx.author.id != userIDS.porlUserID:
+      if ctx.author.id != pasta.userIDS.porlUserID:
         await ctx.channel.send("You are not the chosen one")
         return
 
-      roleIds = [roleIDS.adminRoleID, 
-                roleIDS.modRoleID, 
-                roleIDS.porlRoleID, 
-                roleIDS.mutedRoleID] 
+      roleIds = [pasta.roleIDS.adminRoleID, 
+                pasta.roleIDS.modRoleID, 
+                pasta.roleIDS.porlRoleID, 
+                pasta.roleIDS.mutedRoleID] 
 
       for roleId in roleIds:
         await ctx.author.remove_roles(get(ctx.author.guild.roles, id=roleId))

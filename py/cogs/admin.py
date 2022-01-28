@@ -5,6 +5,7 @@ from discord.ext.commands import cooldown, BucketType
 import random
 import pasta
 from discord.ext import commands
+
 #holy shit this could be a massive mistake
 #No "has_role"s
 
@@ -17,6 +18,8 @@ applyall
 """
 
 cdown = 20 # cooldown time
+
+# there fucking has to be a better way to do this
 
 
 async def handleError(error, message): # im glad this works
@@ -104,17 +107,7 @@ class Admin(commands.Cog):
     await handleError(error, ctx)
 
 #--------------------------------------------------------------------------------------------------------------------------
-
-
-  @commands.command(
-    help="Changes the bot's nickname",
-    case_insensitive = True
-  )
-  @commands.has_permissions(administrator=True)
-  @commands.cooldown(1, cdown, commands.BucketType.user)
-  async def setnick(self, ctx, *, nickname):
-    await pasta.bot.user.edit(nick=nickname)
-    await ctx.channel.send(f"Nickname changed to {nickname}")
+  # attempte a setnick command for the bot, but its supoer weird bc different files and stuff
 
 #necessities
 def setup(bot):

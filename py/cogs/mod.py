@@ -263,8 +263,6 @@ class Moderator(commands.Cog):
         await ctx.channel.send("fuck off")
         return
 
-
-
     listNick = list(nickname)
     realNick = " ".join(listNick)
     await user.edit(nick=realNick)
