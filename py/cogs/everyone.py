@@ -3,8 +3,7 @@ from discord.utils import get
 from discord.ext import commands
 import asyncio
 import random
-from pasta import *
-
+import pasta
 
 """
 Ping
@@ -13,10 +12,15 @@ remindme
 """
 
 # making a function to handle the errors bc i didnt do that before for some reason
-async def handleError(error, ctx):
+async def handleError(error, message): # im glad this works
   if isinstance(error, commands.CommandOnCooldown):
     msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-    await ctx.channel.send(msg)
+    await message.channel.send(msg)
+
+  elif isinstance(error, commands.MissingRequiredArgument):
+    await message.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
+    raise error
+  
   else:
     raise error
 

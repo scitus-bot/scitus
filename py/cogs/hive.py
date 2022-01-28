@@ -1,11 +1,7 @@
 import discord
 from discord.utils import get
 from discord.ext import commands
-import asyncio
-import random
-from pasta import *
 import requests as rq
-
 
 
 """

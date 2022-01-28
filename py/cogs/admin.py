@@ -3,9 +3,8 @@ from discord.ext import commands
 from discord.utils import get
 from discord.ext.commands import cooldown, BucketType
 import random
-from pasta import *
+import pasta
 from discord.ext import commands
-import inspect
 #holy shit this could be a massive mistake
 #No "has_role"s
 
@@ -17,6 +16,8 @@ editrole
 applyall
 """
 
+cdown = 20 # cooldown time
+
 
 async def handleError(error, message): # im glad this works
   if isinstance(error, commands.CommandOnCooldown):
@@ -25,7 +26,7 @@ async def handleError(error, message): # im glad this works
   elif isinstance(error, commands.MissingPermissions):
       await message.send("You cant do that!")
   elif isinstance(error, commands.MissingRequiredArgument):
-    await message.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
+    await message.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
     raise error
   else:
     raise error
@@ -53,7 +54,7 @@ class Admin(commands.Cog):
     case_insensitive = True
   )
   @commands.has_permissions(manage_roles=True)
-  @commands.cooldown(1, 20, commands.BucketType.user)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
   async def colour(self, ctx, role : discord.Role, colour):
     colour = int(colour, base=16)
     colour = discord.Colour(colour)
@@ -74,7 +75,7 @@ class Admin(commands.Cog):
     case_insensitive = True
   )
   @commands.has_permissions(manage_roles=True)
-  @commands.cooldown(1, 20, commands.BucketType.user)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
   async def name(self, ctx, role : discord.Role, *name):
     actualName = list(name)
     realActualName = " ".join(actualName)
@@ -92,7 +93,7 @@ class Admin(commands.Cog):
     case_insensitive = True 
   )
   @commands.has_guild_permissions(manage_roles=True)
-  @commands.cooldown(1, 20, commands.BucketType.user)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
   async def delete(self, ctx, role : discord.Role):
     roleName = role.name()
     await role.delete()
@@ -102,6 +103,18 @@ class Admin(commands.Cog):
   async def delete_error(self, ctx, error):
     await handleError(error, ctx)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+  @commands.command(
+    help="Changes the bot's nickname",
+    case_insensitive = True
+  )
+  @commands.has_permissions(administrator=True)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
+  async def setnick(self, ctx, *, nickname):
+    await pasta.bot.user.edit(nick=nickname)
+    await ctx.channel.send(f"Nickname changed to {nickname}")
 
 #necessities
 def setup(bot):

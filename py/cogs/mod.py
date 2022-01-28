@@ -1,12 +1,11 @@
 #importing
-from multiprocessing.sharedctypes import Value
 import discord
 from discord.utils import get
 from discord.ext import commands
-import random
 from discord.ext.commands import cooldown, BucketType
-from pasta import * # pretty sure this is bad coding whatever 
+import random
 from time import sleep
+import pasta
 #--------------------------------------------------------------------------------------------------------------------------
 
 
@@ -32,7 +31,7 @@ async def handleError(error, ctx):
   elif isinstance(error, commands.MissingRole):
     await ctx.channel.send("You cant do that!")
   elif isinstance(error, commands.MissingRequiredArgument):
-    await ctx.channel.send(listsPas.helpPastas[random.randrange(0, len(listsPas.helpPastas) - 1)])
+    await ctx.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
   else:
       raise error
 
@@ -51,14 +50,14 @@ class Moderator(commands.Cog):
     case_insensitive = True,
     aliases=["mute"]
   )
-  @commands.has_role(roleIDS.modRoleID) #mod role
+  @commands.has_role(pasta.roleIDS.modRoleID) #mod role
   @commands.cooldown(1, 3, commands.BucketType.guild)
   async def eject(self, ctx, member : discord.Member, time = ""): #arguments in the command
 
     if ctx.author == member: #prevent users from muting themselves
       await ctx.channel.send("You are not the imposter.")
     else:
-      role = get(ctx.author.guild.roles, id=roleIDS.mutedRoleID) #getting the role (doesnt work)
+      role = get(ctx.author.guild.roles, id=pasta.roleIDS.mutedRoleID) #getting the role (doesnt work)
       #wouldnt it be so fucking funny if this worked
       if role in member.roles:
         await ctx.channel.send("This person is already ejected.")
@@ -112,13 +111,13 @@ class Moderator(commands.Cog):
     brief="Unmute command",
     case_insensitive = True
   )
-  @commands.has_role(roleIDS.modRoleID) #mod role
+  @commands.has_role(pasta.roleIDS.modRoleID) #mod role
   @commands.cooldown(1, 10, commands.BucketType.guild)
   async def unmute(self, ctx, member : discord.Member): #ctx is just a variable
     if ctx.author == member: #prevent users from unmuting themselves
       await ctx.channel.send("You cannot unmute yourself.")
     else:
-      muted = get(ctx.author.guild.roles, id=roleIDS.mutedRoleID) #removes mute role
+      muted = get(ctx.author.guild.roles, id=pasta.roleIDS.mutedRoleID) #removes mute role
       #print(muted)
 
       if muted in member.roles:
@@ -176,7 +175,7 @@ class Moderator(commands.Cog):
     case_insensitive = True
     )
   @commands.cooldown(1, 3, commands.BucketType.user)
-  @commands.has_role(roleIDS.modRoleID) #mod command
+  @commands.has_role(pasta.roleIDS.modRoleID) #mod command
   async def sudo(self, ctx):
     msg = ctx.message.content
     print(ctx.author.name)
@@ -260,7 +259,7 @@ class Moderator(commands.Cog):
   @commands.has_permissions(manage_nicknames=True)
   @commands.cooldown(1, 5, commands.BucketType.user)
   async def nick(self, ctx, user : discord.Member, *nickname):
-    if user.id == userIDS.porlUserID: # so i cant be nick changed (minor trolling)
+    if user.id == pasta.userIDS.porlUserID: # so i cant be nick changed (minor trolling)
         await ctx.channel.send("fuck off")
         return
 
@@ -283,7 +282,7 @@ class Moderator(commands.Cog):
   #warn command
   #this command does nothing actually
   @commands.command(pass_context=True, help="Warns a user.")
-  @commands.has_role(roleIDS.modRoleID) #mod
+  @commands.has_role(pasta.roleIDS.modRoleID) #mod
   @commands.cooldown(1, 5, commands.BucketType.user)
   async def warn(self, ctx, user : discord.Member):
     if ctx.author.id == user.id:
