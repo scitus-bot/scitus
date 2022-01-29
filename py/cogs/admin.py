@@ -115,7 +115,7 @@ class Admin(commands.Cog):
   )
   @commands.has_role(pasta.roleIDS.adminRoleID)
   @commands.cooldown(1, cdown, commands.BucketType.user)
-  async def eval(ctx, *, command):
+  async def eval(ctx, k*, command):
     rt = spidermonkey.Runtime()
     cx = rt.new_context()
     result = cx.eval_script(command)

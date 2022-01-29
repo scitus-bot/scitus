@@ -4,12 +4,16 @@ from discord.ext import commands
 import asyncio
 import random
 import pasta
+from time import sleep
 
 """
 Ping
 Sus  -- Has Cooldown Error
 remindme
 """
+
+
+
 
 # making a function to handle the errors bc i didnt do that before for some reason
 async def handleError(error, message): # im glad this works
@@ -86,52 +90,29 @@ class Everyone(commands.Cog):
   help="Reminds you about a thing after a certain amount of time. \n 5s = 5 seconds, 5m = 5 minutes, 5h = 5 hours, 5d = 5 days.",
   brief="Remind you about something after a certain amount of time.") #aliases are pog
   @commands.cooldown(1, 20, commands.BucketType.user)
-  async def remindme(self, ctx, after, *reminder):
+  async def remindme(self, ctx, after, *, reminder):
+
     
-    afterLen = len(after) - 1
-    timmy = after[afterLen] #time, timme, timmy
-    
-    sex = int(after[:afterLen]) #seconds, secs, sex
-    oral = sex
-    measure = ""
-    #time for a shit ton of bad code practise
-    #ie, stacked if statements
-    if timmy == "s":
-      print("Cool")
-      measure = "seconds."
-    elif timmy == "m":
-      sex = sex * 60 #60 seconds in a minute
-      measure = "minutes."
-    elif timmy == "h":
-      sex = sex * 3600 #3600 seconds in an hour
-      measure = "hours."
-    elif timmy == "d":
-      sex = sex * 86400 #that many seconds in a day
-      measure = "days."
-    else:
-      await ctx.channel.send("Hey you've entered an invalid value, please try again.")
-      return
-    
-    #hopefully the above works
-    #im going to (dangerously) assume it does 
-    #onto the remind message and shit
+    async def wait(amount : str, unit, multiplier : int): # for the reminder command
+      amount = int(amount.replace(unit, ""))
+      sleep(amount*multiplier)
 
-    if sex > 100000:
-      await ctx.channel.send("Sorry, that's too long of a time :(")
-      return
-    else:
 
-      #converting the weird bracket-y array into one string
-      listRemind = list(reminder)
-      remind = " ".join(listRemind)
-      #done
+    await ctx.channel.send(f"OK, {ctx.author.mention} I will remind you about '{reminder}' in {after}")
 
-      #sending shit
-      await ctx.channel.send(f"I'll remind you about {remind} in {oral} {measure}")
 
-      await asyncio.sleep(sex)
+    if after[-1] == "s":
+      await wait(after, "s", 1)
+    elif after[-1] == "m":
+      await wait(after, "m", 60)
+    elif after[-1] == "h":
+      await wait(after, "h", 3600)
+    elif after[-1] == "d":
+      await wait(after, "d",86400)
 
-      await ctx.channel.send(f"{ctx.author.mention} you asked me to remind you about {remind}.")
+
+    await ctx.channel.send(f"{ctx.author.mention} --- You are being reminded about '{reminder}'")
+      
 
   @remindme.error
   async def remindme_error(self, ctx, error):
@@ -152,7 +133,6 @@ class Everyone(commands.Cog):
       fullReason = str(fullReason) + str(word) + " "
 
     await report.send(f"Reporter: <@!{reporter}> \nReported: {reported} \nReason: {fullReason}")
-
 
     await ctx.message.delete()
     await ctx.channel.send("User has been reported!")
