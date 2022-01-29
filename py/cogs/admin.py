@@ -4,7 +4,7 @@ from discord.utils import get
 from discord.ext.commands import cooldown, BucketType
 import random
 import pasta
-from discord.ext import commands
+
 
 #holy shit this could be a massive mistake
 #No "has_role"s
@@ -106,6 +106,21 @@ class Admin(commands.Cog):
   async def delete_error(self, ctx, error):
     await handleError(error, ctx)
 
+#--------------------------------------------------------------------------------------------------------------------------
+
+  """ 
+  @commands.command(
+    help="Hopefully an eval command",
+    case_insenstive=True
+  )
+  @commands.has_role(pasta.roleIDS.adminRoleID)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
+  async def eval(ctx, *, command):
+    rt = spidermonkey.Runtime()
+    cx = rt.new_context()
+    result = cx.eval_script(command)
+    return await result
+   """
 #--------------------------------------------------------------------------------------------------------------------------
   # attempte a setnick command for the bot, but its supoer weird bc different files and stuff
 
