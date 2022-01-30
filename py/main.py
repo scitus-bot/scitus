@@ -107,11 +107,11 @@ async def on_message(message):
 @bot.event
 async def on_member_join(member):
   await member.send("https://media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
-  await bot.process_commands(member)
 
   async for role in pasta.joinRoleIDs:
     member.add_roles(get(member.guild.roles, id=role))
 
+  await bot.process_commands(member)
 #end of command
 
 
