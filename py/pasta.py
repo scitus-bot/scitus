@@ -37,7 +37,10 @@ class roleIDS:
 
 	mutedRoleID = 819697679146942534 #muted
 
-
+class joinRoleIDs:
+	pingsRoleID = 850733810348851240
+	infoRoleID = 850733459399508028
+	memberRoleID = 709182248213020704
 #--------------------------------------------------------------------------------------------------------------------------
 #Not going to make a class for the help copypastas, due to the fact that they will need to be randomly chose, so adding a class will just slow things down in the long run
 #It will not slow things down, I am now going to make a class for lists
