@@ -156,7 +156,6 @@ class Admin(commands.Cog):
   @commands.has_permissions(manage_roles=True)
   @commands.cooldown(1, cdown, commands.BucketType.user)
   async def removeall(self, ctx, role : discord.Role):
-    members =[]
     async for member in ctx.guild.fetch_members(limit=None):
       if not member.bot:
         await member.remove_roles(role)
