@@ -139,10 +139,34 @@ class Admin(commands.Cog):
         await member.add_roles(role)
       else:
         print(f"{member.name} is a bot")
+    print("gave all roles")
+    
+
+  @giveall.error
+  async def giveall_error(self, ctx, error):
+    handleError(error, ctx)
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 
+  @commands.command(
+    help="Gives everyone in the server a role",
+    case_insensitive=True
+  )
+  @commands.has_permissions(manage_roles=True)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
+  async def removeall(self, ctx, role : discord.Role):
+    members =[]
+    async for member in ctx.guild.fetch_members(limit=None):
+      if not member.bot:
+        await member.remove_roles(role)
+      else:
+        print(f"{member.name} is a bot")
+    print("removed all roles")
 
-
+  @removeall.error
+  async def removeall_error(self, ctx, error):
+    handleError(error, ctx)
 
 #--------------------------------------------------------------------------------------------------------------------------
 
