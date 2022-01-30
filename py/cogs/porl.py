@@ -9,19 +9,19 @@ import pasta
 Die
 Respawn
 """
-
+async def handleError(error, ctx):
+  if isinstance(error, commands.CommandOnCooldown):
+    msg = 'This command is on cooldown, please try again in {:.2f}s'.format (error.retry_after)
+    await ctx.channel.send(msg)
+  else:
+    raise error
 
 class Porl(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
 
-async def handleError(error, ctx):
-  if isinstance(error, commands.CommandOnCooldown):
-    msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-    await ctx.channel.send(msg)
-  else:
-    raise error
+
 
 
 #--------------------------------------------------------------------------------------------------------------------------

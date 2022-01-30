@@ -105,6 +105,13 @@ async def on_message(message):
 
 @bot.event
 async def on_member_join(member):
+
+  for roleid in pasta.joinRoleIDs.giveRoleIDS:
+    role = get(member.guild.roles, id=roleid)
+    await member.add_roles(role)
+
+
+
   await member.send("https://media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
 
 
