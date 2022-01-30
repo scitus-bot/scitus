@@ -74,8 +74,8 @@ class Moderator(commands.Cog):
       sentence = int(sent.replace(unit, ""))
 
       sleep(sentence*multiplier)
-      
       await unmute()
+      
 
     try:  
       if time[-1] == "s":

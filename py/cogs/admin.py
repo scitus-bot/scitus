@@ -9,11 +9,13 @@ import pasta
 #holy shit this could be a massive mistake
 #No "has_role"s
 
+# setnick command isnt needed bc you can just pass the bot through the nick command
 
 """
 editrole
 -colour
 -name
+-delete
 applyall
 """
 cdown = 20 # cooldown time
@@ -122,7 +124,27 @@ class Admin(commands.Cog):
     return await result
    """
 #--------------------------------------------------------------------------------------------------------------------------
-  # attempte a setnick command for the bot, but its supoer weird bc different files and stuff
+  # applyall command
+
+  @commands.command(
+    help="Gives everyone in the server a role",
+    case_insensitive=True
+  )
+  @commands.has_permissions(manage_roles=True)
+  @commands.cooldown(1, cdown, commands.BucketType.user)
+  async def giveall(self, ctx, role : discord.Role):
+    members =[]
+    async for member in ctx.guild.fetch_members(limit=None):
+      if not member.bot:
+        await member.add_roles(role)
+      else:
+        print(f"{member.name} is a bot")
+
+
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 #necessities
 def setup(bot):
