@@ -99,27 +99,28 @@ async def on_message(message):
             await message.channel.send(f"bad language {message.author.mention}")
             await message.delete()
 
+  await bot.process_commands(message)
 #--------------------------------------------------------------------------------------------------------------------------
   #I have "coder's block" :(  
-  await bot.process_commands(message)
 
 @bot.event
 async def on_member_join(member):
 
+
+  # give the new member their roles
   for roleid in pasta.joinRoleIDs.giveRoleIDS:
     role = get(member.guild.roles, id=roleid)
     await member.add_roles(role)
 
-
-
   await member.send("https://media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
-
-
 
   await bot.process_commands(member)
 #end of command
 
-
+@bot.event
+async def on_member_remove(member):
+  general = get(member.guild.channels, id=pasta.channels.gen)
+  await general.send(f"{member.mention} has left us")
 
 
 

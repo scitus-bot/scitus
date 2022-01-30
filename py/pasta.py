@@ -57,5 +57,6 @@ class listsPas:
 
 class channels:
   report = 904829118477111366
+  gen = 709182248741503093
 
 #now its time to implement them :weep:
