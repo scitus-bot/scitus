@@ -58,5 +58,6 @@ class listsPas:
 class channels:
   report = 904829118477111366
   gen = 709182248741503093
+  selfroles = 855505466598621224 # it is the torture chamber atm
 
 #now its time to implement them :weep:

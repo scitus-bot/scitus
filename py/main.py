@@ -98,6 +98,7 @@ async def on_message(message):
             await message.author.add_roles(role)
             await message.channel.send(f"bad language {message.author.mention}")
             await message.delete()
+            return
 
   await bot.process_commands(message)
 #--------------------------------------------------------------------------------------------------------------------------
@@ -116,6 +117,7 @@ async def on_member_join(member):
 
   await bot.process_commands(member)
 #end of command
+#--------------------------------------------------------------------------------------------------------------------------
 
 @bot.event
 async def on_member_remove(member):
@@ -123,6 +125,7 @@ async def on_member_remove(member):
   await general.send(f"{member.mention} has left us")
 
   await bot.process_commands(member)
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 ## wow nice
