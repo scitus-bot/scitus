@@ -95,6 +95,19 @@ class Everyone(commands.Cog):
   
 #----------------------------------------------------------------------------------------------------------------
 
+  @commands.command(case_insensiive=True)
+  @commands.cooldown(1, 20, commands.BucketType.user)
+  async def avatar(self, ctx, user : discord.Member):
+    await ctx.channel.send(user.avatar_url)
+
+
+  @avatar.error
+  async def avatar_error(self, ctx, error):
+    await handleError(error, ctx)
+
+
+#----------------------------------------------------------------------------------------------------------------
+
 #necesseties
 def setup(bot):
   bot.add_cog(Everyone(bot))
