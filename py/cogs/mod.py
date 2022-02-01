@@ -94,8 +94,6 @@ class Moderator(commands.Cog):
       pass
     
 
-
-
   @eject.error
   async def eject_error(self, ctx, error):
     await handleError(error, ctx)
@@ -194,7 +192,7 @@ class Moderator(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
 
 
-  #kick/ban commands
+  #kick commands
   @commands.command(
     help="Kicks a user, innapropriate usage of this command will get you punished uwu",
     brief="Kicks a user.",
@@ -223,7 +221,8 @@ class Moderator(commands.Cog):
   @commands.has_permissions(ban_members=True)
   @commands.cooldown(1, 20, commands.BucketType.user)
   async def ban(self, ctx, user : discord.Member, *, reason=None):
-    await user.ban(reason=str(reason))
+    await user.ban(reason=str(reason), delete_message_days=0)
+    await user.send("You've been banned from Monkeys and Dragons\nLLLLLLLLL")
     await ctx.channel.send(f"{user.mention} has left. {ctx.message.author.mention} <:peepoSad:809355473831854132> \n Reason: " + str(reason))
     await ctx.message.delete()
 
