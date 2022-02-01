@@ -122,7 +122,7 @@ async def on_member_remove(member):
   general = get(member.guild.channels, id=pasta.channels.gen)
   await general.send(f"{member.mention} has left us")
 
-
+  await bot.process_commands(member)
 
 #--------------------------------------------------------------------------------------------------------------------------
 ## wow nice
