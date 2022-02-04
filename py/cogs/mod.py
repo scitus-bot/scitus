@@ -52,7 +52,7 @@ class Moderator(commands.Cog):
   )
   @commands.has_role(pasta.roleIDS.modRoleID) #mod role
   @commands.cooldown(1, 3, commands.BucketType.guild)
-  async def eject(self, ctx, member : discord.Member, time = ""): #arguments in the command
+  async def eject(self, ctx, member : discord.Member): #arguments in the command
 
     if ctx.author == member: #prevent users from muting themselves
       await ctx.channel.send("You are not the imposter.")
@@ -64,34 +64,6 @@ class Moderator(commands.Cog):
       else:
         await member.add_roles(role) #meant to add the role to the meember
         await ctx.channel.send(str(member) + " was the imposter.")
-
-    # s - second, m - minute, h - hour
-    async def unmute():
-      if role in member.roles:
-        await member.remove_roles(role)
-    
-    async def waitTime(sent : str, unit, multiplier : int):
-      sentence = int(sent.replace(unit, ""))
-
-      sleep(sentence*multiplier)
-      await unmute()
-      
-
-    try:  
-      if time[-1] == "s":
-        await waitTime(time, "s", 1)
-
-      elif time[-1] == "m":
-        await waitTime(time, "m", 60)
-
-      elif time [-1] == "h":
-        await waitTime(time, "h", 3600)
-
-      else:
-        raise ValueError
-
-    except ValueError:
-      pass
     
 
   @eject.error
