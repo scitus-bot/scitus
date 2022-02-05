@@ -26,7 +26,7 @@ prefix = pasta.prefixPasta #change prefix in pasta.py
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
-bot = commands.Bot(intents=intents, command_prefix=prefix, case_insensitive=True)
+bot = commands.Bot(intents=intents, command_prefix=prefix, case_insensitive=True, help_command=False)
 
 @bot.event
 async def on_ready():
