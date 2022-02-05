@@ -51,20 +51,17 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_message(message):
-  
+  msgContent = message.content
   
   #if i get pinged, it will tell them to shut up
   mentioned = message.mentions
   for user in mentioned:
-    if message.author.id == 848209731474817094:#bot
+    if message.author.bot: # bot
       return
-
-    #elif user.id == 409821972026097667: #me
-    #  await message.channel.send("kindly shut up")
     
     elif user.id == 848209731474817094: #bot
       porl = bot.get_user(409821972026097667)
-      await porl.send(str(message.content) + "  -  sent by " + str(message.author))
+      await porl.send(f"{msgContent} - sent by - {message.author.mention}")
 
   #next
 
@@ -72,7 +69,7 @@ async def on_message(message):
 
   #AUTOREPLY (copypastas)
   #finding how to do case insensitive things 
-  if message.author.id == 848209731474817094: #scitus id
+  if message.author.bot:
      return
   else:
     if "vaporeon" in message.content.lower(): #Green squigglies show up but you can ignore them.
@@ -93,12 +90,9 @@ async def on_message(message):
 #--------------------------------------------------------------------------------------------------------------------------
     #autofilter:
     for word in pasta.listsPas.autoMutePas:
-        if word in message.content:
-            role = get(message.author.guild.roles, id=pasta.roleIDS.mutedRoleID)
-            await message.author.add_roles(role)
-            await message.channel.send(f"bad language {message.author.mention}")
-            await message.delete()
-            return
+      if word in msgContent:
+        await message.delete()
+        await message.channel.send(f"{message.author.mention} you can't send that!")
 
   await bot.process_commands(message)
 

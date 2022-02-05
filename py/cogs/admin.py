@@ -20,7 +20,6 @@ applyall
 """
 cdown = 20 # cooldown time
 
-
 # there fucking has to be a better way to do this
 
 
@@ -56,10 +55,11 @@ class Admin(commands.Cog):
   @editrole.command(
     help="Changes the colour of a role.",
     brief="Changes the colour of a role.",
-    case_insensitive = True
+    case_insensitive=True
   )
   @commands.has_permissions(manage_roles=True)
   @commands.cooldown(1, cdown, commands.BucketType.user)
+
   async def colour(self, ctx, role : discord.Role, colour):
     colour = int(colour, base=16)
     colour = discord.Colour(colour)
@@ -81,6 +81,7 @@ class Admin(commands.Cog):
   )
   @commands.has_permissions(manage_roles=True)
   @commands.cooldown(1, cdown, commands.BucketType.user)
+
   async def name(self, ctx, role : discord.Role, *name):
     actualName = list(name)
     realActualName = " ".join(actualName)
@@ -99,6 +100,7 @@ class Admin(commands.Cog):
   )
   @commands.has_guild_permissions(manage_roles=True)
   @commands.cooldown(1, cdown, commands.BucketType.user)
+
   async def delete(self, ctx, role : discord.Role):
     roleName = role.name()
     await role.delete()
@@ -109,21 +111,6 @@ class Admin(commands.Cog):
     await handleError(error, ctx)
 
 #--------------------------------------------------------------------------------------------------------------------------
-
-  """ 
-  @commands.command(
-    help="Hopefully an eval command",
-    case_insenstive=True
-  )
-  @commands.has_role(pasta.roleIDS.adminRoleID)
-  @commands.cooldown(1, cdown, commands.BucketType.user)
-  async def eval(ctx, k*, command):
-    rt = spidermonkey.Runtime()
-    cx = rt.new_context()
-    result = cx.eval_script(command)
-    return await result
-   """
-#--------------------------------------------------------------------------------------------------------------------------
   # applyall command
 
   @commands.command(
@@ -132,8 +119,9 @@ class Admin(commands.Cog):
   )
   @commands.has_permissions(manage_roles=True)
   @commands.cooldown(1, cdown, commands.BucketType.user)
+
   async def giveall(self, ctx, role : discord.Role):
-    members =[]
+    members = []
     async for member in ctx.guild.fetch_members(limit=None):
       if not member.bot:
         await member.add_roles(role)
@@ -155,6 +143,7 @@ class Admin(commands.Cog):
   )
   @commands.has_permissions(manage_roles=True)
   @commands.cooldown(1, cdown, commands.BucketType.user)
+  
   async def removeall(self, ctx, role : discord.Role):
     async for member in ctx.guild.fetch_members(limit=None):
       if not member.bot:
