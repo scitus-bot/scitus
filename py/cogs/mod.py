@@ -62,7 +62,7 @@ class Moderator(commands.Cog):
         await ctx.channel.send("This person is already ejected.")
       else:
         await member.add_roles(role) #meant to add the role to the meember
-        await ctx.channel.send(str(member) + " was the imposter.")
+        await ctx.channel.send(f"{member} was the imposter.")
     
 
   @eject.error
@@ -91,7 +91,7 @@ class Moderator(commands.Cog):
 
       if muted in member.roles:
         await member.remove_roles(muted)
-        await ctx.channel.send(str(member) + " you have been freed.")
+        await ctx.channel.send(f"{member} you have been freed.")
 
       else:
         await ctx.channel.send("This user is not muted.")
