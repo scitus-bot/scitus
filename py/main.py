@@ -35,7 +35,7 @@ bot = commands.Bot(intents=intents, command_prefix=prefix, case_insensitive=True
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
-
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="your mum"))
 #--------------------------------------------------------------------------------------------------------------------------
 #no clue what im doing, but its something to do with cogs
 
