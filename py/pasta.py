@@ -53,7 +53,7 @@ class listsPas:
 
     autoDelPas = []
 
-    autoMutePas = ["nigg", "fag", "tranny"]
+    autoMutePas = ["nigg", "fag", "tranny", "retard"]
 
 class channels:
   report = 904829118477111366
