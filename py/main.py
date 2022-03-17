@@ -16,6 +16,10 @@ import pasta
 #print(copypastas.vaporeonPas)
 
 
+# annoying as fuck thing ratelimiting my code
+# i think its the autofilter but im not sure
+
+
 #--------------------------------------------------------------------------------------------------------------------------
 #weird stuff i dont get
 my_secret = os.environ['TOKEN']
@@ -26,7 +30,7 @@ prefix = pasta.prefixPasta #change prefix in pasta.py
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
-bot = commands.Bot(intents=intents, command_prefix=prefix, case_insensitive=True, help_command=False)
+bot = commands.Bot(intents=intents, command_prefix=prefix, case_insensitive=True,)
 
 @bot.event
 async def on_ready():
@@ -63,7 +67,7 @@ async def on_message(message):
       porl = bot.get_user(409821972026097667)
       await porl.send(f"{msgContent} - sent by - {message.author.mention}")
 
-  #next
+  # next # uncommented this line of code
 
 #--------------------------------------------------------------------------------------------------------------------------
 

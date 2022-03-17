@@ -7,10 +7,6 @@ import requests as rq
 """
 kdr (skywars)
 """
-def rqget(gamemode, p1):
-        apirq = rq.get("https://api.playhive.com/v0/game/all/{}/{}".format(gamemode, p1))
-        hjs = apirq.json()
-        return hjs
 
 async def handleError(error, ctx):
   if isinstance(error, commands.CommandOnCooldown):
@@ -21,6 +17,10 @@ async def handleError(error, ctx):
 
 
 
+def rqget(gamemode, p1):
+        apirq = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}")
+        hjs = apirq.json()
+        return hjs
 #--------------------------------------------------------------------------------------------------------------------------
 class hive(commands.Cog):
   def __init__(self, bot):
