@@ -54,18 +54,26 @@ if __name__ == '__main__':
 #on_message thing
 
 @bot.event
-async def on_message(message):
-  msgContent = message.content
+async def on_message(msg):
+  msgContent = msg.content
+  
+  """ 
+  if msg.author.id == 251066113679425537:
+    await msg.delete()
+    ninsang = bot.get_user(251066113679425537)
+    await ninsang.send("L")
+  """
+  
   
   #if i get pinged, it will tell them to shut up
-  mentioned = message.mentions
+  mentioned = msg.mentions
   for user in mentioned:
-    if message.author.bot: # bot
+    if msg.author.bot: # bot
       return
     
     elif user.id == 848209731474817094: #bot
       porl = bot.get_user(409821972026097667)
-      await porl.send(f"{msgContent} - sent by - {message.author.mention}")
+      await porl.send(f"{msgContent} - sent by - {msg.author.mention}")
 
   # next # uncommented this line of code
 
@@ -73,32 +81,32 @@ async def on_message(message):
 
   #AUTOREPLY (copypastas)
   #finding how to do case insensitive things 
-  if message.author.bot:
+  if msg.author.bot:
      return
   else:
-    if "vaporeon" in message.content.lower(): #Green squigglies show up but you can ignore them.
-      await message.channel.send(pasta.copypastas.vaporeonPas, delete_after=20.0)
+    if "vaporeon" in msg.content.lower(): #Green squigglies show up but you can ignore them.
+      await msg.channel.send(pasta.copypastas.vaporeonPas, delete_after=20.0)
 
-    if "gaming laptop" in message.content.lower():
-      await message.channel.send(pasta.copypastas.laptopPas, delete_after=20.0)
+    if "gaming laptop" in msg.content.lower():
+      await msg.channel.send(pasta.copypastas.laptopPas, delete_after=20.0)
 
-    if "meow" in message.content.lower():
-      await message.channel.send(pasta.copypastas.meowPas, delete_after=20.0)
+    if "meow" in msg.content.lower():
+      await msg.channel.send(pasta.copypastas.meowPas, delete_after=20.0)
 
-    if "downvote" in message.content.lower():
-      await message.channel.send(pasta.copypastas.downfaqPas, delete_after=20.0)
+    if "downvote" in msg.content.lower():
+      await msg.channel.send(pasta.copypastas.downfaqPas, delete_after=20.0)
 
-    if "dog" in message.content.lower() and "doggo" not in message.content.lower():
-        await message.channel.send(pasta.copypastas.doggoPas, delete_after=20.0)
+    if "dog" in msg.content.lower() and "doggo" not in msg.content.lower():
+        await msg.channel.send(pasta.copypastas.doggoPas, delete_after=20.0)
 
 #--------------------------------------------------------------------------------------------------------------------------
     #autofilter:
     for word in pasta.listsPas.autoMutePas:
       if word in msgContent:
-        await message.delete()
-        await message.channel.send(f"{message.author.mention} you can't send that!")
+        await msg.delete()
+        await msg.channel.send(f"{msg.author.mention} you can't send that!")
 
-  await bot.process_commands(message)
+  await bot.process_commands(msg)
 
 #--------------------------------------------------------------------------------------------------------------------------
 ## wow nice
