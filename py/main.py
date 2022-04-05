@@ -65,7 +65,7 @@ async def on_message(msg):
   """
   
   
-  #if i get pinged, it will tell them to shut up
+  #if i get pinged, it will tell them to shut up # (removed)
   mentioned = msg.mentions
   for user in mentioned:
     if msg.author.bot: # bot
