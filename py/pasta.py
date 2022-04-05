@@ -1,5 +1,4 @@
 #This is a file that contains copypastas/user IDs/role IDs
-#first time using classes myself lol
 
 #this was a test, this works
 #"copypastas" is a class from the file pasta.py
@@ -44,20 +43,19 @@ class joinRoleIDs:
   giveRoleIDS = [pingsRoleID, infoRoleID, memberRoleID]
 
 #--------------------------------------------------------------------------------------------------------------------------
-#Not going to make a class for the help copypastas, due to the fact that they will need to be randomly chose, so adding a class will just slow things down in the long run
 #It will not slow things down, I am now going to make a class for lists
 class listsPas:
     helpPastas = ["Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
 	  "wanker", "holy fucking shit, are you genuinely blind? no? then how about you fucking use the fucking help command huh? \ndipshit ass"
-    ]
+    ] # when people dont use the commands correctly
 
-    autoDelPas = []
+    autoMutePas = ["nigg", "fag", "tranny", "retard"] # mute automatically 
 
-    autoMutePas = ["nigg", "fag", "tranny", "retard"]
+    # autoDelPas = []
 
 class channels:
   report = 904829118477111366
   gen = 709182248741503093
-  selfroles = 855505466598621224 # it is the torture chamber atm
+  selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
 
 #now its time to implement them :weep:

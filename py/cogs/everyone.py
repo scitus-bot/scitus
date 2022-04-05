@@ -103,15 +103,6 @@ class Everyone(commands.Cog):
 
 #----------------------------------------------------------------------------------------------------------------
 
-  @commands.command()
-  @commands.cooldown(1, 10, commands.BucketType.user)
-  async def help(self, ctx, command=None):
-    pass
-
-
-
-#----------------------------------------------------------------------------------------------------------------
-
 #necesseties
 def setup(bot):
   bot.add_cog(Everyone(bot))
