@@ -125,4 +125,4 @@ async def on_message(msg: discord.message.Message):
 ## wow nice
 #necessities
 
-bot.run("ODQ4MjA5NzMxNDc0ODE3MDk0.YLJS3g.Soo8KyXInCqP4jaoT7xE7sshyOU")
+bot.run(BOT_TOKEN)
