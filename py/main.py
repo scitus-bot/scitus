@@ -3,7 +3,7 @@ import os
 import discord
 from discord.ext import commands
 from discord.utils import get
-from keep_alive import keep_alive
+# from keep_alive import keep_alive
 import pasta
 
 #print(datetime.today().weekday())
@@ -22,7 +22,7 @@ import pasta
 
 #--------------------------------------------------------------------------------------------------------------------------
 #weird stuff i dont get
-my_secret = os.environ['TOKEN']
+# my_secret = os.environ['TOKEN']
 #token is unique, cant give that to you
 
 #weird stuff
@@ -56,15 +56,7 @@ if __name__ == '__main__':
 @bot.event
 async def on_message(msg):
   msgContent = msg.content
-  
-  """ 
-  if msg.author.id == 251066113679425537:
-    await msg.delete()
-    ninsang = bot.get_user(251066113679425537)
-    await ninsang.send("L")
-  """
-  
-  
+
   #if i get pinged, it will tell them to shut up # (removed)
   mentioned = msg.mentions
   for user in mentioned:
@@ -112,5 +104,5 @@ async def on_message(msg):
 ## wow nice
 #necessities
 
-keep_alive()
-bot.run(my_secret)
+# keep_alive()
+bot.run("ODQ4MjA5NzMxNDc0ODE3MDk0.YLJS3g.Soo8KyXInCqP4jaoT7xE7sshyOU")

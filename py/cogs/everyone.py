@@ -71,8 +71,11 @@ class Everyone(commands.Cog):
     await handleError(error, ctx)
 
 #--------------------------------------------------------------------------------------------------------------------------
-  @commands.command(case_insensitive = True,
-  help="Use to report people, format like this: Person ID / Reason", brief="Used to report people.")
+  @commands.command(
+  case_insensitive = True,
+  help="Use to report people, format like this: Person ID / Reason", 
+  brief="Used to report people."
+  )
   @commands.cooldown(1, 20, commands.BucketType.user)
   async def report(self, ctx, userID, *, reason):
     reported = userID
