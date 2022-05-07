@@ -37,10 +37,10 @@ class roleIDS:
 	mutedRoleID = 819697679146942534 #muted
 
 class joinRoleIDs:
-  pingsRoleID = 850733810348851240
-  infoRoleID = 850733459399508028
-  memberRoleID = 709182248213020704
-  giveRoleIDS = [pingsRoleID, infoRoleID, memberRoleID]
+    pingsRoleID = 850733810348851240
+    infoRoleID = 850733459399508028
+    memberRoleID = 709182248213020704
+    giveRoleIDS = [pingsRoleID, infoRoleID, memberRoleID]
 
 #--------------------------------------------------------------------------------------------------------------------------
 #It will not slow things down, I am now going to make a class for lists
@@ -54,8 +54,8 @@ class listsPas:
     # autoDelPas = []
 
 class channels:
-  report = 904829118477111366
-  gen = 709182248741503093
-  selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
+    report = 904829118477111366
+    gen = 709182248741503093
+    selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
 
 #now its time to implement them :weep:
