@@ -4,6 +4,9 @@ from discord.ext import commands
 from discord.utils import get
 # from keep_alive import keep_alive
 import pasta
+from decouple import config
+
+BOT_TOKEN = config('TOKEN')
 
 #print(datetime.today().weekday())
 #monday = 0, sunday = 6
@@ -22,7 +25,6 @@ import pasta
 
 #--------------------------------------------------------------------------------------------------------------------------
 #weird stuff i dont get
-# my_secret = os.environ['TOKEN']
 #token is unique, cant give that to you
 
 #weird stuff
