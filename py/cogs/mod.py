@@ -1,4 +1,5 @@
 #importing
+from click import pass_context
 import discord
 from discord.utils import get
 from discord.ext import commands
@@ -134,10 +135,9 @@ class Moderator(commands.Cog):
         await handleError(error, ctx)
 
 
-    #end of command
-
 #--------------------------------------------------------------------------------------------------------------------------
     #sudo command
+    
     @commands.command(
         help="Sends a message, as the bot. Deletes the original message.",
         brief="Output text as the bot.",
@@ -161,9 +161,8 @@ class Moderator(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-
-
     #kick commands
+
     @commands.command(
         help="Kicks a user, innapropriate usage of this command will get you punished uwu",
         brief="Kicks a user.",
@@ -181,9 +180,10 @@ class Moderator(commands.Cog):
     async def kick_error(self, ctx, error):
         await handleError(error, ctx)
 
-#--------------------------------------------------------------------------------------------------------------------------
 
+#--------------------------------------------------------------------------------------------------------------------------
     #ban command:
+
     @commands.command(
         help="Bans a user uwu",
         brief="Bans a user.",
@@ -227,7 +227,10 @@ class Moderator(commands.Cog):
       
 #--------------------------------------------------------------------------------------------------------------------------
     #nick command
-    @commands.command(pass_context=True, help="Changes the nickname of a user.")
+    @commands.command(
+        pass_context=True, 
+        help="Changes the nickname of a user.",
+        )
     @commands.has_permissions(manage_nicknames=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def nick(self, ctx, user : discord.Member, *nickname):
@@ -251,7 +254,10 @@ class Moderator(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
     #warn command
     #this command does nothing actually
-    @commands.command(pass_context=True, help="Warns a user.")
+    @commands.command(
+        pass_context=True,
+        help="Warns a user.",
+        )
     @commands.has_role(pasta.roleIDS.modRoleID) #mod
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def warn(self, ctx, user : discord.Member):
@@ -264,6 +270,36 @@ class Moderator(commands.Cog):
     @warn.error
     async def warn_error(self, ctx, error):
         await handleError(error, ctx)
+#--------------------------------------------------------------------------------------------------------------------------
+    # lockdown 
+    
+    @commands.command(
+        pass_context=True,
+        case_insensitive=True,
+        help="Locks down a channel.",
+        )
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def lock(self, ctx):
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await ctx.channel.send("Channel locked 👍")
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # unlockdown
+    
+    @commands.command(
+        pass_context=True,
+        case_insensitive=True,
+        help="Unlocks a channel",
+        )
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def unlock(self, ctx):
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
+        await ctx.channel.send("Channel unlocked 👍")
+        
+
 #--------------------------------------------------------------------------------------------------------------------------
 
 

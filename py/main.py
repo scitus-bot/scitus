@@ -2,7 +2,6 @@ import os
 import discord
 from discord.ext import commands
 from discord.utils import get
-# from keep_alive import keep_alive
 import pasta
 from dotenv import load_dotenv
 load_dotenv()
@@ -43,7 +42,12 @@ bot = commands.Bot(
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="your mum"))
+    await bot.change_presence(
+        activity=discord.Activity(
+            type=discord.ActivityType.watching, 
+            name="your mum",
+            )
+        )
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -118,6 +122,13 @@ async def on_message(msg: discord.message.Message):
 
 #--------------------------------------------------------------------------------------------------------------------------
     #AUTOREACTS
+
+    if ("y/n" in msgContent):
+        up = '\N{THUMBS UP SIGN}'
+        down = '\N{THUMBS DOWN SIGN}'
+        await msg.add_reaction(up)
+        await msg.add_reaction(down)
+        
 
 #--------------------------------------------------------------------------------------------------------------------------
     await bot.process_commands(msg)
