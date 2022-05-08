@@ -11,15 +11,6 @@ BOT_TOKEN = os.environ.get('TOKEN')
 #print(datetime.today().weekday())
 #monday = 0, sunday = 6
 
-#holy shit so many fucking libraries
-
-#this was a test, this works
-#"copypastas" is a class from the file pasta.py
-#print(copypastas.vaporeonPas)
-
-
-# annoying as fuck thing ratelimiting my code
-# i think its the autofilter but im not sure
 
 # 7.5.22 decided to run the bot from my laptop rather than repl
 

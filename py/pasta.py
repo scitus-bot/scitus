@@ -40,17 +40,28 @@ class joinRoleIDs:
     pingsRoleID = 850733810348851240
     infoRoleID = 850733459399508028
     memberRoleID = 709182248213020704
-    giveRoleIDS = [pingsRoleID, infoRoleID, memberRoleID]
+    giveRoleIDS = [
+        pingsRoleID, 
+        infoRoleID, 
+        memberRoleID,
+        ]
 
 #--------------------------------------------------------------------------------------------------------------------------
 #It will not slow things down, I am now going to make a class for lists
 class listsPas:
-    helpPastas = ["Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
-	  "wanker", "holy fucking shit, are you genuinely blind? no? then how about you fucking use the fucking help command huh? \ndipshit ass"
-    ] # when people dont use the commands correctly
+    helpPastas = [
+        "Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
+	    "wanker", 
+        "holy fucking shit, are you genuinely blind? no? then how about you fucking use the fucking help command huh? \ndipshit ass",
+        ] # when people dont use the commands correctly
 
     # words that get you muted automatically 
-    autoMutePas = ["nigg", "fag", "tranny", "retard"] 
+    autoMutePas = [
+        "nigg", 
+        "fag", 
+        "tranny", 
+        "retard",
+        ] 
 
     # autoDelPas = []
 
