@@ -69,5 +69,6 @@ class channels:
     report = 904829118477111366
     gen = 709182248741503093
     selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
+    rules = 715714389231272056
 
 #now its time to implement them :weep:

@@ -25,7 +25,7 @@ async def handleError(error, message): # im glad this works
         await message.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
     
     else:
-        raise error
+        print(error)
 
 
 
@@ -35,8 +35,10 @@ class Everyone(commands.Cog):
         self.bot = bot
         self._last_member = None
 
+
+#--------------------------------------------------------------------------------------------------------------------------
     #ping
-    @commands.guild_only()
+    
     @commands.command(
         case_insensitive=True,
         help="Pings the bot to check if its online",
@@ -46,14 +48,15 @@ class Everyone(commands.Cog):
     async def ping(self, ctx): 
         await ctx.channel.send("pong")
 
+
     @ping.error
     async def ping_error(self, ctx, error):
         await handleError(error, ctx)
     
-    #end of command
 
-#- -------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------
     #sus
+
     @commands.command(
         case_insensitive=True,
         help="ඞ",
@@ -64,12 +67,15 @@ class Everyone(commands.Cog):
         await ctx.message.delete()
         await ctx.channel.send("ඞ") 
     
-    #error thing
+
     @sus.error
     async def sus_error(self, ctx, error):
         await handleError(error, ctx)
 
-#-  -------------------------------------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # report
+
     @commands.command(
         case_insensitive=True,
         help="Use to report people, format like this: Person ID / Reason", 
@@ -86,11 +92,14 @@ class Everyone(commands.Cog):
         await ctx.message.delete()
         await ctx.channel.send("User has been reported!")
 
+    
     @report.error
     async def report_error(self, ctx, error):
         await handleError(error, ctx)
     
-#-  ---------------------------------------------------------------------------------------------------------------
+    
+#----------------------------------------------------------------------------------------------------------------
+    # avatar
 
     @commands.command(
         case_insensiive=True
