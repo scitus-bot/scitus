@@ -118,9 +118,9 @@ class Moderator(commands.Cog):
         #have to rewrite this shit bc of the "inconsistent" indents
         #getting a list of all member IDs
         members = []
-        async for member in ctx.guild.fetch_members(limit=None): #FRICK DISCORD.PY
+        async for member in ctx.guild.fetch_members(limit=None): 
             if not member.bot:  
-                members.append(member) #thank you CJ i love you so much
+                members.append(member)
 
 
         rnd = randint(0, len(members) - 1)

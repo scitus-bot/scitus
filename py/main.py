@@ -32,6 +32,7 @@ prefix = pasta.prefixPasta #change prefix in pasta.py
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
+guild = client.get_guild(709182248213020702)
 bot = commands.Bot(
     intents=intents, 
     command_prefix=prefix, 
@@ -68,6 +69,15 @@ initial_extensions = [
 if __name__ == '__main__':
     for extension in initial_extensions:
         bot.load_extension(extension)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+# on_user_join 
+
+@bot.event
+async def on_member_join(member):
+    for id in pasta.joinRoleIDs.giveRoleIDS:
+        role = bot.get_all_members()
 
 
 #--------------------------------------------------------------------------------------------------------------------------
