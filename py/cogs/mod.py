@@ -6,7 +6,6 @@ from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
 import random
 import pasta
-#--------------------------------------------------------------------------------------------------------------------------
 
 
 """
@@ -43,7 +42,9 @@ class Moderator(commands.Cog):
         self.bot = bot
 
 
+#--------------------------------------------------------------------------------------------------------------------------
     #mute command
+    
     @commands.command(
         help="Adds the Muted role to a target",
         brief="Mute command",
@@ -71,11 +72,9 @@ class Moderator(commands.Cog):
         await handleError(error, ctx)
 
 
-    #end of command
-
-
 #--------------------------------------------------------------------------------------------------------------------------
     #unmute command
+    
     @commands.command(
         help="Removes the Muted role.",
         brief="Unmute command",
@@ -129,7 +128,6 @@ class Moderator(commands.Cog):
         #it was to delete the message lol
 
 
-    #error thing
     @someone.error #this is when the cooldown error shows up
     async def someone_error(self, ctx, error):
         await handleError(error, ctx)
@@ -154,7 +152,7 @@ class Moderator(commands.Cog):
         await ctx.channel.send(message) #oh yeah lmao ##goddamn
         await ctx.message.delete()
     
-    #error thing
+
     @sudo.error
     async def sudo_error(self, ctx, error):
         await handleError(error, ctx)
@@ -176,6 +174,7 @@ class Moderator(commands.Cog):
         await ctx.channel.send(f"{user.mention} has been kindly removed by {ctx.message.author.mention} <:wholesome:806907457342930975> \n Reason: " + str(reason))
         await ctx.message.delete()
 
+
     @kick.error
     async def kick_error(self, ctx, error):
         await handleError(error, ctx)
@@ -196,6 +195,7 @@ class Moderator(commands.Cog):
         await user.send("You've been banned from Monkeys and Dragons\nLLLLLLLLL")
         await ctx.channel.send(f"{user.mention} has left. {ctx.message.author.mention} <:peepoSad:809355473831854132> \n Reason: {str(reason)}")
         await ctx.message.delete()
+
 
     @ban.error
     async def ban_error(self, ctx, error):
@@ -221,12 +221,15 @@ class Moderator(commands.Cog):
         await ctx.send(str(limit - 1) + ' messages cleared by {}'.format(ctx.author.mention))
         await ctx.message.delete()
 
+
     @purge.error
     async def clear_error(self, ctx, error):
         await handleError(error, ctx)
       
+      
 #--------------------------------------------------------------------------------------------------------------------------
     #nick command
+    
     @commands.command(
         pass_context=True, 
         help="Changes the nickname of a user.",
@@ -244,16 +247,14 @@ class Moderator(commands.Cog):
         await ctx.channel.send("Nickname changed.")
 
 
-    #errors for nick
     @nick.error
     async def nick_error(self, ctx, error):
         await handleError(error, ctx)
 
 
-
 #--------------------------------------------------------------------------------------------------------------------------
     #warn command
-    #this command does nothing actually
+
     @commands.command(
         pass_context=True,
         help="Warns a user.",
@@ -270,6 +271,8 @@ class Moderator(commands.Cog):
     @warn.error
     async def warn_error(self, ctx, error):
         await handleError(error, ctx)
+
+
 #--------------------------------------------------------------------------------------------------------------------------
     # lockdown 
     
@@ -285,6 +288,11 @@ class Moderator(commands.Cog):
         await ctx.channel.send("Channel locked 👍")
 
 
+    @lock.error
+    async def lock_error(self, ctx, error):
+        await handleError(error, ctx)
+        
+        
 #--------------------------------------------------------------------------------------------------------------------------
     # unlockdown
     
@@ -300,6 +308,11 @@ class Moderator(commands.Cog):
         await ctx.channel.send("Channel unlocked 👍")
         
 
+    @unlock.error
+    async def unlock_error(self, ctx, error):
+        await handleError(error, ctx)
+        
+        
 #--------------------------------------------------------------------------------------------------------------------------
 
 

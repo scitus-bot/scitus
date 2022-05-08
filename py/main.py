@@ -114,8 +114,8 @@ async def on_message(msg: discord.message.Message):
             member = msg.author
             muteID = pasta.roleIDS.mutedRoleID
             mute = msg.guild.get_role(muteID)
-            await member.add_roles(mute)
 
+            await member.add_roles(mute)
             await msg.delete()
             await msg.channel.send(f"{msg.author.mention} you can't send that!")
         
