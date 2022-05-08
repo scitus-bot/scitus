@@ -49,7 +49,8 @@ class listsPas:
 	  "wanker", "holy fucking shit, are you genuinely blind? no? then how about you fucking use the fucking help command huh? \ndipshit ass"
     ] # when people dont use the commands correctly
 
-    autoMutePas = ["nigg", "fag", "tranny", "retard"] # mute automatically 
+    # words that get you muted automatically 
+    autoMutePas = ["nigg", "fag", "tranny", "retard"] 
 
     # autoDelPas = []
 

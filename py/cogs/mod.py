@@ -289,7 +289,7 @@ class Moderator(commands.Cog):
         await ctx.channel.set_permissions(
             ctx.guild.default_role, 
             send_messages=False,
-            add_reactions=True,
+            add_reactions=False,
             )
         await ctx.channel.send("Channel locked 👍")
 

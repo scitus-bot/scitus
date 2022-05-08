@@ -112,6 +112,7 @@ async def on_message(msg: discord.message.Message):
 
 #-------------------------------------------------------------------------------------------------------------------------
     #autofilter:
+    
     for word in pasta.listsPas.autoMutePas:
         if word in msgContent:
             member = msg.author
