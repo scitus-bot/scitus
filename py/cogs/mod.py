@@ -286,7 +286,11 @@ class Moderator(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def lock(self, ctx):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await ctx.channel.set_permissions(
+            ctx.guild.default_role, 
+            send_messages=False,
+            add_reactions=True,
+            )
         await ctx.channel.send("Channel locked 👍")
 
 
@@ -306,7 +310,11 @@ class Moderator(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def unlock(self, ctx):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
+        await ctx.channel.set_permissions(
+            ctx.guild.default_role, 
+            send_messages=True,
+            add_reactions=True,
+            )
         await ctx.channel.send("Channel unlocked 👍")
         
 
