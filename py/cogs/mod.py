@@ -221,7 +221,6 @@ class Moderator(commands.Cog):
         limit = limit + 1
         await ctx.channel.purge(limit=limit)
         await ctx.send(str(limit - 1) + ' messages cleared by {}'.format(ctx.author.mention))
-        await ctx.message.delete()
 
 
     @purge.error
