@@ -72,16 +72,15 @@ if __name__ == '__main__':
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# on_user_join 
+# on_user_join (WIP)
 
 @bot.event
 async def on_member_join(member):
-    for id in pasta.joinRoleIDs.giveRoleIDS:
-        role = bot.get_all_members()
+    pass
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-#on_message thing
+#on_message
 
 @bot.event
 async def on_message(msg: discord.message.Message):
