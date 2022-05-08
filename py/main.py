@@ -41,7 +41,11 @@ bot = commands.Bot(
 
 @bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(bot))
+    print(f"Logged on as: {bot.user}")
+    
+    gen = bot.get_channel(pasta.channels.gen)
+    await gen.send("The bot is now online!")
+    
     await bot.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.watching, 
@@ -81,7 +85,6 @@ async def on_message(msg: discord.message.Message):
     
     mentioned = msg.mentions
     for user in mentioned:
-
         if user.id == 848209731474817094: #bot
             porl = bot.get_user(409821972026097667)
             await porl.send(f"{msgContent} - sent by - {msg.author.mention}")

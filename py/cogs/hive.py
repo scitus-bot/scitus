@@ -77,6 +77,7 @@ class hive(commands.Cog):
     async def stats_error(self, ctx, error):
         await handleError(error, ctx)
 
+
 #necesseties
 def setup(bot):
     bot.add_cog(hive(bot))
