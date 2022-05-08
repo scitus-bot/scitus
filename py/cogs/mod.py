@@ -1,11 +1,11 @@
 #importing
-from click import pass_context
 import discord
 from discord.utils import get
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
-import random
+from random import randint
 import pasta
+
 
 
 """
@@ -30,7 +30,8 @@ async def handleError(error, ctx):
     elif isinstance(error, commands.MissingRole):
         await ctx.channel.send("You cant do that!")
     elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
+        rnd = randint(0, len(pasta.listsPas.helpPastas) - 1)
+        await ctx.channel.send(pasta.listsPas.helpPastas[rnd])
     else:
         raise error
 
@@ -119,16 +120,17 @@ class Moderator(commands.Cog):
         members = []
         async for member in ctx.guild.fetch_members(limit=None): #FRICK DISCORD.PY
             if not member.bot:  
-                members.append(member.id) #thank you CJ i love you so much
+                members.append(member) #thank you CJ i love you so much
 
 
+        rnd = randint(0, len(members) - 1)
         await ctx.message.delete()
-        await ctx.channel.send("<@!" + str(members[random.randint(0, len(members) - 1)]) + ">")
-        #before i edited there were other things down here, but i dont remember what they were/were used for
-        #it was to delete the message lol
+        await ctx.channel.send(members[rnd].mention)
+        # before i edited there were other things down here, but i dont remember what they were/were used for
+        # it was to delete the message lol
 
 
-    @someone.error #this is when the cooldown error shows up
+    @someone.error 
     async def someone_error(self, ctx, error):
         await handleError(error, ctx)
 
