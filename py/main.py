@@ -63,11 +63,46 @@ if __name__ == '__main__':
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# on_user_join (WIP)
+# on_user_join 
 
 @bot.event
-async def on_member_join(member):
-    pass
+async def on_member_join(member: discord.Member):
+    guild = member.guild
+    
+#--------------------------------------------------------------------------------------------------------------------------
+    # welcome message
+    
+    general = guild.get_channel(pasta.channels.gen)
+    ruleID = pasta.channels.rules
+    
+    await general.send(f"Welcome {member.mention}, hope you have a good time in the server! Check out <#{ruleID}> for the rules!")
+    
+    if member.bot: # dont want the hassle of dming bots and assigning roles and etc
+        botRole = get(guild.roles, id=709182248213020705)
+        await member.add_roles(botRole)
+        return
+    
+    
+#--------------------------------------------------------------------------------------------------------------------------
+    # give roles
+
+    for roleID in pasta.joinRoleIDs.giveRoleIDS:
+        role = get(guild.roles, id=roleID)
+        await member.add_roles(role)
+    
+    
+#--------------------------------------------------------------------------------------------------------------------------
+    # silly little image
+
+    await member.send("https://images-ext-1.discordapp.net/external/AQAbFMaLzdhzzS8lX2tGQ-5mejo6KqycKl8Z5tK-BFU/https/media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+@bot.event
+async def on_member_remove(member: discord.Member):
+    
+    gen = bot.get_channel(pasta.channels.gen)
+    await gen.send(f"{member.mention} has left the server..... what a loser")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
