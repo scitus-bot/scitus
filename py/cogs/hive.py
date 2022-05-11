@@ -1,19 +1,30 @@
 import discord
 from discord.utils import get
 from discord.ext import commands
+from discord.ext.commands import BucketType
 import requests as rq
+from pasta import ListsPas
 
 
 """
 kdr (skywars)
 """
 
-async def handleError(error, ctx):
+async def handleError(message, error): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-        await ctx.channel.send(msg)
+        await message.channel.send(msg)
+        
+    elif isinstance(error, commands.MissingPermissions):
+        await message.send("You cant do that!")
+        
+    elif isinstance(error, commands.MissingRequiredArgument):
+        rnd = randint(0, len(ListsPas.helpPastas) - 1)
+        msg = ListsPas.helpPastas[rnd]
+        await message.channel.send(msg)
+        
     else:
-        raise error
+        print(error)
 
 
 def rqget(gamemode, p1):
@@ -32,7 +43,7 @@ class hive(commands.Cog):
     @commands.command(
         help="Outputs your stats for 3 Hive Games.",
         )
-    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.cooldown(1, 5, BucketType.guild)
     async def stats(self, ctx, player):
         #treasurewars
         hjs = rqget("wars", player) #the hivejson im using updates each time this function is used
@@ -75,7 +86,7 @@ class hive(commands.Cog):
 
     @stats.error
     async def stats_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #necesseties
