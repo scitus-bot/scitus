@@ -33,7 +33,7 @@ bot = commands.Bot(
 async def on_ready():
     print(f"Logged on as: {bot.user}")
     
-    gen = bot.get_channel(pasta.channels.gen)
+    gen = bot.get_channel(pasta.ChannelIDs.gen)
     await gen.send("The bot is now online!")
     
     await bot.change_presence(
@@ -71,8 +71,8 @@ async def on_member_join(member: discord.Member):
     guild = member.guild
     
     
-    general = guild.get_channel(pasta.channels.gen)
-    ruleID = pasta.channels.rules
+    general = guild.get_channel(pasta.ChannelIDs.gen)
+    ruleID = pasta.ChannelIDs.rules
     
     await general.send(f"Welcome {member.mention}, hope you have a good time in the server! Check out <#{ruleID}> for the rules!")
     
@@ -85,7 +85,7 @@ async def on_member_join(member: discord.Member):
 #--------------------------------------------------------------------------------------------------------------------------
     # give roles
 
-    for roleID in pasta.joinRoleIDs.giveRoleIDS:
+    for roleID in pasta.JoinRoleIDs.giveRoleIDS:
         role = get(guild.roles, id=roleID)
         await member.add_roles(role)
     
@@ -102,7 +102,7 @@ async def on_member_join(member: discord.Member):
 @bot.listen()
 async def on_member_remove(member: discord.Member):
     
-    gen = bot.get_channel(pasta.channels.gen)
+    gen = bot.get_channel(pasta.ChannelIDs.gen)
     await gen.send(f"{member.mention} has left the server..... what a loser")
 
 
@@ -131,28 +131,28 @@ async def on_message(msg: discord.Message):
     #finding how to do case insensitive things 
 
     if "vaporeon" in msg.content.lower(): #Green squigglies show up but you can ignore them.
-        await msg.channel.send(pasta.copypastas.vaporeonPas, delete_after=20.0)
+        await msg.channel.send(pasta.CopyPastas.vaporeonPas, delete_after=20.0)
     
     if "gaming laptop" in msg.content.lower():
-        await msg.channel.send(pasta.copypastas.laptopPas, delete_after=20.0)
+        await msg.channel.send(pasta.CopyPastas.laptopPas, delete_after=20.0)
     
     if "meow" in msg.content.lower():
-        await msg.channel.send(pasta.copypastas.meowPas, delete_after=20.0)
+        await msg.channel.send(pasta.CopyPastas.meowPas, delete_after=20.0)
     
     if "downvote" in msg.content.lower():
-        await msg.channel.send(pasta.copypastas.downfaqPas, delete_after=20.0)
+        await msg.channel.send(pasta.CopyPastas.downfaqPas, delete_after=20.0)
     
     if "dog" in msg.content.lower() and "doggo" not in msg.content.lower():
-        await msg.channel.send(pasta.copypastas.doggoPas, delete_after=20.0)
+        await msg.channel.send(pasta.CopyPastas.doggoPas, delete_after=20.0)
 
 
 #-------------------------------------------------------------------------------------------------------------------------
     #autofilter:
     
-    for word in pasta.listsPas.autoMutePas:
+    for word in pasta.ListsPas.autoMutePas:
         if word in msgContent:
             member = msg.author
-            muteID = pasta.roleIDS.mutedRoleID
+            muteID = pasta.RoleIDs.mutedRoleID
             mute = msg.guild.get_role(muteID)
 
             await member.add_roles(mute)
