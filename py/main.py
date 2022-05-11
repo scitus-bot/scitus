@@ -11,6 +11,8 @@ BOT_TOKEN = os.environ.get('TOKEN')
 #print(datetime.today().weekday())
 #monday = 0, sunday = 6
 
+# shoutout u/Bals2008 for being extremely swaggy
+
 
 # 7.5.22 decided to run the bot from my laptop rather than repl
 
