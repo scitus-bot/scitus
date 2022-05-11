@@ -1,15 +1,12 @@
 import discord
 from discord.ext import commands
-from discord.utils import get
-from discord.ext.commands import cooldown, BucketType
-import random
-import pasta
+from discord.ext.commands import BucketType
+from random import randint
+from pasta import ListsPas
 
 
-#holy shit this could be a massive mistake
 #No "has_role"s
 
-# setnick command isnt needed bc you can just pass the bot through the nick command
 
 """
 editrole
@@ -18,22 +15,24 @@ editrole
 -delete
 applyall
 """
-cdown = 20          # cooldown time
-
-# there fucking has to be a better way to do this
+CDOWN = 20          # cooldown time
 
 
-async def handleError(error, message): # im glad this works
+async def handleError(message, error): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
         await message.channel.send(msg)
+        
     elif isinstance(error, commands.MissingPermissions):
         await message.send("You cant do that!")
+        
     elif isinstance(error, commands.MissingRequiredArgument):
-        await message.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
-        raise error
+        rnd = randint(0, len(ListsPas.helpPastas) - 1)
+        msg = ListsPas.helpPastas[rnd]
+        await message.channel.send(msg)
+        
     else:
-        raise error
+        print(error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -57,11 +56,10 @@ class Admin(commands.Cog):
     @editrole.command(
         help="Changes the colour of a role.",
         brief="Changes the colour of a role.",
-        case_insensitive=True,
         )
     @commands.has_permissions(manage_roles=True)
-    @commands.cooldown(1, cdown, commands.BucketType.user)
-    async def colour(self, ctx, role : discord.Role, colour):
+    @commands.cooldown(1, CDOWN, BucketType.user)
+    async def colour(self, ctx, role: discord.Role, colour):
         colour = int(colour, base=16)
         colour = discord.Colour(colour)
         await role.edit(colour=colour)
@@ -70,7 +68,7 @@ class Admin(commands.Cog):
 
     @colour.error
     async def colour_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -79,19 +77,19 @@ class Admin(commands.Cog):
     @editrole.command(
         help="Changes the name of a role.",
         brief="Changes the name of a role.",
-        case_insensitive = True,
         )
     @commands.has_permissions(manage_roles=True)
-    @commands.cooldown(1, cdown, commands.BucketType.user)
-    async def name(self, ctx, role : discord.Role, *name):
+    @commands.cooldown(1, CDOWN, BucketType.user)
+    async def name(self, ctx, role: discord.Role, *name):
         actualName = list(name)
         realActualName = " ".join(actualName)
         await role.edit(name=str(realActualName))
         await ctx.channel.send(f"Role name changed to {realActualName}")
 
+
     @name.error
     async def name_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -99,18 +97,18 @@ class Admin(commands.Cog):
     
     @editrole.command(
         help = "Deletes a role >:)",
-        case_insensitive = True,
         )
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.cooldown(1, cdown, commands.BucketType.user)
-    async def delete(self, ctx, role : discord.Role):
+    @commands.cooldown(1, CDOWN, BucketType.user)
+    async def delete(self, ctx, role: discord.Role):
         roleName = role.name()
         await role.delete()
         await ctx.channel.send(f"@{roleName} has been deleted.")
 
+
     @delete.error
     async def delete_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -118,22 +116,23 @@ class Admin(commands.Cog):
 
     @commands.command(
         help="Gives everyone in the server a role",
-        case_insensitive=True,
         )
     @commands.has_permissions(manage_roles=True)
-    @commands.cooldown(1, cdown, commands.BucketType.user)
-    async def giveall(self, ctx, role : discord.Role):
-        async for member in ctx.guild.fetch_members(limit=None):
+    @commands.cooldown(1, CDOWN, BucketType.user)
+    async def giveall(self, ctx, role: discord.Role):
+        
+        # giving all non-bot users a role
+        for member in ctx.guild.members:
             if not member.bot:
                 await member.add_roles(role)
             else:
                 print(f"{member.name} is a bot")
-        print("gave all roles")
+        ctx.channel.send("Succesfully gave everyone the role.")
 
 
     @giveall.error
     async def giveall_error(self, ctx, error):
-        handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -141,21 +140,24 @@ class Admin(commands.Cog):
 
     @commands.command(
         help="Removes a role from everyone",
-        case_insensitive=True,
         )
     @commands.has_permissions(manage_roles=True)
-    @commands.cooldown(1, cdown, commands.BucketType.user)
-    async def removeall(self, ctx, role : discord.Role):
-        async for member in ctx.guild.fetch_members(limit=None):
+    @commands.cooldown(1, CDOWN, BucketType.user)
+    async def removeall(self, ctx, role: discord.Role):
+        
+        # removing a role from all non-bot users
+        for member in ctx.guild.members:
             if not member.bot:
                 await member.remove_roles(role)
             else:
                 print(f"{member.name} is a bot")
-        print("removed all roles")
+        
+        ctx.channel.send("Succesfully removed the role from everyone.")
+
 
     @removeall.error
     async def removeall_error(self, ctx, error):
-        handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
