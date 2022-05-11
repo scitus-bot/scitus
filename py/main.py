@@ -22,8 +22,6 @@ BOT_TOKEN = os.environ.get('TOKEN')
 prefix = pasta.prefixPasta #change prefix in pasta.py
 intents = discord.Intents.default()
 intents.members = True
-client = discord.Client(intents=intents)
-guild = client.get_guild(709182248213020702)
 bot = commands.Bot(
     intents=intents, 
     command_prefix=prefix, 
@@ -31,7 +29,7 @@ bot = commands.Bot(
     )
 
 
-@bot.event
+@bot.listen()
 async def on_ready():
     print(f"Logged on as: {bot.user}")
     
@@ -65,12 +63,13 @@ if __name__ == '__main__':
 #--------------------------------------------------------------------------------------------------------------------------
 # on_user_join 
 
-@bot.event
+@bot.listen()
 async def on_member_join(member: discord.Member):
+
+    # welcome message
+
     guild = member.guild
     
-#--------------------------------------------------------------------------------------------------------------------------
-    # welcome message
     
     general = guild.get_channel(pasta.channels.gen)
     ruleID = pasta.channels.rules
@@ -98,7 +97,9 @@ async def on_member_join(member: discord.Member):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-@bot.event
+# on leave
+
+@bot.listen()
 async def on_member_remove(member: discord.Member):
     
     gen = bot.get_channel(pasta.channels.gen)
@@ -108,10 +109,10 @@ async def on_member_remove(member: discord.Member):
 #--------------------------------------------------------------------------------------------------------------------------
 #on_message
 
-@bot.event
-async def on_message(msg: discord.message.Message):
+@bot.listen()
+async def on_message(msg: discord.Message):
     if msg.author.bot:
-      return
+        return
     
     msgContent = msg.content
 
@@ -170,7 +171,6 @@ async def on_message(msg: discord.message.Message):
         
 
 #--------------------------------------------------------------------------------------------------------------------------
-    await bot.process_commands(msg)
 
 ## wow nice
 #necessities
