@@ -6,7 +6,7 @@
 prefixPasta = "," #only change this if you want to change the prefix
 
 #--------------------------------------------------------------------------------------------------------------------------
-class copypastas:
+class CopyPastas:
 	#These copypastas are the triggers for the words or smt
 	vaporeonPas = "Hey guys, did you know that in terms of male human and female Pokémon breeding, Vaporeon is the most compatible Pokémon for humans? Not only are they in the field egg group, which is mostly comprised of mammals, Vaporeon are an average of 3”03’ tall and 63.9 pounds, this means they’re large enough to be able handle human dicks, and with their impressive Base Stats for HP and access to Acid Armor, you can be rough with one. Due to their mostly water based biology, there’s no doubt in my mind that an aroused Vaporeon would be incredibly wet, so wet that you could easily have sex with one for hours without getting sore. They can also learn the moves Attract, Baby-Doll Eyes, Captivate, Charm, and Tail Whip, along with not having fur to hide nipples, so it’d be incredibly easy for one to get you in the mood. With their abilities Water Absorb and Hydration, they can easily recover from fatigue with enough water. No other Pokémon comes close to this level of compatibility. Also, fun fact, if you pull out enough, you can make your Vaporeon turn white. Vaporeon is literally built for human dick. Ungodly defense stat+high HP pool+Acid Armor means it can take cock all day, all shapes and sizes and still come for more"
 
@@ -21,14 +21,14 @@ class copypastas:
 	#add more here 
 
 #--------------------------------------------------------------------------------------------------------------------------
-class userIDS:
+class UserIDs:
 	porlUserID = 409821972026097667 #porl's user ID
 
   # there is no point to having a list of bot users bc you can just check if they are a bot
 
 #--------------------------------------------------------------------------------------------------------------------------
 #IDs for various roles
-class roleIDS:
+class RoleIDs:
 	modRoleID = 735110195528597506 #lords role
 	adminRoleID = 735110195528597506 #admin
 
@@ -36,10 +36,11 @@ class roleIDS:
 
 	mutedRoleID = 819697679146942534 #muted
 
-class joinRoleIDs:
+class JoinRoleIDs:
     pingsRoleID = 850733810348851240
     infoRoleID = 850733459399508028
     memberRoleID = 709182248213020704
+    
     giveRoleIDS = [
         pingsRoleID, 
         infoRoleID, 
@@ -48,7 +49,7 @@ class joinRoleIDs:
 
 #--------------------------------------------------------------------------------------------------------------------------
 #It will not slow things down, I am now going to make a class for lists
-class listsPas:
+class ListsPas:
     helpPastas = [
         "Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
 	    "wanker", 
@@ -65,7 +66,7 @@ class listsPas:
 
     # autoDelPas = []
 
-class channels:
+class ChannelIDs:
     report = 904829118477111366
     gen = 709182248741503093
     selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
