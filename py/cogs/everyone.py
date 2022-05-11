@@ -1,10 +1,7 @@
 import discord
-from discord.utils import get
 from discord.ext import commands
-import asyncio
-import random
-import pasta
-from time import sleep
+from random import randint
+from pasta import ListsPas
 
 """
 Ping
@@ -13,16 +10,16 @@ report
 """
 
 
-
-
 # making a function to handle the errors bc i didnt do that before for some reason
-async def handleError(error, message): # im glad this works
+async def handleError(message, error): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
         await message.channel.send(msg)
 
     elif isinstance(error, commands.MissingRequiredArgument):
-        await message.channel.send(pasta.listsPas.helpPastas[random.randrange(0, len(pasta.listsPas.helpPastas) - 1)])
+        rnd = randint(0, len(ListsPas.helpPastas) - 1)
+        msg = ListsPas.helpPastas[rnd]
+        await message.channel.send(msg)
     
     else:
         print(error)
@@ -37,7 +34,7 @@ class Everyone(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-    #ping
+    # ping
     
     @commands.command(
         case_insensitive=True,
@@ -46,12 +43,13 @@ class Everyone(commands.Cog):
         )
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def ping(self, ctx): 
+        """ Responds with 'pong' """
         await ctx.channel.send("pong")
 
 
     @ping.error
     async def ping_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
     
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -64,13 +62,14 @@ class Everyone(commands.Cog):
         )
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def sus(self, ctx):
+        """ Responds with an among us looking character """
         await ctx.message.delete()
         await ctx.channel.send("ඞ") 
     
 
     @sus.error
     async def sus_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -78,11 +77,12 @@ class Everyone(commands.Cog):
 
     @commands.command(
         case_insensitive=True,
-        help="Use to report people, format like this: Person ID / Reason", 
+        help="Use to report people, format like this: Mention the person / Reason", 
         brief="Used to report people."
         )
     @commands.cooldown(1, 20, commands.BucketType.user)
     async def report(self, ctx, userID, *, reason):
+        """ Allows any user to report another user """
         reported = userID
         reporter = ctx.author.id
         report = ctx.guild.get_channel(904829118477111366)
@@ -95,23 +95,25 @@ class Everyone(commands.Cog):
     
     @report.error
     async def report_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
     
     
 #----------------------------------------------------------------------------------------------------------------
     # avatar
 
     @commands.command(
-        case_insensiive=True
+        case_insensiive=True,
+        help="Gets a person's avatar.",
         )
     @commands.cooldown(1, 20, commands.BucketType.user)
     async def avatar(self, ctx, user : discord.Member):
+        """ Responds with the avatar of the user mentioned """
         await ctx.channel.send(user.avatar_url)
 
 
     @avatar.error
     async def avatar_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #----------------------------------------------------------------------------------------------------------------
