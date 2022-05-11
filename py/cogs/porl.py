@@ -1,9 +1,9 @@
-#importing stuff
 import discord
 from discord.ext import commands
 from discord.utils import get
-from discord.ext.commands import cooldown, BucketType
-import pasta
+from discord.ext.commands import BucketType
+from random import randint
+from pasta import ListsPas, RoleIDs, UserIDs
 
 """
 Die
@@ -13,13 +13,24 @@ Respawn
 
 
 
-async def handleError(error, ctx):
+async def handleError(message, error): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
-        msg = 'This command is on cooldown, please try again in {:.2f}s'.format (error.retry_after)
-        await ctx.channel.send(msg)
+        msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
+        await message.channel.send(msg)
+        
+    elif isinstance(error, commands.MissingPermissions):
+        await message.send("You cant do that!")
+        
+    elif isinstance(error, commands.MissingRequiredArgument):
+        rnd = randint(0, len(ListsPas.helpPastas) - 1)
+        msg = ListsPas.helpPastas[rnd]
+        await message.channel.send(msg)
+        
     else:
-        raise error
+        print(error)
 
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 class Porl(commands.Cog):
     def __init__(self, bot):
@@ -31,19 +42,18 @@ class Porl(commands.Cog):
     @commands.command(
         help="Adds the admin/mod/personal role back to me if it ever gets removed.",
         brief="Gives roles back to Porl.",
-        case_insensitive = True,
         )
-    @commands.cooldown(1, 60, commands.BucketType.guild)
+    @commands.cooldown(1, 60, BucketType.guild)
     async def respawn(self, ctx):
         #try:
-        if ctx.author.id != pasta.userIDS.porlUserID:
+        if ctx.author.id != UserIDs.porlUserID:
             await ctx.channel.send("You are not the chosen one")
             return
 
         roleIds = [
-            pasta.roleIDS.adminRoleID,
-            pasta.roleIDS.modRoleID, 
-            pasta.roleIDS.porlRoleID,
+            RoleIDs.adminRoleID,
+            RoleIDs.modRoleID, 
+            RoleIDs.porlRoleID,
             ] 
 
         for roleId in roleIds:
@@ -51,9 +61,10 @@ class Porl(commands.Cog):
 
         await ctx.channel.send("https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif")
 
+
     @respawn.error
     async def respawn_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
         
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -63,20 +74,19 @@ class Porl(commands.Cog):
     @commands.command(
         help="Removes admin/mod/personal role. Used for testing.",
         brief="Removes roles, used for testing.",
-        case_insensitive = True
         )
-    @commands.cooldown(1, 60, commands.BucketType.guild)
+    @commands.cooldown(1, 60, BucketType.guild)
     async def die(self, ctx):
         #try:
-        if ctx.author.id != pasta.userIDS.porlUserID:
+        if ctx.author.id != UserIDs.porlUserID:
             await ctx.channel.send("You are not the chosen one")
             return
 
         roleIds = [
-            pasta.roleIDS.adminRoleID, 
-            pasta.roleIDS.modRoleID, 
-            pasta.roleIDS.porlRoleID, 
-            pasta.roleIDS.mutedRoleID,
+            RoleIDs.adminRoleID, 
+            RoleIDs.modRoleID, 
+            RoleIDs.porlRoleID, 
+            RoleIDs.mutedRoleID,
             ] 
 
         for roleId in roleIds:
@@ -84,9 +94,10 @@ class Porl(commands.Cog):
 
         await ctx.channel.send("https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1")
 
+
     @die.error
     async def die_error(self, ctx, error):
-        await handleError(error, ctx)
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
