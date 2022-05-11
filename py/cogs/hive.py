@@ -3,8 +3,8 @@ from discord.utils import get
 from discord.ext import commands
 from discord.ext.commands import BucketType
 import requests as rq
+from random import randint
 from pasta import ListsPas
-
 
 """
 kdr (skywars)
