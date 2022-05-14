@@ -155,7 +155,11 @@ class Moderator(commands.Cog):
         del messageArray[0]
         message = " ".join(messageArray)
         
-        await ctx.channel.send(message) 
+        if message == "":
+            await ctx.channel.send("** **")
+        else:
+            await ctx.channel.send(message) 
+            
         await ctx.message.delete()
     
 
