@@ -30,7 +30,7 @@ bot = commands.Bot(
     case_insensitive=True,
     )
 
-# github webhook test
+# github webhook test part 2
 
 @bot.listen()
 async def on_ready():
