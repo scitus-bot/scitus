@@ -30,6 +30,7 @@ bot = commands.Bot(
     case_insensitive=True,
     )
 
+# github webhook test
 
 @bot.listen()
 async def on_ready():
@@ -47,7 +48,7 @@ async def on_ready():
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-#no clue what im doing, but its something to do with cogs
+# loading in each cog
 
 initial_extensions = [
     "cogs.everyone",        # everyone commands
