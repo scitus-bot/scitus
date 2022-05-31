@@ -3,6 +3,12 @@ from discord.ext import commands
 from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas
+import requests as r
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+WH_URL = os.environ.get('URL')
 
 
 #No "has_role"s
@@ -161,6 +167,43 @@ class Admin(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+    # send as webhook
+
+    @commands.command(
+        help="Sends a message as a webhook",
+        )
+    @commands.has_permissions(
+        manage_messages=True,
+        manage_webhooks=True,
+        )
+    @commands.cooldown(1, CDOWN, BucketType.user)
+    async def sudow(self, ctx): # will add username/pfp support later on 
+        """ Sends a message as a webhook. """
+        print(ctx.author.name)
+
+        # takes the whole message as a list, removes the ",sudow" part and then
+        # the bot sends that
+        msg = ctx.message.content
+        messageArray = msg.split()
+        del messageArray[0]
+        message = " ".join(messageArray)
+        
+        message = "** **" if message == "" else message
+        
+        data = {
+            "content": message,         
+        }
+        
+        await ctx.message.delete()
+        r.post(WH_URL, json=data)
+        
+        
+    @sudow.error
+    async def sudow_error(self, ctx, error):
+        await handleError(ctx, error)
+
+#--------------------------------------------------------------------------------------------------------------------------
+
 #necessities
 
 def setup(bot):
