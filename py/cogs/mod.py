@@ -5,8 +5,6 @@ from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas, RoleIDs, UserIDs
 
-
-
 """
 List of commands:
   -Silence

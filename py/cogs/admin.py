@@ -15,7 +15,7 @@ editrole
 -delete
 applyall
 """
-CDOWN = 20          # cooldown time
+CDOWN = 20 # cooldown time
 
 
 async def handleError(message, error): # im glad this works
