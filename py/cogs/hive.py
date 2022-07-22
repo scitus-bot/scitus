@@ -6,6 +6,7 @@ import requests as rq
 from random import randint
 from pasta import ListsPas
 
+
 """
 kdr (skywars)
 """

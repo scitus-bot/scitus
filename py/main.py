@@ -16,6 +16,9 @@ BOT_TOKEN = os.environ.get('TOKEN')
 
 # 7.5.22 decided to run the bot from my laptop rather than repl
 
+# (22.7.22) Beginning to migrate to slash commands 
+# This is probably going to take a while (hopefully the whole summer holidays)
+
 #--------------------------------------------------------------------------------------------------------------------------
 #weird stuff i dont get
 #token is unique, cant give that to you
