@@ -4,6 +4,7 @@ from discord.utils import get
 import pasta
 import os
 from dotenv import load_dotenv
+from discord_slash import SlashCommand, SlashContext
 load_dotenv()
 
 BOT_TOKEN = os.environ.get('TOKEN')
@@ -32,8 +33,17 @@ bot = commands.Bot(
     command_prefix=prefix, 
     case_insensitive=True,
     )
+slash = SlashCommand(bot)
 
 # github webhook test part 2
+
+# test command
+
+@slash.slash(name="Test")
+async def _test(ctx: SlashContext):
+    await ctx.channel.send("Hello!")
+
+
 
 @bot.listen()
 async def on_ready():
