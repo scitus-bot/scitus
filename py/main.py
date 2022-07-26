@@ -120,7 +120,7 @@ async def on_message(msg: discord.Message):
     if msg.author.bot:
         return
     
-    msgContent = msg.content
+    msgContent = msg.content.lower()
 
     # print(type(msg)) # discord.message.Message
     #if i get pinged, it will tell them to shut up # (removed)
@@ -136,24 +136,29 @@ async def on_message(msg: discord.Message):
     #AUTOREPLY (copypastas)
     #finding how to do case insensitive things 
 
-    if "vaporeon" in msg.content.lower(): #Green squigglies show up but you can ignore them.
+    if "vaporeon" in msgContent: #Green squigglies show up but you can ignore them.
         await msg.channel.send(pasta.CopyPastas.vaporeonPas, delete_after=20.0)
     
-    if "gaming laptop" in msg.content.lower():
+    if "gaming laptop" in msgContent:
         await msg.channel.send(pasta.CopyPastas.laptopPas, delete_after=20.0)
     
-    if "meow" in msg.content.lower():
+    if "meow" in msgContent:
         await msg.channel.send(pasta.CopyPastas.meowPas, delete_after=20.0)
     
-    if "downvote" in msg.content.lower():
+    if "downvote" in msgContent:
         await msg.channel.send(pasta.CopyPastas.downfaqPas, delete_after=20.0)
     
-    if "dog" in msg.content.lower() and "doggo" not in msg.content.lower():
+    if "dog" in msgContent and "doggo" not in msgContent:
         await msg.channel.send(pasta.CopyPastas.doggoPas, delete_after=20.0)
 
 
 #-------------------------------------------------------------------------------------------------------------------------
     #autofilter:
+    
+    # trolling 
+    if "jesus" in msgContent:
+        await msg.delete()
+    
     
     for word in pasta.ListsPas.autoMutePas:
         if word in msgContent:
