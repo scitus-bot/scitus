@@ -45,7 +45,7 @@ async def on_ready():
     await bot.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.playing,
-            name="your mum",
+            name="peace and love 😎✌️🌟❤️🎶🌈☮️",
             )
         )
 
