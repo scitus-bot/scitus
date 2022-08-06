@@ -57,7 +57,7 @@ class Moderator(commands.Cog):
     @commands.cooldown(1, 3, BucketType.guild)
     async def eject(self, ctx, member: discord.Member):
         if member.id == 848209731474817094:
-            await ctx.channel.send("Nice try”)
+            await ctx.channel.send('Nice try')
             return
         """ Mutes a member if they've been naughty. """
         if ctx.author == member:            # prevent self-muting
@@ -180,7 +180,7 @@ class Moderator(commands.Cog):
     @commands.cooldown(1, 20, BucketType.user)
     async def kick(self, ctx, user: discord.Member, *, reason=None):
         if user.id == 848209731474817094:
-            await ctx.channel.send("Nice try”)
+            await ctx.channel.send('Nice try')
             return
         """ Kicks a user. """
         await user.kick(reason=str(reason))
@@ -205,7 +205,7 @@ class Moderator(commands.Cog):
     @commands.cooldown(1, 20, BucketType.user)
     async def ban(self, ctx, user: discord.Member, *, reason=None):
         if user.id == 848209731474817094:
-            await ctx.channel.send("Nice try")
+            await ctx.channel.send('Nice try')
             return
         """ Bans a member. """
         await user.ban(reason=str(reason), delete_message_days=0)
