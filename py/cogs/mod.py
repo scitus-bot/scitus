@@ -1,189 +1,345 @@
 import discord
-from discord.ext import commands
 from discord.utils import get
-import pasta
-import os
-from dotenv import load_dotenv
-load_dotenv()
+from discord.ext import commands
+from discord.ext.commands import BucketType
+from random import randint
+from pasta import ListsPas, RoleIDs, UserIDs
 
-BOT_TOKEN = os.environ.get('TOKEN')
+"""
+List of commands:
+  -Silence
+  -Free
+  -Sudo
+  -Someone 
+  -purge
+  -nick
+"""
 
-#print(datetime.today().weekday())
-#monday = 0, sunday = 6
 
-# shoutout u/Bals2008 for being extremely swaggy
+# im going to use this function as a general error handling thing
+async def handleError(message, error): 
+    """ Multi-use error handler """
+    if isinstance(error, commands.CommandOnCooldown):
+        msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
+        await message.channel.send(msg)
+        
+    elif isinstance(error, commands.MissingPermissions):
+        await message.channel.send("You cant do that!")
+        
+    elif isinstance(error, commands.MissingRole):
+        await message.channel.send("You cant do that!")
+        
+    elif isinstance(error, commands.MissingRequiredArgument):
+        rnd = randint(0, len(ListsPas.helpPastas) - 1)
+        msg = ListsPas.helpPastas[rnd]
+        await message.channel.send(msg)
+        
+    else:
+        print(error)
 
 
-# 7.5.22 decided to run the bot from my laptop rather than repl
-
-# (22.7.22) Beginning to migrate to slash commands 
-# This is probably going to take a while (hopefully the whole summer holidays)
 
 #--------------------------------------------------------------------------------------------------------------------------
-#weird stuff i dont get
-#token is unique, cant give that to you
+class Moderator(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-#weird stuff
-prefix = pasta.prefixPasta #change prefix in pasta.py
-intents = discord.Intents.default()
-intents.members = True
-bot = commands.Bot(
-    intents=intents, 
-    command_prefix=prefix, 
-    case_insensitive=True,
-    )
 
-# github webhook test part 2
-
-@bot.listen()
-async def on_ready():
-    print(f"Logged on as: {bot.user}")
+#--------------------------------------------------------------------------------------------------------------------------
+    #mute command
     
-    gen = bot.get_channel(pasta.ChannelIDs.gen)
-    await gen.send("The bot is now online!")
-    
-    await bot.change_presence(
-        activity=discord.Activity(
-            type=discord.ActivityType.playing,
-            name="peace and love 😎✌️🌟❤️🎶🌈☮️",
-            )
+    @commands.command(
+        help="Adds the Muted role to a target",
+        brief="Mute command",
+        aliases=["mute"],
         )
+    @commands.has_role(RoleIDs.modRoleID)   #mod role
+    @commands.cooldown(1, 3, BucketType.guild)
+    async def eject(self, ctx, member: discord.Member):
+        if member.id == 848209731474817094:
+            await ctx.channel.send("Nice try”)
+            return
+        """ Mutes a member if they've been naughty. """
+        if ctx.author == member:            # prevent self-muting
+            await ctx.channel.send("You are not the imposter.")
+            return
+
+        
+        role = get(ctx.guild.roles, id=RoleIDs.mutedRoleID)
+        if role in member.roles:
+            await ctx.channel.send("This person is already ejected.")
+        else:
+            await member.add_roles(role)
+            await ctx.channel.send(f"{member} was the imposter.")
+
+
+    @eject.error
+    async def eject_error(self, ctx, error):
+        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# loading in each cog
-
-initial_extensions = [
-    "cogs.everyone",        # everyone commands
-    "cogs.mod",             # mod commands
-    "cogs.porl",            # porl commands
-    "cogs.admin",           # admin commands
-    "cogs.hive",            # hive commands
-    ]
-
-if __name__ == '__main__':
-    for extension in initial_extensions:
-        bot.load_extension(extension)
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-# on_user_join 
-
-@bot.listen()
-async def on_member_join(member: discord.Member):
-
-    # welcome message
-
-    guild = member.guild
+    # unmute command
     
-    
-    general = guild.get_channel(pasta.ChannelIDs.gen)
-    ruleID = pasta.ChannelIDs.rules
-    
-    await general.send(f"Welcome {member.mention}, hope you have a good time in the server! Check out <#{ruleID}> for the rules!")
-    
-    if member.bot: # dont want the hassle of dming bots and assigning roles and etc
-        botRole = get(guild.roles, id=709182248213020705)
-        await member.add_roles(botRole)
-        return
-    
-    
-#--------------------------------------------------------------------------------------------------------------------------
-    # give roles
-
-    for roleID in pasta.JoinRoleIDs.giveRoleIDS:
-        role = get(guild.roles, id=roleID)
-        await member.add_roles(role)
-    
-    
-#--------------------------------------------------------------------------------------------------------------------------
-    # silly little image
-
-    await member.send("https://images-ext-1.discordapp.net/external/AQAbFMaLzdhzzS8lX2tGQ-5mejo6KqycKl8Z5tK-BFU/https/media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-# on leave
-
-@bot.listen()
-async def on_member_remove(member: discord.Member):
-    
-    gen = bot.get_channel(pasta.ChannelIDs.gen)
-    await gen.send(f"{member.mention} has left the server..... what a loser")
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-#on_message
-
-@bot.listen()
-async def on_message(msg: discord.Message):
-    if msg.author.bot:
-        return
-    
-    msgContent = msg.content.lower()
-
-    # print(type(msg)) # discord.message.Message
-    #if i get pinged, it will tell them to shut up # (removed)
-    
-    mentioned = msg.mentions
-    for user in mentioned:
-        if user.id == 848209731474817094: #bot
-            porl = bot.get_user(409821972026097667)
-            await porl.send(f"{msgContent} - sent by - {msg.author.mention}")
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-    #AUTOREPLY (copypastas)
-    #finding how to do case insensitive things 
-
-    if "vaporeon" in msgContent: #Green squigglies show up but you can ignore them.
-        await msg.channel.send(pasta.CopyPastas.vaporeonPas, delete_after=20.0)
-    
-    if "gaming laptop" in msgContent:
-        await msg.channel.send(pasta.CopyPastas.laptopPas, delete_after=20.0)
-    
-    if "meow" in msgContent:
-        await msg.channel.send(pasta.CopyPastas.meowPas, delete_after=20.0)
-    
-    if "downvote" in msgContent:
-        await msg.channel.send(pasta.CopyPastas.downfaqPas, delete_after=20.0)
-    
-    if "dog" in msgContent and "doggo" not in msgContent:
-        await msg.channel.send(pasta.CopyPastas.doggoPas, delete_after=20.0)
-
-
-#-------------------------------------------------------------------------------------------------------------------------
-    #autofilter:
-    
-    # trolling 
-    if "jesus" in msgContent:
-        await msg.delete()
-    
-    
-    for word in pasta.ListsPas.autoMutePas:
-        if word in msgContent:
-            member = msg.author
-            muteID = pasta.RoleIDs.mutedRoleID
-            mute = msg.guild.get_role(muteID)
-
-            await member.add_roles(mute)
-            await msg.delete()
-            await msg.channel.send(f"{msg.author.mention} you can't send that!")
+    @commands.command(
+        help="Removes the Muted role.",
+        brief="Unmute command",
+        )
+    @commands.has_role(RoleIDs.modRoleID)   # mod role
+    @commands.cooldown(1, 10, BucketType.guild)
+    async def unmute(self, ctx, member : discord.Member):
+        """ Unmutes a member if they're muted. """
+        if ctx.author == member:        # prevent self-unmuting
+            await ctx.channel.send("You cannot unmute yourself.")
+            return
         
 
-#--------------------------------------------------------------------------------------------------------------------------
-    #AUTOREACTS
+        role = get(ctx.guild.roles, id=RoleIDs.mutedRoleID)     # the muted role
+        if role in member.roles:
+            await member.remove_roles(role)
+            await ctx.channel.send(f"{member} you have been freed.")
+        else:
+            await ctx.channel.send("This user is not muted.")
 
-    if ("y/n" in msgContent):
-        up = '\N{THUMBS UP SIGN}'
-        down = '\N{THUMBS DOWN SIGN}'
-        await msg.add_reaction(up)
-        await msg.add_reaction(down)
+    
+    @unmute.error
+    async def unmute_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    #@someone
+
+    @commands.command(
+        help="Mentions a random user from the server.",
+        brief="Mentions a random user.",
+        )
+    @commands.has_permissions(manage_roles=True)
+    @commands.cooldown(1, 5, BucketType.user)
+    async def someone(self, ctx): 
+        """ Pings a random member in the current server """
+
+        # getting a list that contains all non-bot members
+        members = []
+        for m in ctx.guild.members:
+            if not m.bot:
+                members.append(m)
         
 
+        rnd = randint(0, len(members) - 1)
+        await ctx.message.delete()
+        await ctx.channel.send(members[rnd].mention)
+
+
+    @someone.error 
+    async def someone_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    #sudo command
+    
+    @commands.command(
+        help="Sends a message, as the bot. Deletes the original message.",
+        brief="Output text as the bot.",
+        )
+    @commands.has_role(RoleIDs.modRoleID) 
+    @commands.cooldown(1, 3, BucketType.user)
+    async def sudo(self, ctx):
+        """ Sends a message as the bot. """
+        print(ctx.author.name)
+
+        # takes the whole message as a list, removes the ",sudo" part and then
+        # the bot sends that
+        msg = ctx.message.content
+        messageArray = msg.split()
+        del messageArray[0]
+        message = " ".join(messageArray)
+        
+        if message == "":
+            await ctx.channel.send("** **")
+        else:
+            await ctx.channel.send(message) 
+            
+        await ctx.message.delete()
+    
+
+    @sudo.error
+    async def sudo_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    #kick commands
+
+    @commands.command(
+        help="Kicks a user, innapropriate usage of this command will get you punished uwu",
+        brief="Kicks a user.",
+        )
+    @commands.has_permissions(kick_members=True)
+    @commands.cooldown(1, 20, BucketType.user)
+    async def kick(self, ctx, user: discord.Member, *, reason=None):
+        if user.id == 848209731474817094:
+            await ctx.channel.send("Nice try”)
+            return
+        """ Kicks a user. """
+        await user.kick(reason=str(reason))
+
+        await ctx.channel.send(f"{user.mention} has been kindly removed by {ctx.author.mention} <:wholesome:806907457342930975> \n Reason: {str(reason)}")
+        await ctx.message.delete()
+
+
+    @kick.error
+    async def kick_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    #ban command:
+
+    @commands.command(
+        help="Bans a user uwu",
+        brief="Bans a user.",
+        )
+    @commands.has_permissions(ban_members=True)
+    @commands.cooldown(1, 20, BucketType.user)
+    async def ban(self, ctx, user: discord.Member, *, reason=None):
+        if user.id == 848209731474817094:
+            await ctx.channel.send("Nice try")
+            return
+        """ Bans a member. """
+        await user.ban(reason=str(reason), delete_message_days=0)
+        await user.send(f"You've been banned from {ctx.guild.name}\nLLLLLLLLL")
+        await ctx.channel.send(f"{user.mention} has left. {ctx.author.mention} <:peepoSad:809355473831854132> \n Reason: {str(reason)}")
+        await ctx.message.delete()
+
+
+    @ban.error
+    async def ban_error(self, ctx, error):
+        await handleError(ctx, error)
+    
+
+#--------------------------------------------------------------------------------------------------------------------------
+    #purge
+
+    @commands.command(
+        help="Purges a given amount of messages.",
+        brief="Purges messages.",
+        )
+    @commands.has_permissions(manage_messages=True)
+    @commands.cooldown(1, 5, BucketType.user)
+    async def purge(self, ctx, limit: int):
+        """ Purges a certain amount of messages """
+        if limit > 30:
+            await ctx.channel.send("Purge less messages dipshit")
+            return
+
+        await ctx.channel.purge(limit=(limit+1))
+        await ctx.channel.send(f"{limit} messages cleared by {ctx.author.mention}")
+        
+
+    @purge.error
+    async def clear_error(self, ctx, error):
+        await handleError(ctx, error)
+      
+      
+#--------------------------------------------------------------------------------------------------------------------------
+    #nick command
+    
+    @commands.command(
+        help="Changes the nickname of a user.",
+        )
+    @commands.has_permissions(manage_nicknames=True)
+    @commands.cooldown(1, 5, BucketType.user)
+    async def nick(self, ctx, user: discord.Member, *nickname):
+        """ Changes the nickname of a user. """
+        if user.id == UserIDs.porlUserID: # so i cant be nick changed (minor trolling)
+            await ctx.channel.send("fuck off")
+            return
+
+        listNick = list(nickname)
+        realNick = " ".join(listNick)
+        await user.edit(nick=realNick)
+        await ctx.channel.send("Nickname changed.")
+
+
+    @nick.error
+    async def nick_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    #warn command
+
+    @commands.command(
+        help="Warns a user.",
+        )
+    @commands.has_role(RoleIDs.modRoleID) 
+    @commands.cooldown(1, 5, BucketType.user)
+    async def warn(self, ctx, user: discord.Member):
+        """ Warns a user, in reality does nothing. """
+        if ctx.author.id == user.id:
+            await ctx.channel.send("You can't warn yourself dipshit")
+            return 
+        
+        await ctx.channel.send(f"{user.mention} has been warned.")
+
+
+    @warn.error
+    async def warn_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # lockdown 
+    
+    @commands.command(
+        help="Locks down a channel.",
+        )
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 5, BucketType.user)
+    async def lock(self, ctx):
+        """ Locks the channel that the command was used in so only mods can send messages """
+        await ctx.channel.set_permissions(
+            ctx.guild.default_role, 
+            send_messages=False,
+            add_reactions=False,
+            )
+        await ctx.channel.send("Channel locked 👍")
+
+
+    @lock.error
+    async def lock_error(self, ctx, error):
+        await handleError(ctx, error)
+        
+        
+#--------------------------------------------------------------------------------------------------------------------------
+    # unlockdown
+    
+    @commands.command(
+        help="Unlocks a channel",
+        )
+    @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 5, BucketType.user)
+    async def unlock(self, ctx):
+        """ Unlocks the channel that this was sent in. """
+        await ctx.channel.set_permissions(
+            ctx.guild.default_role, 
+            send_messages=True,
+            add_reactions=True,
+            )
+        await ctx.channel.send("Channel unlocked 👍")
+        
+
+    @unlock.error
+    async def unlock_error(self, ctx, error):
+        await handleError(ctx, error)
+        
+        
 #--------------------------------------------------------------------------------------------------------------------------
 
-## wow nice
-#necessities
 
-bot.run(BOT_TOKEN)
+  
+# this bit is just necessary i should probably look into why
+def setup(bot):
+    bot.add_cog(Moderator(bot))
