@@ -155,10 +155,9 @@ async def on_message(msg: discord.Message):
 #-------------------------------------------------------------------------------------------------------------------------
     #autofilter:
     
-    # trolling 
-    if "jesus" in msgContent:
+    # trolling
+    if "genshin" in msgContent or "impact" in msgContent or "america" in msgContent or "jesus" in msgContent or "oh" in msgContent:
         await msg.delete()
-    
     
     for word in pasta.ListsPas.autoMutePas:
         if word in msgContent:
