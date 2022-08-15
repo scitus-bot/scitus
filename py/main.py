@@ -5,6 +5,7 @@ import pasta
 import os
 from dotenv import load_dotenv
 import requests as r
+from json import dumps
 load_dotenv()
 
 BOT_TOKEN = os.environ.get('TOKEN')
@@ -196,7 +197,7 @@ async def on_message(msg: discord.Message):
             "avatar_url": msg.author.avatar_url,
         }
 
-        result = r.post(url, json=data.toJSON())
+        result = r.post(url, json=dumps(data))
         try:
             result.raise_for_status()
         except r.exceptions.HTTPError as err:
