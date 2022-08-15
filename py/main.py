@@ -186,6 +186,7 @@ async def on_message(msg: discord.Message):
 # copying the original users pfp and username
 
     if "jesus" in msgContent:
+        await msg.delete()
         url = os.environ.get('url')
         quran = msgContent.replace("jesus", "Allah")
 
@@ -195,8 +196,7 @@ async def on_message(msg: discord.Message):
             "avatar_url": msg.author.avatar_url,
         }
 
-        result = r.post(url, json=data)
-        await msg.delete()
+        result = r.post(url, json=data.toJSON())
         try:
             result.raise_for_status()
         except r.exceptions.HTTPError as err:
