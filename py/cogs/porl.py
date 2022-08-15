@@ -111,7 +111,7 @@ class Porl(commands.Cog):
     async def update(self, ctx):
         if ctx.author.id != UserIDs.porlUserID:
             return
-        subprocess.run(["bash scitusupdate"], input="y y")
+        subprocess.run(["bash ~/scitusupdate"], input="y y")
 
     @update.error
     async def update_error(self, ctx, error):
