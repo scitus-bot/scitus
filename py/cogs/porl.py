@@ -113,6 +113,7 @@ class Porl(commands.Cog):
             return
         subprocess.run(["bash scitusupdate"], input="y y")
 
+    @update.error
     async def update_error(self, ctx, error):
         await handleError(ctx, error)
 
