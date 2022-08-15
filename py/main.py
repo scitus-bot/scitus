@@ -196,7 +196,7 @@ async def on_message(msg: discord.Message):
         }
 
         result = r.post(url, json=data)
-
+        await msg.delete()
         try:
             result.raise_for_status()
         except r.exceptions.HTTPError as err:
