@@ -189,7 +189,7 @@ async def on_message(msg: discord.Message):
     if "jesus" in msgContent:
         await msg.delete()
         url = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
-        quran = msg.content.replace("jesus", "Allah")
+        quran = msgContent.replace("jesus", "Allah")
 
         data = {
             "content": quran,
