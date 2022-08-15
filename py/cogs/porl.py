@@ -4,6 +4,7 @@ from discord.utils import get
 from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas, RoleIDs, UserIDs
+import subprocess # oooo scary
 
 """
 Die
@@ -43,7 +44,7 @@ class Porl(commands.Cog):
         help="Adds the admin/mod/personal role back to me if it ever gets removed.",
         brief="Gives roles back to Porl.",
         )
-    @commands.cooldown(1, 60, BucketType.guild)
+    @commands.cooldown(1, 60, BucketType.user)
     async def respawn(self, ctx):
         #try:
         if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
@@ -75,7 +76,7 @@ class Porl(commands.Cog):
         help="Removes admin/mod/personal role. Used for testing.",
         brief="Removes roles, used for testing.",
         )
-    @commands.cooldown(1, 60, BucketType.guild)
+    @commands.cooldown(1, 60, BucketType.user)
     async def die(self, ctx):
         #try:
         if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
@@ -101,7 +102,20 @@ class Porl(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+# update command
+    
+    @commands.command(
+        help="Updates the bot",
+    )
+    @commands.cooldown(1, 20, BucketType.user)
+    async def update(self, ctx):
+        subprocess.run(["bash scitusupdate"], input="y y")
 
+    async def update_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 # adds the cog to the main.py and allows it to be used
 def setup(bot):
