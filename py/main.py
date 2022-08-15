@@ -188,16 +188,16 @@ async def on_message(msg: discord.Message):
 
     if "jesus" in msgContent:
         await msg.delete()
-        url = os.environ.get('url')
+        url = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
         quran = msgContent.replace("jesus", "Allah")
 
         data = {
             "content": quran,
-            "username": msg.author.name,
-            "avatar_url": msg.author.avatar_url,
+            "username": str(msg.author.name),
+            "avatar_url": str(msg.author.avatar_url),
         }
 
-        result = r.post(url, json=dumps(data))
+        result = r.post(url, json=data)
         try:
             result.raise_for_status()
         except r.exceptions.HTTPError as err:
