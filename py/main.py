@@ -186,7 +186,7 @@ async def on_message(msg: discord.Message):
 # copying the original users pfp and username
 
     if "jesus" in msgContent:
-        url = os.environ.get('')
+        url = os.environ.get('url')
         quran = msgContent.replace("jesus", "Allah")
 
         data = {
