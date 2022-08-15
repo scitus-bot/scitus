@@ -109,6 +109,8 @@ class Porl(commands.Cog):
     )
     @commands.cooldown(1, 20, BucketType.user)
     async def update(self, ctx):
+        if ctx.author.id != UserIDs.porlUserID:
+            return
         subprocess.run(["bash scitusupdate"], input="y y")
 
     async def update_error(self, ctx, error):
