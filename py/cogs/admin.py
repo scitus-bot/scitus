@@ -165,6 +165,32 @@ class Admin(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+# create role
+
+    @commands.command(
+        help="Creates a role",
+    )
+    @commands.has_permissions(manage_roles=True)
+    @commands.cooldown(1, 10, BucketType.user)
+    async def createrole(self, ctx):
+        guild = ctx.guild
+
+        roleName = ctx.message.content
+        tempArray = roleName.split()
+        del tempArray[0]
+        roleName = " ".join(tempArray)
+
+        roleName = "new role" if roleName == "" else roleName
+
+        await guild.create_role(name=roleName)
+
+    
+    @createrole.error
+    async def createrole_error(self, ctx, error):
+        await handleError(ctx, error)
+        
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 #necessities
 

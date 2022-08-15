@@ -10,7 +10,6 @@ load_dotenv()
 
 BOT_TOKEN = os.environ.get('TOKEN')
 
-# test
 
 #print(datetime.today().weekday())
 #monday = 0, sunday = 6
