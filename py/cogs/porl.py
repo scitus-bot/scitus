@@ -46,7 +46,9 @@ class Porl(commands.Cog):
         )
     @commands.cooldown(1, 60, BucketType.user)
     async def respawn(self, ctx):
-        #try:
+        if ctx.author.id == 545959964921823247:
+            await ctx.channel.send("Stop using this command!!")
+
         if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
             await ctx.channel.send("You are not the chosen one")
             return
@@ -111,7 +113,8 @@ class Porl(commands.Cog):
     async def update(self, ctx):
         if ctx.author.id != UserIDs.porlUserID:
             return
-        subprocess.run(["bash", "~/scitusupdate"], input="y y")
+        subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
+        exit() # to prevent any possible clashes 
 
     @update.error
     async def update_error(self, ctx, error):

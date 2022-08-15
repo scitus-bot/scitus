@@ -77,10 +77,8 @@ if __name__ == '__main__':
 async def on_member_join(member: discord.Member):
 
     # welcome message
-
+    
     guild = member.guild
-    
-    
     general = guild.get_channel(pasta.ChannelIDs.gen)
     ruleID = pasta.ChannelIDs.rules
     
@@ -188,6 +186,7 @@ async def on_message(msg: discord.Message):
 
     if "jesus" in msgContent:
         await msg.delete()
+        # need to put this url into a .env soonr 
         url = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
         quran = msgContent.replace("jesus", "Allah")
 
@@ -202,9 +201,6 @@ async def on_message(msg: discord.Message):
             result.raise_for_status()
         except r.exceptions.HTTPError as err:
             print(err)  
-
-
-
 
 
 #--------------------------------------------------------------------------------------------------------------------------
