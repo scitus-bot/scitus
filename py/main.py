@@ -4,6 +4,7 @@ from discord.utils import get
 import pasta
 import os
 from dotenv import load_dotenv
+import requests as r
 load_dotenv()
 
 BOT_TOKEN = os.environ.get('TOKEN')
@@ -157,10 +158,6 @@ async def on_message(msg: discord.Message):
 #-------------------------------------------------------------------------------------------------------------------------
     #autofilter:
     
-    # trolling
-    if "genshin" in msgContent or "impact" in msgContent or "america" in msgContent or "jesus" in msgContent or "oh" in msgContent:
-        await msg.delete()
-    
     for word in pasta.ListsPas.autoMutePas:
         if word in msgContent:
             member = msg.author
@@ -175,12 +172,39 @@ async def on_message(msg: discord.Message):
 #--------------------------------------------------------------------------------------------------------------------------
     #AUTOREACTS
 
-    if ("y/n" in msgContent):
+    if msg.channel.id == pasta.ChannelIDs.suggestions or "y/n" in msgContent:
         up = '\N{THUMBS UP SIGN}'
         down = '\N{THUMBS DOWN SIGN}'
         await msg.add_reaction(up)
         await msg.add_reaction(down)
         
+
+#--------------------------------------------------------------------------------------------------------------------------
+# praise allah
+
+# if jesus is in a message then copy the message text but replace jesus with allah and then post the message using a webhook
+# copying the original users pfp and username
+
+    if "jesus" in msgContent:
+        url = os.environ.get('')
+        quran = msgContent.replace("jesus", "Allah")
+
+        data = {
+            "content": quran,
+            "username": msg.author.name,
+            "avatar_url": msg.author.avatar_url,
+        }
+
+        result = r.post(url, json=data)
+
+        try:
+            result.raise_for_status()
+        except r.exceptions.HTTPError as err:
+            print(err)  
+
+
+
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 

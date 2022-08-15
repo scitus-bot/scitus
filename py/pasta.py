@@ -72,5 +72,6 @@ class ChannelIDs:
     gen = 709182248741503093
     selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
     rules = 715714389231272056
+    suggestions = 747194071075782756
 
 #now its time to implement them :weep:
