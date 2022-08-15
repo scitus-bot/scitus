@@ -102,7 +102,7 @@ class Porl(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# update command
+# update command # real
     
     @commands.command(
         help="Updates the bot",
