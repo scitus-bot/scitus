@@ -182,7 +182,7 @@ class Admin(commands.Cog):
 
         roleName = "new role" if roleName == "" else roleName
 
-        await ctx.channel.send(f"{roleName} role created.")
+        await ctx.channel.send(f"'{roleName}' role created.")
         await guild.create_role(name=roleName)
 
     
