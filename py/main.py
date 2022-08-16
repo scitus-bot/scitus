@@ -179,6 +179,7 @@ async def on_message(msg: discord.Message):
         # need to put this url into a .env soonr 
         url = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
         quran = msgContent.replace("jesus", "Allah")
+        quran = quran.replace("hesus", "Allah")
 
         data = {
             "content": quran,
