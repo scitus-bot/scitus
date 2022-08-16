@@ -125,12 +125,6 @@ async def on_message(msg: discord.Message):
 
     # print(type(msg)) # discord.message.Message
     #if i get pinged, it will tell them to shut up # (removed)
-    
-    mentioned = msg.mentions
-    for user in mentioned:
-        if user.id == 848209731474817094: #bot
-            porl = bot.get_user(409821972026097667)
-            await porl.send(f"{msgContent} - sent by - {msg.author.mention}")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -158,11 +152,10 @@ async def on_message(msg: discord.Message):
     
     for word in pasta.ListsPas.autoMutePas:
         if word in msgContent:
-            member = msg.author
             muteID = pasta.RoleIDs.mutedRoleID
             mute = msg.guild.get_role(muteID)
 
-            await member.add_roles(mute)
+            await msg.author.add_roles(mute)
             await msg.delete()
             await msg.channel.send(f"{msg.author.mention} you can't send that!")
         
@@ -183,7 +176,7 @@ async def on_message(msg: discord.Message):
 # if jesus is in a message then copy the message text but replace jesus with allah and then post the message using a webhook
 # copying the original users pfp and username
 
-    if "jesus" in msgContent:
+    if "jesus" in msgContent or "hesus" in msgContent:
         await msg.delete()
         # need to put this url into a .env soonr 
         url = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
