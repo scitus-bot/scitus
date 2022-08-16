@@ -5,7 +5,7 @@ from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas, RoleIDs, UserIDs
 import subprocess # oooo scary
-
+import sys
 """
 Die
 Respawn
@@ -116,7 +116,7 @@ class Porl(commands.Cog):
         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
 
         # the clashes still happen, there are multiple instances of the bot running at the same time
-        await self.bot.close()  # to prevent any possible clashes 
+        sys.exit()  # to prevent any possible clashes 
 
     @update.error
     async def update_error(self, ctx, error):
@@ -133,7 +133,7 @@ class Porl(commands.Cog):
         if ctx.author.id != UserIDs.porlUserID:
             await ctx.channel.send("Stop being stupid.")
         await ctx.channel.send("Logging out the bot...")
-        await self.bot.close()
+        sys.exit()
 
 
     @logout.error
