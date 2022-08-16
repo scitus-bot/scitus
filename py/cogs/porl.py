@@ -119,7 +119,7 @@ class Porl(commands.Cog):
         await ctx.channel.send("Updating the bot...")
 
         with open("last_sha.txt", "w") as op:
-            short_sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
+            short_sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd="~/scitus").decode('ascii').strip()
             op.write(str(short_sha))
 
         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
