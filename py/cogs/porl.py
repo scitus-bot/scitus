@@ -4,8 +4,10 @@ from discord.utils import get
 from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas, RoleIDs, UserIDs
-import subprocess # oooo scary
+import subprocess 
 import sys
+import git
+
 """
 Die
 Respawn
@@ -113,6 +115,13 @@ class Porl(commands.Cog):
     async def update(self, ctx):
         if ctx.author.id != UserIDs.porlUserID:
             return
+
+        with open("last_sha.txt", "w") as op:
+            repo = git.Repo(search_parent_directories=True)
+            sha = repo.head.commit.hexsha
+            short_sha = repo.git.rev_parse(sha, short=4)
+            op.write(str(short_sha))
+
         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
 
         # the clashes still happen, there are multiple instances of the bot running at the same time
@@ -138,6 +147,24 @@ class Porl(commands.Cog):
 
     @logout.error
     async def logout_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # version command
+
+    @commands.command(
+        help="Returns the last short sha that the bot was updated on."
+    )
+    @commands.cooldown(1, 20, BucketType.user)
+    async def version(self, ctx):
+        with open("last_sha.txt", "r") as rf:
+            sha = rf.read()
+            await ctx.channel.send(f"The last commit that the bot was updated on is: {sha}")
+
+
+    @version.error
+    async def version_error(self, ctx, error):
         await handleError(ctx, error)
 
 
