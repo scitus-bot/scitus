@@ -123,7 +123,7 @@ class Porl(commands.Cog):
             with open("last_sha.txt", "w") as op:
                 repo = git.Repo("~/scitus")
                 sha = repo.head.object.hexsha
-                op.write(str(sha))
+                op.write(str(sha)[:7])
 
             subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
         except:
