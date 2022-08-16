@@ -116,10 +116,28 @@ class Porl(commands.Cog):
         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
 
         # the clashes still happen, there are multiple instances of the bot running at the same time
-        self.bot.logout()  # to prevent any possible clashes 
+        await self.bot.logout()  # to prevent any possible clashes 
 
     @update.error
     async def update_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # logout command
+
+    @commands.command(
+        help="Logs out the bot",
+    )
+    async def logout(self, ctx):
+        if ctx.author.id != UserIDs.porlUserID:
+            await ctx.channel.send("Stop being stupid.")
+        await ctx.channel.send("Logging out the bot...")
+        await self.bot.close()
+
+
+    @logout.error
+    async def logout_error(self, ctx, error):
         await handleError(ctx, error)
 
 
