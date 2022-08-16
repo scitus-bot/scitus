@@ -137,7 +137,7 @@ class Everyone(commands.Cog):
         except ValueError:
             raise commands.MissingRequiredArgument
 
-        await ctx.channel.send(f"Alright {ctx.author.mention}, I'll remind you about \n{reason}")
+        await ctx.channel.send(f"Alright {ctx.author.mention}, I'll remind you about \n'{reason}'")
 
         if unt == "m":
             sec *= 60
@@ -147,7 +147,7 @@ class Everyone(commands.Cog):
             sec *= (3600 * 24)
 
         sleep(sec)
-        await ctx.channel.send(f"{ctx.author.mention} you wanted to be reminded about \n{reason}")
+        await ctx.channel.send(f"{ctx.author.mention} you wanted to be reminded about \n'{reason}'")
 
     
     @remindme.error
