@@ -5,7 +5,6 @@ import pasta
 import os
 from dotenv import load_dotenv
 import requests as r
-from json import dumps
 load_dotenv()
 
 BOT_TOKEN = os.environ.get('TOKEN')
@@ -36,7 +35,6 @@ bot = commands.Bot(
     case_insensitive=True,
     )
 
-# github webhook test part 2
 
 @bot.listen()
 async def on_ready():
@@ -131,7 +129,7 @@ async def on_message(msg: discord.Message):
     #AUTOREPLY (copypastas)
     #finding how to do case insensitive things 
 
-    if "vaporeon" in msgContent: #Green squigglies show up but you can ignore them.
+    if "vaporeon" in msgContent: 
         await msg.channel.send(pasta.CopyPastas.vaporeonPas, delete_after=20.0)
     
     if "gaming laptop" in msgContent:
