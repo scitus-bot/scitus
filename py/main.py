@@ -106,6 +106,8 @@ async def on_member_join(member: discord.Member):
 
 @bot.listen()
 async def on_member_remove(member: discord.Member):
+    if member.bot:
+        return
     
     gen = bot.get_channel(pasta.ChannelIDs.gen)
     await gen.send(f"{member.mention} has left the server..... what a loser")
