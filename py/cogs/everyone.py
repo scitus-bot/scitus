@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas
-from time import sleep
+from asyncio import sleep
 
 """
 Ping
@@ -146,7 +146,7 @@ class Everyone(commands.Cog):
         elif unt == "d":
             sec *= (3600 * 24)
 
-        sleep(sec)
+        await sleep(sec)
         await ctx.channel.send(f"{ctx.author.mention} you wanted to be reminded about \n'{reason}'")
 
     
