@@ -120,12 +120,12 @@ class Porl(commands.Cog):
 
 
         try:
+            subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
+
             with open("last_sha.txt", "w") as op:
                 repo = git.Repo("~/scitus")
                 sha = repo.head.object.hexsha
                 op.write(str(sha)[:7])
-
-            subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
         except:
             await ctx.channel.send(f"Error encountered.")
         else:
