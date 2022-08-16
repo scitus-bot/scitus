@@ -5,8 +5,6 @@ from random import randint
 from pasta import ListsPas
 import requests as r
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 
 #No "has_role"s
