@@ -129,7 +129,7 @@ class Everyone(commands.Cog):
     async def remindme(self, ctx, time: str, *, reason="nothing"):
         # m, h, d
         # im going to assume that raising an exception also stops it (and i dont need to add a return)
-        if len(time) == 1: raise commands.MissingRequiredArgument
+        if len(time) < 2: raise commands.MissingRequiredArgument
 
         unt = time[-1]
         try:
