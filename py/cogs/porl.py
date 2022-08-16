@@ -121,8 +121,9 @@ class Porl(commands.Cog):
 
         try:
             with open("last_sha.txt", "w") as op:
-                short_sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd="~/scitus").decode('ascii').strip()
-                op.write(str(short_sha))
+                repo = git.Repo("~/scitus")
+                sha = repo.head.object.hexsha
+                op.write(str(sha))
 
             subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
         except:
