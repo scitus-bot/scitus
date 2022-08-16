@@ -116,6 +116,8 @@ class Porl(commands.Cog):
         if ctx.author.id != UserIDs.porlUserID:
             return
 
+        await ctx.channel.send("Updating the bot...")
+
         with open("last_sha.txt", "w") as op:
             short_sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
             op.write(str(short_sha))
