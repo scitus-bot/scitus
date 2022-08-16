@@ -133,7 +133,7 @@ class Everyone(commands.Cog):
 
         unt = time[-1]
         try:
-            sec = time[:-2]
+            sec = int(time[:1])
         except ValueError:
             raise commands.MissingRequiredArgument
 
