@@ -114,7 +114,9 @@ class Porl(commands.Cog):
         if ctx.author.id != UserIDs.porlUserID:
             return
         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
-        exit() # to prevent any possible clashes 
+
+        # the clashes still happen, there are multiple instances of the bot running at the same time
+        bot.logout()  # to prevent any possible clashes 
 
     @update.error
     async def update_error(self, ctx, error):
