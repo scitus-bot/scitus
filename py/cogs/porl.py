@@ -82,7 +82,6 @@ class Porl(commands.Cog):
         )
     @commands.cooldown(1, 60, BucketType.user)
     async def die(self, ctx):
-        #try:
         if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
             await ctx.channel.send("You are not the chosen one")
             return
