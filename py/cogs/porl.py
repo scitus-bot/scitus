@@ -118,14 +118,17 @@ class Porl(commands.Cog):
 
         await ctx.channel.send("Updating the bot...")
 
-        with open("last_sha.txt", "w") as op:
-            short_sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd="~/scitus").decode('ascii').strip()
-            op.write(str(short_sha))
 
-        subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
+        try:
+            with open("last_sha.txt", "w") as op:
+                short_sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd="~/scitus").decode('ascii').strip()
+                op.write(str(short_sha))
 
-        # the clashes still happen, there are multiple instances of the bot running at the same time
-        sys.exit()  # to prevent any possible clashes 
+            subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
+        except:
+            await ctx.channel.send(f"Error encountered.")
+        else:
+            sys.exit()  # to prevent any possible clashes 
 
     @update.error
     async def update_error(self, ctx, error):
