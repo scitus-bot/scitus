@@ -1,7 +1,9 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import BucketType
 from random import randint
 from pasta import ListsPas
+from time import sleep
 
 """
 Ping
@@ -41,7 +43,7 @@ class Everyone(commands.Cog):
         help="Pings the bot to check if its online",
         brief="Responds with 'pong'",
         )
-    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.cooldown(1, 5, BucketType.guild)
     async def ping(self, ctx): 
         """ Responds with 'pong' """
         await ctx.channel.send("pong")
@@ -60,7 +62,7 @@ class Everyone(commands.Cog):
         help="ඞ",
         brief="ඞ",
         )
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 5, BucketType.user)
     async def sus(self, ctx):
         """ Responds with an among us looking character """
         await ctx.message.delete()
@@ -80,7 +82,7 @@ class Everyone(commands.Cog):
         help="Use to report people, format like this: Mention the person / Reason", 
         brief="Used to report people."
         )
-    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.cooldown(1, 20, BucketType.user)
     async def report(self, ctx, userID, *, reason):
         """ Allows any user to report another user """
         reported = userID
@@ -105,7 +107,7 @@ class Everyone(commands.Cog):
         case_insensiive=True,
         help="Gets a person's avatar.",
         )
-    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.cooldown(1, 20, BucketType.user)
     async def avatar(self, ctx, user : discord.Member):
         """ Responds with the avatar of the user mentioned """
         await ctx.channel.send(user.avatar_url)
@@ -113,6 +115,43 @@ class Everyone(commands.Cog):
 
     @avatar.error
     async def avatar_error(self, ctx, error):
+        await handleError(ctx, error)
+
+
+#----------------------------------------------------------------------------------------------------------------
+    # remindme
+    # hopefully since the bot is self hosted this shouldn't break as much
+
+    @commands.command(
+        help="Reminds you about something after a certain amount of time",
+    )
+    @commands.cooldown(1, 20, BucketType.user)
+    async def remindme(self, ctx, time: str, *, reason="nothing"):
+        # m, h, d
+        # im going to assume that raising an exception also stops it (and i dont need to add a return)
+        if len(time) == 1: raise commands.MissingRequiredArgument
+
+        unt = time[-1]
+        try:
+            sec = time[:-2]
+        except ValueError:
+            raise commands.MissingRequiredArgument
+
+        await ctx.channel.send(f"Alright {ctx.author.mention}, I'll remind you about \n{reason}")
+
+        if unt == "m":
+            sec *= 60
+        elif unt == "h":
+            sec *= 3600
+        elif unt == "d":
+            sec *= (3600 * 24)
+
+        sleep(sec)
+        await ctx.channel.send(f"{ctx.author.mention} you wanted to be reminded about \n{reason}")
+
+    
+    @remindme.error
+    async def remindme_error(self, ctx, error):
         await handleError(ctx, error)
 
 
