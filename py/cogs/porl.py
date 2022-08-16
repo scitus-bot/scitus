@@ -116,7 +116,7 @@ class Porl(commands.Cog):
         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
 
         # the clashes still happen, there are multiple instances of the bot running at the same time
-        bot.logout()  # to prevent any possible clashes 
+        self.bot.logout()  # to prevent any possible clashes 
 
     @update.error
     async def update_error(self, ctx, error):
