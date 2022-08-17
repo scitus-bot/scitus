@@ -124,7 +124,6 @@ class Porl(commands.Cog):
             with open("last_sha.txt", "w") as op:
                 repo = git.Repo("~/scitus")
                 sha = repo.head.object.hexsha[:7]
-                await ctx.channel.send(sha)
                 op.write(str(sha))
         except:
             await ctx.channel.send(f"Error encountered.")
