@@ -55,22 +55,22 @@ class Moderator(commands.Cog):
         )
     @commands.has_role(RoleIDs.modRoleID)   #mod role
     @commands.cooldown(1, 3, BucketType.guild)
-    async def eject(self, ctx, member: discord.Member):
-        if member.id == 848209731474817094:
-            await ctx.channel.send('Nice try')
+    async def eject(self, ctx, user: discord.Member):
+        if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
+            await ctx.channel.send("Nice try")
             return
-        """ Mutes a member if they've been naughty. """
-        if ctx.author == member:            # prevent self-muting
+
+        if ctx.author == user:            # prevent self-muting
             await ctx.channel.send("You are not the imposter.")
             return
 
         
         role = get(ctx.guild.roles, id=RoleIDs.mutedRoleID)
-        if role in member.roles:
+        if role in user.roles:
             await ctx.channel.send("This person is already ejected.")
         else:
-            await member.add_roles(role)
-            await ctx.channel.send(f"{member} was the imposter.")
+            await user.add_roles(role)
+            await ctx.channel.send(f"{user} was the imposter.")
 
 
     @eject.error
@@ -179,8 +179,8 @@ class Moderator(commands.Cog):
     @commands.has_permissions(kick_members=True)
     @commands.cooldown(1, 20, BucketType.user)
     async def kick(self, ctx, user: discord.Member, *, reason=None):
-        if user.id == 848209731474817094:
-            await ctx.channel.send('Nice try')
+        if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
+            await ctx.channel.send("Nice try")
             return
         """ Kicks a user. """
         await user.kick(reason=str(reason))
@@ -204,10 +204,10 @@ class Moderator(commands.Cog):
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 20, BucketType.user)
     async def ban(self, ctx, user: discord.Member, *, reason=None):
-        if user.id == 848209731474817094:
-            await ctx.channel.send('Nice try')
+        if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
+            await ctx.channel.send("Nice try")
             return
-        """ Bans a member. """
+
         await user.ban(reason=str(reason), delete_message_days=0)
         await user.send(f"You've been banned from {ctx.guild.name}\nLLLLLLLLL")
         await ctx.channel.send(f"{user.mention} has left. {ctx.author.mention} <:peepoSad:809355473831854132> \n Reason: {str(reason)}")
@@ -253,7 +253,7 @@ class Moderator(commands.Cog):
     @commands.cooldown(1, 5, BucketType.user)
     async def nick(self, ctx, user: discord.Member, *nickname):
         """ Changes the nickname of a user. """
-        if user.id == UserIDs.porlUserID: # so i cant be nick changed (minor trolling)
+        if user.id == UserIDs.porlUserID and ctx.author.id != UserIDs.porlUserID: # so i cant be nick changed (minor trolling)
             await ctx.channel.send("fuck off")
             return
 
