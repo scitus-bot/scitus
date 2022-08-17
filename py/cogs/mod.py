@@ -56,7 +56,6 @@ class Moderator(commands.Cog):
     @commands.has_role(RoleIDs.modRoleID)   #mod role
     @commands.cooldown(1, 3, BucketType.guild)
     async def eject(self, ctx, user: discord.Member):
-        await ctx.channel.send(self.bot.id)
         if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
             await ctx.channel.send("Nice try")
             return
