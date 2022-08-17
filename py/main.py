@@ -110,7 +110,7 @@ async def on_member_remove(member: discord.Member):
         return
     
     gen = bot.get_channel(pasta.ChannelIDs.gen)
-    await gen.send(f"{member.mention} has left the server..... what a loser")
+    await gen.send(f"{member.mention} has left the server... what a loser")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
