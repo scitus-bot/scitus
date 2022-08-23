@@ -22,7 +22,6 @@ BOT_TOKEN = os.environ.get('TOKEN')
 # This is probably going to take a while (hopefully the whole summer holidays)
 
 #--------------------------------------------------------------------------------------------------------------------------
-#weird stuff i dont get
 #token is unique, cant give that to you
 
 #weird stuff
