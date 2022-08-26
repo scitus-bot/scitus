@@ -45,7 +45,9 @@ class hive(commands.Cog):
         help="Outputs your stats for 3 Hive Games.",
         )
     @commands.cooldown(1, 5, BucketType.guild)
-    async def stats(self, ctx, player):
+    async def stats(self, ctx, *, player=None):
+        if player == None: raise commands.MissingRequiredArgument
+        
         #treasurewars
         hjs = rqget("wars", player) #the hivejson im using updates each time this function is used
 
