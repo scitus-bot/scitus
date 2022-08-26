@@ -25,7 +25,7 @@ async def handleError(message, error): # im glad this works
         await message.channel.send(msg)
         
     else:
-        print(error)
+        message.channel.send(error)
 
 
 def rqget(gamemode, p1):
