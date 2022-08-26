@@ -25,8 +25,7 @@ async def handleError(message, error): # im glad this works
         await message.channel.send(msg)
         
     else:
-        message.channel.send(error)
-
+        print(error)
 
 def rqget(gamemode, p1):
     apirq = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}")
@@ -45,8 +44,13 @@ class hive(commands.Cog):
         help="Outputs your stats for 3 Hive Games.",
         )
     @commands.cooldown(1, 5, BucketType.guild)
-    async def stats(self, ctx, *, player=None):
-        if player == None: raise commands.MissingRequiredArgument
+    async def stats(self, ctx):
+        
+        # getting the player name from the message
+        msg = ctx.message.content
+        messageArray = msg.split()
+        del messageArray[0]
+        player = " ".join(messageArray)        
         
         #treasurewars
         hjs = rqget("wars", player) #the hivejson im using updates each time this function is used
