@@ -6,7 +6,6 @@ from random import randint
 from pasta import ListsPas, RoleIDs, UserIDs
 import subprocess 
 import sys
-import git
 
 """
 Die
@@ -107,32 +106,32 @@ class Porl(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
 # update command # real
     
-    @commands.command(
-        help="Updates the bot",
-    )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def update(self, ctx):
-        if ctx.author.id != UserIDs.porlUserID:
-            return
+    # @commands.command(
+    #     help="Updates the bot",
+    # )
+    # @commands.cooldown(1, 20, BucketType.user)
+    # async def update(self, ctx):
+    #     if ctx.author.id != UserIDs.porlUserID:
+    #         return
 
-        await ctx.channel.send("Updating the bot...")
+    #     await ctx.channel.send("Updating the bot...")
 
 
-        try:
-            subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
-            # saves the last commit into a file
-            with open("last_sha.txt", "w") as op:
-                repo = git.Repo("~/scitus")
-                sha = repo.head.object.hexsha[:7]
-                op.write(str(sha))
-        except:
-            await ctx.channel.send(f"Error encountered.")
-        else:
-            sys.exit()  # to prevent any possible clashes 
+    #     try:
+    #         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
+    #         # saves the last commit into a file
+    #         with open("last_sha.txt", "w") as op:
+    #             repo = git.Repo("~/scitus")
+    #             sha = repo.head.object.hexsha[:7]
+    #             op.write(str(sha))
+    #     except:
+    #         await ctx.channel.send(f"Error encountered.")
+    #     else:
+    #         sys.exit()  # to prevent any possible clashes 
 
-    @update.error
-    async def update_error(self, ctx, error):
-        await handleError(ctx, error)
+    # @update.error
+    # async def update_error(self, ctx, error):
+    #     await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -156,19 +155,19 @@ class Porl(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
     # version command
 
-    @commands.command(
-        help="Returns the last short sha that the bot was updated on."
-    )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def version(self, ctx):
-        with open("last_sha.txt", "r") as rf:
-            sha = rf.read()
-            await ctx.channel.send(f"The last commit that the bot was updated on is: {sha}")
+    # @commands.command(
+    #     help="Returns the last short sha that the bot was updated on."
+    # )
+    # @commands.cooldown(1, 20, BucketType.user)
+    # async def version(self, ctx):
+    #     with open("last_sha.txt", "r") as rf:
+    #         sha = rf.read()
+    #         await ctx.channel.send(f"The last commit that the bot was updated on is: {sha}")
 
 
-    @version.error
-    async def version_error(self, ctx, error):
-        await handleError(ctx, error)
+    # @version.error
+    # async def version_error(self, ctx, error):
+    #     await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
