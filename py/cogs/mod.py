@@ -259,7 +259,7 @@ class Moderator(commands.Cog):
 
         listNick = list(nickname)
         realNick = " ".join(listNick)
-        await user.edit(nick=realNick)
+        new_user = await user.edit(nick=realNick)
         await ctx.channel.send("Nickname changed.")
 
 
