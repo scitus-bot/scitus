@@ -33,7 +33,7 @@ def rqget(gamemode, p1):
     return hjs
 
 #--------------------------------------------------------------------------------------------------------------------------
-class hive(commands.Cog):
+class Hive(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
@@ -98,4 +98,4 @@ class hive(commands.Cog):
 
 #necesseties
 def setup(bot):
-    bot.add_cog(hive(bot))
+    bot.add_cog(Hive(bot))
