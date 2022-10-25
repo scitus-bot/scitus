@@ -6,27 +6,25 @@ import os
 from dotenv import load_dotenv
 import requests as r
 load_dotenv()
-
 BOT_TOKEN = os.environ.get('TOKEN')
 
+# importing each cog
+import sys
+sys.path.insert(1, r"cogs")
 
-#print(datetime.today().weekday())
-#monday = 0, sunday = 6
+from admin import Admin
+from mod import Moderator
+from porl import Porl
+from hive import Hive
+from everyone import Everyone
 
-# shoutout u/Bals2008 for being extremely swaggy
-
-
-# 7.5.22 decided to run the bot from my laptop rather than repl
-
-# (22.7.22) Beginning to migrate to slash commands 
-# This is probably going to take a while (hopefully the whole summer holidays)
 
 #--------------------------------------------------------------------------------------------------------------------------
 #token is unique, cant give that to you
 
 #weird stuff
 prefix = pasta.prefixPasta #change prefix in pasta.py
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 bot = commands.Bot(
     intents=intents, 
@@ -35,10 +33,28 @@ bot = commands.Bot(
     )
 
 
+#--------------------------------------------------------------------------------------------------------------------------
+# loading in each cog
+
+initial_cogs = [
+    Everyone,        # everyone commands
+    Moderator,             # mod commands
+    Porl,            # porl commands
+    Admin,           # admin commands
+    Hive,            # hive commands
+    ]
+
+async def load(cogs: list) -> None:
+    for cog in cogs:
+        await bot.add_cog(cog(bot))
+
+
 @bot.listen()
 async def on_ready():
     print(f"Logged on as: {bot.user}")
     
+    await load(initial_cogs)
+        
     gen = bot.get_channel(pasta.ChannelIDs.gen)
     await gen.send("The bot is now online!")
     
@@ -48,22 +64,6 @@ async def on_ready():
             name="peace and love 😎✌️🌟❤️🎶🌈☮️",
             )
         )
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-# loading in each cog
-
-initial_extensions = [
-    "cogs.everyone",        # everyone commands
-    "cogs.mod",             # mod commands
-    "cogs.porl",            # porl commands
-    "cogs.admin",           # admin commands
-    "cogs.hive",            # hive commands
-    ]
-
-if __name__ == '__main__':
-    for extension in initial_extensions:
-        bot.load_extension(extension)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
