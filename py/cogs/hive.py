@@ -1,15 +1,15 @@
+"""
+kdr (skywars)
+"""
 import discord
 from discord.utils import get
 from discord.ext import commands
-from discord.ext.commands import BucketType
+from discord import app_commands
 import requests as rq
 from random import randint
 from pasta import ListsPas
 
 
-"""
-kdr (skywars)
-"""
 
 async def handleError(message, error): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
@@ -27,30 +27,25 @@ async def handleError(message, error): # im glad this works
     else:
         print(error)
 
-def rqget(gamemode, p1):
+def rqget(gamemode: str, p1: str):
     apirq = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}")
     hjs = apirq.json()
+    print(type(hjs))
     return hjs
 
 #--------------------------------------------------------------------------------------------------------------------------
 class Hive(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self._last_member = None
 
 
 
-    @commands.command(
-        help="Outputs your stats for 3 Hive Games.",
-        )
-    @commands.cooldown(1, 5, BucketType.guild)
-    async def stats(self, ctx):
-        
-        # getting the player name from the message
-        msg = ctx.message.content
-        messageArray = msg.split()
-        del messageArray[0]
-        player = " ".join(messageArray)        
+    @app_commands.command(
+        name="stats",
+        description="Stats for the Hive server."
+    )
+    async def stats(self, inter: discord.Interaction, player: str) -> None:
         
         #treasurewars
         hjs = rqget("wars", player) #the hivejson im using updates each time this function is used
@@ -88,7 +83,7 @@ class Hive(commands.Cog):
         #annoying big string: finale
         superstring = twstring + swstring + sgstring
 
-        await ctx.channel.send(superstring)
+        await inter.response.send_message(superstring)
   
 
     @stats.error
@@ -97,5 +92,5 @@ class Hive(commands.Cog):
 
 
 #necesseties
-def setup(bot):
-    bot.add_cog(Hive(bot))
+async def setup(bot):
+    await bot.add_cog(Hive(bot))

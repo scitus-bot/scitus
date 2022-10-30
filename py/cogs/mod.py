@@ -1,10 +1,3 @@
-import discord
-from discord.utils import get
-from discord.ext import commands
-from discord.ext.commands import BucketType
-from random import randint
-from pasta import ListsPas, RoleIDs, UserIDs
-
 """
 List of commands:
   -Silence
@@ -14,6 +7,15 @@ List of commands:
   -purge
   -nick
 """
+
+
+import discord
+from discord.utils import get
+from discord.ext import commands
+from discord import app_commands
+from random import randint
+from pasta import ListsPas, RoleIDs, UserIDs
+from typing import Optional
 
 
 # im going to use this function as a general error handling thing
@@ -38,308 +40,235 @@ async def handleError(message, error):
         print(error)
 
 
-
 #--------------------------------------------------------------------------------------------------------------------------
 class Moderator(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     #mute command
     
-    @commands.command(
-        help="Adds the Muted role to a target",
-        brief="Mute command",
-        aliases=["mute"],
-        )
-    @commands.has_role(RoleIDs.modRoleID)   #mod role
-    @commands.cooldown(1, 3, BucketType.guild)
-    async def eject(self, ctx, user: discord.Member):
-        if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
-            await ctx.channel.send("Nice try")
+    @app_commands.command(
+        name="mute",
+        description="Mutes a user.",
+    )
+    async def eject(self, inter: discord.Interaction, user: discord.Member, time: Optional[str] = None) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
             return
-
-        if ctx.author == user:            # prevent self-muting
-            await ctx.channel.send("You are not the imposter.")
-            return
-
         
-        role = get(ctx.guild.roles, id=RoleIDs.mutedRoleID)
+        if (user is inter.user) or (user.bot):
+            await inter.response.send_message("Invalid user.")
+            return
+        
+        
+        role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)
         if role in user.roles:
-            await ctx.channel.send("This person is already ejected.")
+            await inter.response.send_message("This person is already ejected.")
         else:
             await user.add_roles(role)
-            await ctx.channel.send(f"{user} was the imposter.")
-
-
-    @eject.error
-    async def eject_error(self, ctx, error):
-        await handleError(ctx, error)
+            await inter.response.send_message(f"{user} was the imposter.")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     # unmute command
     
-    @commands.command(
-        help="Removes the Muted role.",
-        brief="Unmute command",
-        )
-    @commands.has_role(RoleIDs.modRoleID)   # mod role
-    @commands.cooldown(1, 10, BucketType.guild)
-    async def unmute(self, ctx, member : discord.Member):
-        """ Unmutes a member if they're muted. """
-        if ctx.author == member:        # prevent self-unmuting
-            await ctx.channel.send("You cannot unmute yourself.")
+    @app_commands.command(
+        name="unmute",
+        description="Unmutes a user.",
+    )
+    async def unmute(self, inter: discord.Interaction, user: discord.Member) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
+
+        if (user is inter.user) or (user.bot):        # prevent self-unmuting
+            await inter.response.send_message("You cannot unmute yourself.")
             return
         
 
-        role = get(ctx.guild.roles, id=RoleIDs.mutedRoleID)     # the muted role
-        if role in member.roles:
-            await member.remove_roles(role)
-            await ctx.channel.send(f"{member} you have been freed.")
+        role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)     # the muted role
+        if role in user.roles:
+            await user.remove_roles(role)
+            await inter.response.send_message(f"{user} you have been freed.")
         else:
-            await ctx.channel.send("This user is not muted.")
+            await inter.response.send_message("This user is not muted.")
 
     
-    @unmute.error
-    async def unmute_error(self, ctx, error):
-        await handleError(ctx, error)
-
-
 #--------------------------------------------------------------------------------------------------------------------------
     #@someone
 
-    @commands.command(
-        help="Mentions a random user from the server.",
-        brief="Mentions a random user.",
-        )
-    @commands.has_permissions(manage_roles=True)
-    @commands.cooldown(1, 5, BucketType.user)
-    async def someone(self, ctx): 
-        """ Pings a random member in the current server """
-
+    @app_commands.command(
+        name="someone",
+        description="Mentions a random user.",
+    )
+    async def someone(self, inter: discord.Interaction) -> None: 
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
+        
         # getting a list that contains all non-bot members
         members = []
-        for m in ctx.guild.members:
+        for m in inter.guild.members:
             if not m.bot:
                 members.append(m)
         
 
         rnd = randint(0, len(members) - 1)
-        await ctx.message.delete()
-        await ctx.channel.send(members[rnd].mention)
-
-
-    @someone.error 
-    async def someone_error(self, ctx, error):
-        await handleError(ctx, error)
+        await inter.delete_original_response()
+        await inter.channel.send(members[rnd].mention)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     #sudo command
     
-    @commands.command(
-        help="Sends a message, as the bot. Deletes the original message.",
-        brief="Output text as the bot.",
-        )
-    @commands.has_role(RoleIDs.modRoleID) 
-    @commands.cooldown(1, 3, BucketType.user)
-    async def sudo(self, ctx):
-        """ Sends a message as the bot. """
-        print(ctx.author.name)
+    @app_commands.command(
+        name="sudo",
+        description="Sends a message as the bot.",
+    )
+    async def sudo(self, inter: discord.Interaction, message: str) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
 
-        # takes the whole message as a list, removes the ",sudo" part and then
-        # the bot sends that
-        msg = ctx.message.content
-        messageArray = msg.split()
-        del messageArray[0]
-        message = " ".join(messageArray)
-        
-        if message == "":
-            await ctx.channel.send("** **")
-        else:
-            await ctx.channel.send(message) 
-            
-        await ctx.message.delete()
+        await inter.delete_original_response()
+        await inter.channel.send(message)
     
-
-    @sudo.error
-    async def sudo_error(self, ctx, error):
-        await handleError(ctx, error)
-
 
 #--------------------------------------------------------------------------------------------------------------------------
     #kick commands
 
-    @commands.command(
-        help="Kicks a user, innapropriate usage of this command will get you punished uwu",
-        brief="Kicks a user.",
-        )
-    @commands.has_permissions(kick_members=True)
-    @commands.cooldown(1, 20, BucketType.user)
-    async def kick(self, ctx, user: discord.Member, *, reason=None):
-        if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
-            await ctx.channel.send("Nice try")
+    @app_commands.command(
+        name="kick",
+        description="Kicks a user.",
+    )
+    async def kick(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
             return
-        """ Kicks a user. """
+
+
         await user.kick(reason=str(reason))
 
-        await ctx.channel.send(f"{user.mention} has been kindly removed by {ctx.author.mention} <:wholesome:806907457342930975> \n Reason: {str(reason)}")
-        await ctx.message.delete()
-
-
-    @kick.error
-    async def kick_error(self, ctx, error):
-        await handleError(ctx, error)
+        await inter.response.send_message(f"{user.mention} has been kindly removed by {inter.user.mention} <:wholesome:806907457342930975> \n Reason: {str(reason)}")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     #ban command:
 
-    @commands.command(
-        help="Bans a user uwu",
-        brief="Bans a user.",
-        )
-    @commands.has_permissions(ban_members=True)
-    @commands.cooldown(1, 20, BucketType.user)
-    async def ban(self, ctx, user: discord.Member, *, reason=None):
-        if user.id == 848209731474817094 or user.id == UserIDs.porlUserID:
-            await ctx.channel.send("Nice try")
+    @app_commands.command(
+        name="ban",
+        description="Bans a user.",
+    )
+    async def ban(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
             return
 
         await user.ban(reason=str(reason), delete_message_days=0)
-        await user.send(f"You've been banned from {ctx.guild.name}\nLLLLLLLLL")
-        await ctx.channel.send(f"{user.mention} has left. {ctx.author.mention} <:peepoSad:809355473831854132> \n Reason: {str(reason)}")
-        await ctx.message.delete()
-
-
-    @ban.error
-    async def ban_error(self, ctx, error):
-        await handleError(ctx, error)
+        await user.send(f"You've been banned from {inter.guild.name}\nLLLLLLLLL")
+        await inter.response.send_message(f"{user.mention} has left. {inter.user.mention} <:peepoSad:809355473831854132> \n Reason: {str(reason)}")
     
 
 #--------------------------------------------------------------------------------------------------------------------------
     #purge
 
-    @commands.command(
-        help="Purges a given amount of messages.",
-        brief="Purges messages.",
-        )
-    @commands.has_permissions(manage_messages=True)
-    @commands.cooldown(1, 5, BucketType.user)
-    async def purge(self, ctx, limit: int):
-        """ Purges a certain amount of messages """
-        if limit > 30:
-            await ctx.channel.send("Purge less messages dipshit")
+    @app_commands.command(
+        name="purge",
+        description="Purges an amount of messages.",
+    )
+    async def purge(self, inter: discord.Interaction, limit: int) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
             return
 
-        await ctx.channel.purge(limit=(limit+1))
-        await ctx.channel.send(f"{limit} messages cleared by {ctx.author.mention}")
+        if limit > 50:
+            await inter.response.send_message("Purge less messages dipshit")
+            return
+
+        await inter.channel.purge(limit=(limit+1))
+        await inter.response.send_message(f"{limit} messages cleared.")
         
 
-    @purge.error
-    async def clear_error(self, ctx, error):
-        await handleError(ctx, error)
-      
-      
 #--------------------------------------------------------------------------------------------------------------------------
     #nick command
     
-    @commands.command(
-        help="Changes the nickname of a user.",
-        )
-    @commands.has_permissions(manage_nicknames=True)
-    @commands.cooldown(1, 5, BucketType.user)
-    async def nick(self, ctx, user: discord.Member, *nickname):
-        """ Changes the nickname of a user. """
-        if user.id == UserIDs.porlUserID and ctx.author.id != UserIDs.porlUserID: # so i cant be nick changed (minor trolling)
-            await ctx.channel.send("fuck off")
+    @app_commands.command(
+        name="nick",
+        description="Changes the nick of a user.",
+    )
+    async def nick(self, inter: discord.Interaction, user: discord.Member, nick: str) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
             return
 
-        listNick = list(nickname)
-        realNick = " ".join(listNick)
-        new_user = await user.edit(nick=realNick)
-        await ctx.channel.send("Nickname changed.")
-
-
-    @nick.error
-    async def nick_error(self, ctx, error):
-        await handleError(ctx, error)
+        new_user = await user.edit(nick=nick)
+        await inter.response.send_message("Nickname changed.")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     #warn command
 
-    @commands.command(
-        help="Warns a user.",
-        )
-    @commands.has_role(RoleIDs.modRoleID) 
-    @commands.cooldown(1, 5, BucketType.user)
-    async def warn(self, ctx, user: discord.Member):
-        """ Warns a user, in reality does nothing. """
-        if ctx.author.id == user.id:
-            await ctx.channel.send("You can't warn yourself dipshit")
+    @app_commands.command(
+        name="warn",
+        description="Warns a user.",
+    )
+    async def warn(self, inter: discord.Interaction, user: discord.Member, reason: str) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
+        
+        if (user is inter.user) or (user.bot):
+            await inter.response.send_message("Invalid user.")
             return 
         
-        await ctx.channel.send(f"{user.mention} has been warned.")
-
-
-    @warn.error
-    async def warn_error(self, ctx, error):
-        await handleError(ctx, error)
+        await inter.response.send_message(f"{user.mention} has been warned.")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     # lockdown 
     
-    @commands.command(
-        help="Locks down a channel.",
-        )
-    @commands.has_permissions(manage_channels=True)
-    @commands.cooldown(1, 5, BucketType.user)
-    async def lock(self, ctx):
-        """ Locks the channel that the command was used in so only mods can send messages """
-        await ctx.channel.set_permissions(
-            ctx.guild.default_role, 
+    @app_commands.command(
+        name="lockdown",
+        description="Locks down a channel",
+    )
+    async def lock(self, inter: discord.Interaction) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
+        
+        await inter.channel.set_permissions(
+            inter.guild.default_role, 
             send_messages=False,
             add_reactions=False,
             )
-        await ctx.channel.send("Channel locked 👍")
+        await inter.response.send_message("Channel locked 👍")
 
 
-    @lock.error
-    async def lock_error(self, ctx, error):
-        await handleError(ctx, error)
-        
-        
 #--------------------------------------------------------------------------------------------------------------------------
     # unlockdown
     
-    @commands.command(
-        help="Unlocks a channel",
-        )
-    @commands.has_permissions(manage_channels=True)
-    @commands.cooldown(1, 5, BucketType.user)
-    async def unlock(self, ctx):
-        """ Unlocks the channel that this was sent in. """
-        await ctx.channel.set_permissions(
-            ctx.guild.default_role, 
+    @app_commands.command(
+        name="unlock",
+        description="Unlocks a channel",
+    )
+    async def unlock(self, inter: discord.Interaction) -> None:
+        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
+        
+        await inter.channel.set_permissions(
+            inter.guild.default_role, 
             send_messages=True,
             add_reactions=True,
             )
-        await ctx.channel.send("Channel unlocked 👍")
+        await inter.response.send_message("Channel unlocked 👍")
         
 
-    @unlock.error
-    async def unlock_error(self, ctx, error):
-        await handleError(ctx, error)
-        
-        
 #--------------------------------------------------------------------------------------------------------------------------
-
 
   
 # this bit is just necessary i should probably look into why
-def setup(bot):
-    bot.add_cog(Moderator(bot))
+async def setup(bot: commands.Bot) -> None:
+    await bot.add_cog(Moderator(bot))

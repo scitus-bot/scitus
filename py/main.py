@@ -22,7 +22,7 @@ initial_extensions: list[str] = [
     # "cogs.mod",             # mod commands
     # "cogs.porl",            # porl commands
     "cogs.admin",           # admin commands
-    # "cogs.hive",            # hive commands
+    "cogs.hive",            # hive commands
 ]
 
 async def load_cogs(exts: list[str]) -> None:
