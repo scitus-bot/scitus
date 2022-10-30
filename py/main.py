@@ -1,87 +1,85 @@
+# attempting to rewrite scitus using the new discord.py 2.0 along with slash commands
 import discord
+from discord import app_commands
 from discord.ext import commands
-from discord.utils import get
-import pasta
+from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta
 import os
 from dotenv import load_dotenv
 import requests as r
 load_dotenv()
-BOT_TOKEN = os.environ.get('TOKEN')
+TOKEN: str = os.environ.get("TOKEN")
 
-# importing each cog
-import sys
-sys.path.insert(1, r"cogs")
+intents: discord.Intents = discord.Intents.all()
+# client: discord.Client = discord.Client(intents=intents)
+bot: commands.Bot = commands.Bot(
+    command_prefix=prefixPasta,
+    intents=intents,
+)
 
-from admin import Admin
-from mod import Moderator
-from porl import Porl
-from hive import Hive
-from everyone import Everyone
+
+initial_extensions: list[str] = [
+    "cogs.everyone",        # everyone commands
+    # "cogs.mod",             # mod commands
+    # "cogs.porl",            # porl commands
+    # "cogs.admin",           # admin commands
+    # "cogs.hive",            # hive commands
+]
+
+async def load_cogs(exts: list[str]) -> None:
+    for ext in exts:
+        await bot.load_extension(ext)
+
+
+
+""" 
+To Do:
+    Message filter
+    On join + leave
+    On message silly things
+        jesus -> allah
+        
+"""
+
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-#token is unique, cant give that to you
-
-#weird stuff
-prefix = pasta.prefixPasta #change prefix in pasta.py
-intents = discord.Intents.all()
-intents.members = True
-bot = commands.Bot(
-    intents=intents, 
-    command_prefix=prefix, 
-    case_insensitive=True,
-    )
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-# loading in each cog
-
-initial_cogs = [
-    Everyone,        # everyone commands
-    Moderator,             # mod commands
-    Porl,            # porl commands
-    Admin,           # admin commands
-    Hive,            # hive commands
-    ]
-
-async def load(cogs: list) -> None:
-    for cog in cogs:
-        await bot.add_cog(cog(bot))
-
 
 @bot.listen()
-async def on_ready():
-    print(f"Logged on as: {bot.user}")
+async def on_ready() -> None:
+    print(f"Logged on as {bot.user}")
     
-    await load(initial_cogs)
-        
-    gen = bot.get_channel(pasta.ChannelIDs.gen)
-    await gen.send("The bot is now online!")
+    # changing the status of the client
     
     await bot.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.playing,
             name="peace and love 😎✌️🌟❤️🎶🌈☮️",
             )
-        )
+    )
+    
+    # loading in the commands that are kept in other files
+    await load_cogs(initial_extensions)
+    
+    await bot.tree.sync()
+    
+    print("Commands successfully synced and loaded.")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# on_user_join 
 
 @bot.listen()
-async def on_member_join(member: discord.Member):
+async def on_member_join(member: discord.Member) -> None:
 
     # welcome message
     
-    guild = member.guild
-    general = guild.get_channel(pasta.ChannelIDs.gen)
-    ruleID = pasta.ChannelIDs.rules
+    guild: discord.Guild = member.guild
+    general: discord.TextChannel = guild.get_channel(ChannelIDs.gen)
+    ruleID: int = ChannelIDs.rules
     
     await general.send(f"Welcome {member.mention}, hope you have a good time in the server! Check out <#{ruleID}> for the rules!")
     
     if member.bot: # dont want the hassle of dming bots and assigning roles and etc
-        botRole = get(guild.roles, id=709182248213020705)
+        botRole = discord.utils.get(guild.roles, id=709182248213020705)
         await member.add_roles(botRole)
         return
     
@@ -89,8 +87,8 @@ async def on_member_join(member: discord.Member):
 #--------------------------------------------------------------------------------------------------------------------------
     # give roles
 
-    for roleID in pasta.JoinRoleIDs.giveRoleIDS:
-        role = get(guild.roles, id=roleID)
+    for roleID in JoinRoleIDs.giveRoleIDS:
+        role: discord.Role = discord.utils.get(guild.roles, id=roleID)
         await member.add_roles(role)
     
     
@@ -101,58 +99,51 @@ async def on_member_join(member: discord.Member):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# on leave
 
 @bot.listen()
-async def on_member_remove(member: discord.Member):
-    if member.bot:
-        return
+async def on_member_remove(member: discord.Member) -> None:
+    if member.bot: return
     
-    gen = bot.get_channel(pasta.ChannelIDs.gen)
-    await gen.send(f"{member.mention} has left the server... what a loser")
+    gen: discord.TextChannel = bot.get_channel(ChannelIDs.gen)
+    await gen.send(f"{member.mention} has left the server.........")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-#on_message
 
 @bot.listen()
-async def on_message(msg: discord.Message):
-    if msg.author.bot:
-        return
+async def on_message(msg: discord.Message) -> None:
+    if msg.author.bot: return
     
-    msgContent = msg.content.lower()
-
-    # print(type(msg)) # discord.message.Message
-    #if i get pinged, it will tell them to shut up # (removed)
-
-
+    msgC: str = msg.content.lower()
+    
+    
 #--------------------------------------------------------------------------------------------------------------------------
     #AUTOREPLY (copypastas)
     #finding how to do case insensitive things 
 
-    if "vaporeon" in msgContent: 
-        await msg.channel.send(pasta.CopyPastas.vaporeonPas, delete_after=20.0)
+    if "vaporeon" in msgC: 
+        await msg.channel.send(CopyPastas.vaporeonPas, delete_after=20.0)
     
-    if "gaming laptop" in msgContent:
-        await msg.channel.send(pasta.CopyPastas.laptopPas, delete_after=20.0)
+    if "gaming laptop" in msgC:
+        await msg.channel.send(CopyPastas.laptopPas, delete_after=20.0)
     
-    if "meow" in msgContent:
-        await msg.channel.send(pasta.CopyPastas.meowPas, delete_after=20.0)
+    if "meow" in msgC:
+        await msg.channel.send(CopyPastas.meowPas, delete_after=20.0)
     
-    if "downvote" in msgContent:
-        await msg.channel.send(pasta.CopyPastas.downfaqPas, delete_after=20.0)
+    if "downvote" in msgC:
+        await msg.channel.send(CopyPastas.downfaqPas, delete_after=20.0)
     
-    if "dog" in msgContent and "doggo" not in msgContent:
-        await msg.channel.send(pasta.CopyPastas.doggoPas, delete_after=20.0)
+    if "dog" in msgC and "doggo" not in msgC:
+        await msg.channel.send(CopyPastas.doggoPas, delete_after=20.0)
 
 
 #-------------------------------------------------------------------------------------------------------------------------
     #autofilter:
     
-    for word in pasta.ListsPas.autoMutePas:
-        if word in msgContent:
-            muteID = pasta.RoleIDs.mutedRoleID
-            mute = msg.guild.get_role(muteID)
+    for word in ListsPas.autoMutePas:
+        if word in msgC:
+            muteID: int = RoleIDs.mutedRoleID
+            mute: discord.Role = msg.guild.get_role(muteID)
 
             await msg.author.add_roles(mute)
             await msg.delete()
@@ -162,9 +153,9 @@ async def on_message(msg: discord.Message):
 #--------------------------------------------------------------------------------------------------------------------------
     #AUTOREACTS
 
-    if msg.channel.id == pasta.ChannelIDs.suggestions or "y/n" in msgContent:
-        up = '\N{THUMBS UP SIGN}'
-        down = '\N{THUMBS DOWN SIGN}'
+    if (msg.channel.id is ChannelIDs.suggestions) or ("y/n" in msgC):
+        up: str = '\N{THUMBS UP SIGN}'
+        down: str = '\N{THUMBS DOWN SIGN}'
         await msg.add_reaction(up)
         await msg.add_reaction(down)
         
@@ -175,29 +166,27 @@ async def on_message(msg: discord.Message):
 # if jesus is in a message then copy the message text but replace jesus with allah and then post the message using a webhook
 # copying the original users pfp and username
 
-    if "jesus" in msgContent or "hesus" in msgContent:
+    if "jesus" in msgC or "hesus" in msgC:
         await msg.delete()
         # need to put this url into a .env soonr 
-        url = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
-        quran = msgContent.replace("jesus", "Allah")
-        quran = quran.replace("hesus", "Allah")
+        url: str = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
+        quran: str = msgC.replace("jesus", "Allah")
+        quran: str = quran.replace("hesus", "Allah")
 
-        data = {
+        data: dict = {
             "content": quran,
             "username": str(msg.author.name),
             "avatar_url": str(msg.author.avatar_url),
         }
 
-        result = r.post(url, json=data)
+        result: r.Response = r.post(url, json=data)
         try:
             result.raise_for_status()
         except r.exceptions.HTTPError as err:
-            print(err)  
+            print(err)
 
 
-#--------------------------------------------------------------------------------------------------------------------------
 
-## wow nice
-#necessities
 
-bot.run(BOT_TOKEN)
+
+bot.run(TOKEN)
