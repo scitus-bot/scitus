@@ -1,17 +1,16 @@
-import discord
-from discord.ext import commands
-from discord.utils import get
-from discord.ext.commands import BucketType
-from random import randint
-from pasta import ListsPas, RoleIDs, UserIDs
-import subprocess 
-import sys
-
 """
 Die
 Respawn
 """
 
+import discord
+from discord.ext import commands
+from discord.utils import get
+from discord import app_commands
+from random import randint
+from pasta import ListsPas, RoleIDs, UserIDs
+import subprocess 
+import sys
 
 
 
@@ -35,23 +34,20 @@ async def handleError(message, error): # im glad this works
 #--------------------------------------------------------------------------------------------------------------------------
 
 class Porl(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
 #--------------------------------------------------------------------------------------------------------------------------
     #respawn command (when i inevitably lose all my roles)
 
-    @commands.command(
-        help="Adds the admin/mod/personal role back to me if it ever gets removed.",
-        brief="Gives roles back to Porl.",
-        )
-    @commands.cooldown(1, 60, BucketType.user)
-    async def respawn(self, ctx):
-        if ctx.author.id == 545959964921823247:
-            await ctx.channel.send("Stop using this command!!")
+    @app_commands.command(
+        name="respawn",
+        description="Gives me roles (testing).",
+    )
+    async def respawn(self, inter: discord.Interaction) -> None:
 
-        if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
-            await ctx.channel.send("You are not the chosen one")
+        if (inter.user.id is not UserIDs.porlUserID) and (inter.user.id is not UserIDs.ninAltUserID):
+            await inter.response.send_message("You are not the chosen one")
             return
 
         roleIds = [
@@ -61,28 +57,22 @@ class Porl(commands.Cog):
             ] 
 
         for roleId in roleIds:
-            await ctx.author.add_roles(get(ctx.author.guild.roles, id=roleId))
+            await inter.user.add_roles(get(inter.guild.roles, id=roleId))
 
-        await ctx.channel.send("https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif")
+        await inter.response.send_message("https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif")
 
-
-    @respawn.error
-    async def respawn_error(self, ctx, error):
-        await handleError(ctx, error)
-        
 
 #--------------------------------------------------------------------------------------------------------------------------
     #removes my roles
     #for testing purposes
 
-    @commands.command(
-        help="Removes admin/mod/personal role. Used for testing.",
-        brief="Removes roles, used for testing.",
-        )
-    @commands.cooldown(1, 60, BucketType.user)
-    async def die(self, ctx):
-        if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
-            await ctx.channel.send("You are not the chosen one")
+    @app_commands.command(
+        name="die",
+        description="Removes my roles (testing).",
+    )
+    async def die(self, inter: discord.Interaction) -> None:
+        if (inter.user.id is not UserIDs.porlUserID) and (inter.user.id is not UserIDs.ninAltUserID):
+            await inter.response.send_message("You are not the chosen one")
             return
 
         roleIds = [
@@ -93,14 +83,9 @@ class Porl(commands.Cog):
             ] 
 
         for roleId in roleIds:
-            await ctx.author.remove_roles(get(ctx.author.guild.roles, id=roleId))
+            await inter.user.remove_roles(get(inter.guild.roles, id=roleId))
 
-        await ctx.channel.send("https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1")
-
-
-    @die.error
-    async def die_error(self, ctx, error):
-        await handleError(ctx, error)
+        await inter.response.send_message("https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -137,19 +122,16 @@ class Porl(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
     # logout command
 
-    @commands.command(
-        help="Logs out the bot",
+    @app_commands.command(
+        name="logout",
+        description="Logs out the bot.",
     )
-    async def logout(self, ctx):
-        if ctx.author.id != UserIDs.porlUserID:
-            await ctx.channel.send("Stop being stupid.")
-        await ctx.channel.send("Logging out the bot...")
+    async def logout(self, inter: discord.Interaction) -> None:
+        if inter.user.id is not UserIDs.porlUserID:
+            await inter.response.send_message("Stop being stupid.")
+            
+        await inter.response.send_message("Logging out the bot...")
         sys.exit()
-
-
-    @logout.error
-    async def logout_error(self, ctx, error):
-        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -173,5 +155,5 @@ class Porl(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
 
 # adds the cog to the main.py and allows it to be used
-def setup(bot):
-    bot.add_cog(Porl(bot))
+async def setup(bot: commands.Bot) -> None:
+    await bot.add_cog(Porl(bot))
