@@ -27,16 +27,17 @@ class Admin(commands.Cog):
     #colour
     
     @app_commands.command(
-        name="edit role colour",
+        name="editcolour",
         description="Changes the colour of a role.", 
     )
-    async def colour(self, inter: discord.Interaction, role: discord.Role, hex: discord.Colour) -> None:
+    async def colour(self, inter: discord.Interaction, role: discord.Role, hex: str) -> None:
         # crude check if the user has the necessary role, since its not added in as what it was before
         if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
             await inter.response.send_message("Invalid permissions.")
             return
         
-        await role.edit(colour=hex)
+        clr = discord.Colour(int(hex, base=16))
+        await role.edit(colour=clr)
         await inter.response.send_message("Role colour changed successfully.")        
 
 
@@ -44,7 +45,7 @@ class Admin(commands.Cog):
     #name
     
     @app_commands.command(
-        name="edit role name",
+        name="editname",
         description="Changes the name of a role.",
     )
     async def name(self, inter: discord.Interaction, role: discord.Role, name: str) -> None:
@@ -60,7 +61,7 @@ class Admin(commands.Cog):
     # delete role
     
     @app_commands.command(
-        name="delete role",
+        name="deleterole",
         description="Deletes a given role.",
     )
     async def delete(self, inter: discord.Interaction, role: discord.Role) -> None:
@@ -68,16 +69,16 @@ class Admin(commands.Cog):
             await inter.response.send_message("Invalid permissions.")
             return
         
-        roleName: str = role.name()
+        roleName: str = role.name
         await role.delete()
-        await inter.response.send_message(f"@{roleName} has been deleted.")
+        await inter.response.send_message(f"'{roleName}' has been deleted.")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
   # applyall
 
     @app_commands.command(
-        name="apply all",
+        name="applyall",
         description="Gives a given role to all the members in the server.",
     )
     async def giveall(self, inter: discord.Interaction, role: discord.Role) -> None:
@@ -99,7 +100,7 @@ class Admin(commands.Cog):
     # removeall
 
     @app_commands.command(
-        name="remove all",
+        name="removeall",
         description="Removes a role from every user.",
     )
     async def removeall(self, inter: discord.Interaction, role: discord.Role) -> None:
@@ -121,16 +122,16 @@ class Admin(commands.Cog):
 # create role
 
     @app_commands.command(
-        name="create role",
+        name="createrole",
         description="Creates a role with a given name and colour.",
     )
-    async def createrole(self, inter: discord.Interaction, name: str, hex: discord.Colour) -> None:
+    async def createrole(self, inter: discord.Interaction, name: str, hex: str) -> None:
         if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
             await inter.response.send_message("Invalid permissions.")
             return
         
-
-        await inter.guild.create_role(name=name, colour=hex)
+        clr = discord.Colour(int(hex, base=16))
+        await inter.guild.create_role(name=name, colour=clr)
         await inter.response.send_message(f"'{name}' role created.")
 
     

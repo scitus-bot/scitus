@@ -21,7 +21,7 @@ initial_extensions: list[str] = [
     "cogs.everyone",        # everyone commands
     # "cogs.mod",             # mod commands
     # "cogs.porl",            # porl commands
-    # "cogs.admin",           # admin commands
+    "cogs.admin",           # admin commands
     # "cogs.hive",            # hive commands
 ]
 
