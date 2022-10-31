@@ -53,22 +53,33 @@ class Moderator(commands.Cog):
         name="mute",
         description="Mutes a user.",
     )
-    async def eject(self, inter: discord.Interaction, user: discord.Member, time: Optional[str] = None) -> None:
+    async def eject(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = "") -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
         if (user == inter.user) or (user.bot):
-            await inter.response.send_message("Invalid user.")
+            embed: discord.Embed = discord.Embed(title="Invalid user.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
         
         role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)
+        
         if role in user.roles:
-            await inter.response.send_message("This person is already ejected.")
+            embed: discord.Embed = discord.Embed(title="User already is muted.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
+            
         else:
             await user.add_roles(role)
-            await inter.response.send_message(f"{user} was the imposter.")
+            embed: discord.Embed = discord.Embed(
+                title="Success", 
+                colour=discord.Colour.green(),
+                description=f"**{user.mention}** muted for {reason}.",
+            )
+            embed.set_footer(text=f"Muted by {inter.user.name}")
+            await inter.response.send_message(embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -80,20 +91,31 @@ class Moderator(commands.Cog):
     )
     async def unmute(self, inter: discord.Interaction, user: discord.Member) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         if (user == inter.user) or (user.bot):        # prevent self-unmuting
-            await inter.response.send_message("You cannot unmute yourself.")
+            embed: discord.Embed = discord.Embed(title="Invalid user.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
 
         role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)     # the muted role
+        
         if role in user.roles:
             await user.remove_roles(role)
-            await inter.response.send_message(f"{user} you have been freed.")
+            embed: discord.Embed = discord.Embed(
+                title="Success", 
+                colour=discord.Colour.green(),
+                description=f"**{user.mention}** unmuted.",
+            )
+            embed.set_footer(text=f"Muted by {inter.user.name}")
+            await inter.response.send_message(embed=embed)
+            
         else:
-            await inter.response.send_message("This user is not muted.")
+            embed: discord.Embed = discord.Embed(title="User is not muted.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
 
     
 #--------------------------------------------------------------------------------------------------------------------------
@@ -105,7 +127,8 @@ class Moderator(commands.Cog):
     )
     async def someone(self, inter: discord.Interaction) -> None: 
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
         # getting a list that contains all non-bot members
@@ -129,9 +152,11 @@ class Moderator(commands.Cog):
     )
     async def sudo(self, inter: discord.Interaction, message: str) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
+        await inter.response.send_message("Done.")
         await inter.channel.send(message)
         await inter.delete_original_response()
     
@@ -145,13 +170,21 @@ class Moderator(commands.Cog):
     )
     async def kick(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
 
         await user.kick(reason=str(reason))
+        
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"**{user.mention}** has been kicked for {reason}.",
+        )
+        embed.set_footer(text=f"Kicked by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
 
-        await inter.response.send_message(f"{user.mention} has been kindly removed by {inter.user.mention} <:wholesome:806907457342930975> \n Reason: {str(reason)}")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -163,12 +196,20 @@ class Moderator(commands.Cog):
     )
     async def ban(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         await user.ban(reason=str(reason), delete_message_days=0)
         await user.send(f"You've been banned from {inter.guild.name}\nLLLLLLLLL")
-        await inter.response.send_message(f"{user.mention} has left. {inter.user.mention} <:peepoSad:809355473831854132> \n Reason: {str(reason)}")
+        
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"**{user.mention}** has been banned for {reason}.",
+        )
+        embed.set_footer(text=f"Banned by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
     
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -180,15 +221,24 @@ class Moderator(commands.Cog):
     )
     async def purge(self, inter: discord.Interaction, limit: int) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         if limit > 50:
-            await inter.response.send_message("Purge less messages dipshit")
+            embed: discord.Embed = discord.Embed(title="Too many messages.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         await inter.channel.purge(limit=(limit+1))
-        await inter.response.send_message(f"{limit} messages cleared.")
+        
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"**{limit}** messages cleared.",
+        )
+        embed.set_footer(text=f"Purged by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
         
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -200,11 +250,19 @@ class Moderator(commands.Cog):
     )
     async def nick(self, inter: discord.Interaction, user: discord.Member, nick: str) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         new_user = await user.edit(nick=nick)
-        await inter.response.send_message("Nickname changed.")
+        
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"Nickname changed to **{nick}**.",
+        )
+        embed.set_footer(text=f"Nicked by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -216,14 +274,22 @@ class Moderator(commands.Cog):
     )
     async def warn(self, inter: discord.Interaction, user: discord.Member, reason: str) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
         if (user == inter.user) or (user.bot):
-            await inter.response.send_message("Invalid user.")
+            embed: discord.Embed = discord.Embed(title="Invalid User.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return 
         
-        await inter.response.send_message(f"{user.mention} has been warned.")
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"{user.mention} has been warned.",
+        )
+        embed.set_footer(text=f"Warned by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -235,15 +301,23 @@ class Moderator(commands.Cog):
     )
     async def lock(self, inter: discord.Interaction) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
         await inter.channel.set_permissions(
             inter.guild.default_role, 
             send_messages=False,
             add_reactions=False,
-            )
-        await inter.response.send_message("Channel locked 👍")
+        )
+        
+        embed: discord.Embed = discord.Embed(
+            title="Success",
+            colour=discord.Colour.green(),
+            description=f"<#{inter.channel.id}> has been locked.",
+        )
+        embed.set_footer(text=f"Locked by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -255,15 +329,23 @@ class Moderator(commands.Cog):
     )
     async def unlock(self, inter: discord.Interaction) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            await inter.response.send_message("Invalid permissions.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
         
         await inter.channel.set_permissions(
             inter.guild.default_role, 
             send_messages=True,
             add_reactions=True,
-            )
-        await inter.response.send_message("Channel unlocked 👍")
+        )
+        
+        embed: discord.Embed = discord.Embed(
+            title="Success",
+            colour=discord.Colour.green(),
+            description=f"<#{inter.channel.id}> has been unlocked.",
+        )
+        embed.set_footer(text=f"Unlocked by {inter.user.name}")
+        await inter.response.send_message(embed=embed)
         
 
 #--------------------------------------------------------------------------------------------------------------------------
