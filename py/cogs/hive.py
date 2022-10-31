@@ -46,6 +46,8 @@ class Hive(commands.Cog):
     )
     async def stats(self, inter: discord.Interaction, player: str) -> None:
         
+        await inter.response.send_message("Processing....")
+        
         #treasurewars
         hjs = rqget("wars", player) #the hivejson im using updates each time this function is used
 
@@ -87,10 +89,10 @@ class Hive(commands.Cog):
         emb.add_field(name="Survival Games", value=sgstring)
 
 
-        await inter.response.send_message(embed=emb)
+        await inter.followup.send(embed=emb)
   
 
 
 #necesseties
-async def setup(bot):
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Hive(bot))
