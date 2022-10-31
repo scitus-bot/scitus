@@ -47,15 +47,19 @@ class Everyone(commands.Cog):
         name="report",
         description="Use to report someone anonymously.",
     )
-    async def report(self, inter: discord.Interaction, member: discord.Member, reason: Optional[str] = None) -> None:
+    async def report(self, inter: discord.Interaction, member: discord.Member, reason: Optional[str] = "") -> None:
         report = self.bot.get_channel(ChannelIDs.report)
         
         await inter.response.send_message("Reported Successfully!")
         await inter.delete_original_response()
         
-        await report.send(f"Reporter: {inter.user.mention}\nReported: {member.mention}")
-        if reason is not None:
-            await report.send(f"Reason: {reason}")
+            
+        embed=discord.Embed(title="Report", color=0xff0000)
+        embed.set_thumbnail(url=inter.guild.icon.url)
+        embed.add_field(name="User Reported:", value=member.mention, inline=False)
+        embed.add_field(name="Reason:", value=reason, inline=False)
+        embed.add_field(name="Reported By:", value=inter.user.mention, inline=True)
+        await report.send(embed=embed)
             
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -66,7 +70,10 @@ class Everyone(commands.Cog):
     )
     async def avatar(self, inter: discord.Interaction, member: Optional[discord.Member] = None) -> None:
         member = member or inter.user
-        await inter.response.send_message(member.display_avatar)
+        
+        embed = discord.Embed(title="Avatar", description=f"{member.name}'s avatar.", color=0xEEDB83) 
+        embed.set_image(url=member.avatar.url)
+        await inter.response.send_message(embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
