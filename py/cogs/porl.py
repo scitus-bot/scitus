@@ -46,7 +46,7 @@ class Porl(commands.Cog):
     )
     async def respawn(self, inter: discord.Interaction) -> None:
 
-        if (inter.user.id is not UserIDs.porlUserID) and (inter.user.id is not UserIDs.ninAltUserID):
+        if (inter.user.id != UserIDs.porlUserID) and (inter.user.id != UserIDs.ninAltUserID):
             await inter.response.send_message("You are not the chosen one")
             return
 
@@ -71,7 +71,7 @@ class Porl(commands.Cog):
         description="Removes my roles (testing).",
     )
     async def die(self, inter: discord.Interaction) -> None:
-        if (inter.user.id is not UserIDs.porlUserID) and (inter.user.id is not UserIDs.ninAltUserID):
+        if (inter.user.id != UserIDs.porlUserID) and (inter.user.id != UserIDs.ninAltUserID):
             await inter.response.send_message("You are not the chosen one")
             return
 

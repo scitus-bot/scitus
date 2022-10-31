@@ -27,10 +27,9 @@ async def handleError(message, error): # im glad this works
     else:
         print(error)
 
-def rqget(gamemode: str, p1: str):
+def rqget(gamemode: str, p1: str) -> dict:
     apirq = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}")
     hjs = apirq.json()
-    print(type(hjs))
     return hjs
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -43,7 +42,7 @@ class Hive(commands.Cog):
 
     @app_commands.command(
         name="stats",
-        description="Stats for the Hive server."
+        description="Stats for the Hive server.",
     )
     async def stats(self, inter: discord.Interaction, player: str) -> None:
         
@@ -54,7 +53,7 @@ class Hive(commands.Cog):
         twkdr, twwlr = round(twk/twd, 2), round(tww/twl, 2)
 
         #annoying big string
-        twstring = f"Treasure Wars:\n{twkdr} ({twk}K {twd}D)\n{twwlr} ({tww}W {twl}L {twp}P)\n\n"
+        twstring = f"**{twkdr}** ({twk}K {twd}D)\n**{twwlr}** ({tww}W {twl}L {twp}P)\n\n"
 
 
 
@@ -65,7 +64,7 @@ class Hive(commands.Cog):
         swkdr, swwlr = round(swk/swd, 2), round(sww/swd, 2)
 
         #annoying big string p2
-        swstring = f"Skywars:\n{swkdr} ({swk}K {swd}D)\n{swwlr} ({sww}W {swd}L {swp}P)\n\n"
+        swstring = f"**{swkdr}** ({swk}K {swd}D)\n**{swwlr}** ({sww}W {swd}L {swp}P)\n\n"
 
 
 
@@ -76,19 +75,20 @@ class Hive(commands.Cog):
         sgkdr, sgwlr = round(sgk/sgd, 2), round(sgw/sgd, 2)
 
         #annoying big string p3
-        sgstring = f"Survival Games:\n{sgkdr} ({sgk}K {sgd}D)\n{sgwlr} ({sgw}W {sgd}L {sgp}P)"
+        sgstring = f"**{sgkdr}** ({sgk}K {sgd}D)\n**{sgwlr}** ({sgw}W {sgd}L {sgp}P)"
 
 
+        # creating the embed
+        emb: discord.Embed = discord.Embed(title=player, description=f"{player}'s Hive Stats.", colour=discord.Colour(int("ffad14", base=16)))
+        emb.set_author(name=inter.user, icon_url=inter.user.display_avatar.url)
+        emb.set_thumbnail(url="https://static.wikia.nocookie.net/youtube/images/d/df/HiveGames.jpg/revision/latest?cb=20210726032229")
+        emb.add_field(name="Treasure Wars", value=twstring)
+        emb.add_field(name="Skywars", value=swstring)
+        emb.add_field(name="Survival Games", value=sgstring)
 
-        #annoying big string: finale
-        superstring = twstring + swstring + sgstring
 
-        await inter.response.send_message(superstring)
+        await inter.response.send_message(embed=emb)
   
-
-    @stats.error
-    async def stats_error(self, ctx, error):
-        await handleError(ctx, error)
 
 
 #necesseties

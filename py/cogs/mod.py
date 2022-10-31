@@ -58,7 +58,7 @@ class Moderator(commands.Cog):
             await inter.response.send_message("Invalid permissions.")
             return
         
-        if (user is inter.user) or (user.bot):
+        if (user == inter.user) or (user.bot):
             await inter.response.send_message("Invalid user.")
             return
         
@@ -83,7 +83,7 @@ class Moderator(commands.Cog):
             await inter.response.send_message("Invalid permissions.")
             return
 
-        if (user is inter.user) or (user.bot):        # prevent self-unmuting
+        if (user == inter.user) or (user.bot):        # prevent self-unmuting
             await inter.response.send_message("You cannot unmute yourself.")
             return
         
@@ -132,8 +132,8 @@ class Moderator(commands.Cog):
             await inter.response.send_message("Invalid permissions.")
             return
 
-        await inter.delete_original_response()
         await inter.channel.send(message)
+        await inter.delete_original_response()
     
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ class Moderator(commands.Cog):
             await inter.response.send_message("Invalid permissions.")
             return
         
-        if (user is inter.user) or (user.bot):
+        if (user == inter.user) or (user.bot):
             await inter.response.send_message("Invalid user.")
             return 
         

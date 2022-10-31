@@ -57,7 +57,6 @@ class Everyone(commands.Cog):
         if reason is not None:
             await report.send(f"Reason: {reason}")
             
-            
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -68,6 +67,9 @@ class Everyone(commands.Cog):
     async def avatar(self, inter: discord.Interaction, member: Optional[discord.Member] = None) -> None:
         member = member or inter.user
         await inter.response.send_message(member.display_avatar)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Everyone(bot))

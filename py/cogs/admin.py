@@ -137,6 +137,21 @@ class Admin(commands.Cog):
     
 #--------------------------------------------------------------------------------------------------------------------------
 
+    @app_commands.command(
+        name="sync",
+        description="Syncs the commands up, done sparingly.",
+    )
+    async def sync(self, inter: discord.Interaction) -> None:
+        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
+            await inter.response.send_message("Invalid permissions.")
+            return
+        
+        await self.bot.tree.sync()
+        await inter.response.send_message("Syncing complete.")
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
 #necessities
 
 async def setup(bot: commands.Bot) -> None:
