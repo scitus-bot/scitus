@@ -45,9 +45,9 @@ class Porl(commands.Cog):
         description="Gives me roles (testing).",
     )
     async def respawn(self, inter: discord.Interaction) -> None:
-
         if (inter.user.id != UserIDs.porlUserID) and (inter.user.id != UserIDs.ninAltUserID):
-            await inter.response.send_message("You are not the chosen one")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         roleIds = [
@@ -72,7 +72,8 @@ class Porl(commands.Cog):
     )
     async def die(self, inter: discord.Interaction) -> None:
         if (inter.user.id != UserIDs.porlUserID) and (inter.user.id != UserIDs.ninAltUserID):
-            await inter.response.send_message("You are not the chosen one")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
             return
 
         roleIds = [
@@ -128,9 +129,16 @@ class Porl(commands.Cog):
     )
     async def logout(self, inter: discord.Interaction) -> None:
         if inter.user.id is not UserIDs.porlUserID:
-            await inter.response.send_message("Stop being stupid.")
+            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
+            await inter.response.send_message(embed=embed)
+            return
             
-        await inter.response.send_message("Logging out the bot...")
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"Logging out the bot.",
+        )
+        await inter.response.send_message(embed=embed)
         sys.exit()
 
 
