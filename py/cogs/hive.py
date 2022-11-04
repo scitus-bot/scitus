@@ -45,7 +45,7 @@ def stat_string(hive: dict) -> str:
     wins = hive["victories"]
     played = hive["played"]
     
-    statString = f"**{kills/deaths}** ({kills}K {deaths}D)\n**{100*wins/played}%** ({wins}W {played-wins}L {played}P)\n\n"
+    statString = f"**{round(kills/deaths, 2)}** ({kills}K {deaths}D)\n**{round(100*wins/played, 2)}%** ({wins}W {played-wins}L {played}P)\n\n"
     
     return statString
     
