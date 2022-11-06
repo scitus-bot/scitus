@@ -23,6 +23,7 @@ initial_extensions: list[str] = [
     "cogs.porl",            # porl commands
     "cogs.admin",           # admin commands
     "cogs.hive",            # hive commands
+    "cogs.voice",           # voice commands
 ]
 
 async def load_cogs(exts: list[str]) -> None:
@@ -176,7 +177,7 @@ async def on_message(msg: discord.Message) -> None:
         data: dict = {
             "content": quran,
             "username": str(msg.author.name),
-            "avatar_url": str(msg.author.avatar_url),
+            "avatar_url": str(msg.author.display_avatar.url),
         }
 
         result: r.Response = r.post(url, json=data)
