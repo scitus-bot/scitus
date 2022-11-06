@@ -16,13 +16,18 @@ class Voice(commands.Cog):
         description="Plays a sound in vc",
     )
     async def mlg(self, inter: discord.Interaction) -> None:
-        vClient: discord.VoiceClient = get(self.bot.voice_clients, guild=inter.guild)
-        file = discord.FFmpegPCMAudio("mlg.mp3")
-        vClient.play(file, after=None)
+        # discord.opus.load_opus("opus")
+        channel = inter.user.voice.channel
+        
+        if channel:
+            voice = await channel.connect()
+            voice.play(discord.FFmpegPCMAudio("mlg.mp3"))
+            await inter.response.send_message("playing sound")
+            await sleep(10)
+            await voice.disconnect()
             
-        
-        
-        
+            
+
         
         
 async def setup(bot: commands.Bot) -> None:
