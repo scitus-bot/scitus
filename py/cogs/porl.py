@@ -37,6 +37,11 @@ class Porl(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
+    def is_porl() -> None:
+        def predicate(interaction: discord.Interaction) -> bool:
+            return interaction.user.id == UserIDs.porlUserID or interaction.user.id == UserIDs.ninAltUserID
+        return app_commands.check(predicate)
+
 #--------------------------------------------------------------------------------------------------------------------------
     #respawn command (when i inevitably lose all my roles)
 
@@ -44,11 +49,8 @@ class Porl(commands.Cog):
         name="respawn",
         description="Gives me roles (testing).",
     )
+    @is_porl()
     async def respawn(self, inter: discord.Interaction) -> None:
-        if (inter.user.id != UserIDs.porlUserID) and (inter.user.id != UserIDs.ninAltUserID):
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
 
         roleIds = [
             RoleIDs.adminRoleID,
@@ -70,11 +72,8 @@ class Porl(commands.Cog):
         name="die",
         description="Removes my roles (testing).",
     )
+    @is_porl()
     async def die(self, inter: discord.Interaction) -> None:
-        if (inter.user.id != UserIDs.porlUserID) and (inter.user.id != UserIDs.ninAltUserID):
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
 
         roleIds = [
             RoleIDs.adminRoleID, 
@@ -127,11 +126,8 @@ class Porl(commands.Cog):
         name="logout",
         description="Logs out the bot.",
     )
+    @is_porl()
     async def logout(self, inter: discord.Interaction) -> None:
-        if inter.user.id is not UserIDs.porlUserID:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
             
         embed: discord.Embed = discord.Embed(
             title="Success", 
