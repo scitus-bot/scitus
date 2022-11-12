@@ -30,12 +30,8 @@ class Admin(commands.Cog):
         name="editcolour",
         description="Changes the colour of a role.", 
     )
+    @app_commands.default_permissions(manage_roles=True)
     async def colour(self, inter: discord.Interaction, role: discord.Role, hex: str) -> None:
-        # crude check if the user has the necessary role, since its not added in as what it was before
-        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         clr = discord.Colour(int(hex, base=16))
         await role.edit(colour=clr)
@@ -55,11 +51,8 @@ class Admin(commands.Cog):
         name="editname",
         description="Changes the name of a role.",
     )
+    @app_commands.default_permissions(manage_roles=True)
     async def name(self, inter: discord.Interaction, role: discord.Role, name: str) -> None:
-        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         await role.edit(name=name)
         embed: discord.Embed = discord.Embed(
@@ -78,6 +71,7 @@ class Admin(commands.Cog):
         name="deleterole",
         description="Deletes a given role.",
     )
+    @app_commands.default_permissions(manage_roles=True)
     async def delete(self, inter: discord.Interaction, role: discord.Role) -> None:
         if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
             embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
@@ -102,12 +96,8 @@ class Admin(commands.Cog):
         name="applyall",
         description="Gives a given role to all the members in the server.",
     )
+    @app_commands.default_permissions(administrator=True)
     async def giveall(self, inter: discord.Interaction, role: discord.Role) -> None:
-        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
-        
         
         # giving all non-bot users a role
         for member in inter.guild.members:
@@ -133,11 +123,8 @@ class Admin(commands.Cog):
         name="removeall",
         description="Removes a role from every user.",
     )
+    @app_commands.default_permissions(administrator=True)
     async def removeall(self, inter: discord.Interaction, role: discord.Role) -> None:
-        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         # removing a role from all non-bot users
         for member in inter.guild.members:
@@ -162,11 +149,8 @@ class Admin(commands.Cog):
         name="createrole",
         description="Creates a role with a given name and colour.",
     )
+    @app_commands.default_permissions(manage_roles=True)
     async def createrole(self, inter: discord.Interaction, name: str, hex: str) -> None:
-        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         clr = discord.Colour(int(hex, base=16))
         await inter.guild.create_role(name=name, colour=clr)
@@ -185,11 +169,8 @@ class Admin(commands.Cog):
         name="sync",
         description="Syncs the commands up, done sparingly.",
     )
+    @app_commands.default_permissions(administrator=True)
     async def sync(self, inter: discord.Interaction) -> None:
-        if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         await self.bot.tree.sync()
         embed: discord.Embed = discord.Embed(
