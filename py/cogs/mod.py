@@ -53,23 +53,20 @@ class Moderator(commands.Cog):
         name="mute",
         description="Mutes a user.",
     )
+    @app_commands.default_permissions(moderate_members=True)
     async def eject(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = "") -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
-        
         if (user == inter.user) or (user.bot):
             embed: discord.Embed = discord.Embed(title="Invalid user.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
             return
         
-        
+        # muted role
         role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)
         
+        # dont mute the user if theyre already muted
         if role in user.roles:
             embed: discord.Embed = discord.Embed(title="User already is muted.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
             
         else:
             await user.add_roles(role)
@@ -89,20 +86,17 @@ class Moderator(commands.Cog):
         name="unmute",
         description="Unmutes a user.",
     )
+    @app_commands.default_permissions(moderate_members=True)
     async def unmute(self, inter: discord.Interaction, user: discord.Member) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
-
         if (user == inter.user) or (user.bot):        # prevent self-unmuting
             embed: discord.Embed = discord.Embed(title="Invalid user.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
             return
         
-
-        role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)     # the muted role
+        # the muted role
+        role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)     
         
+        # dont unmute the user if theyre not already muted
         if role in user.roles:
             await user.remove_roles(role)
             embed: discord.Embed = discord.Embed(
@@ -115,7 +109,7 @@ class Moderator(commands.Cog):
             
         else:
             embed: discord.Embed = discord.Embed(title="User is not muted.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
 
     
 #--------------------------------------------------------------------------------------------------------------------------
@@ -125,19 +119,16 @@ class Moderator(commands.Cog):
         name="someone",
         description="Mentions a random user.",
     )
+    @app_commands.default_permissions(mention_everyone=True)
     async def someone(self, inter: discord.Interaction) -> None: 
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
-        
+
         # getting a list that contains all non-bot members
         members = []
         for m in inter.guild.members:
             if not m.bot:
                 members.append(m)
         
-
+        # sending a random one from that list
         rnd = randint(0, len(members) - 1)
         await inter.delete_original_response()
         await inter.channel.send(members[rnd].mention)
@@ -150,11 +141,8 @@ class Moderator(commands.Cog):
         name="sudo",
         description="Sends a message as the bot.",
     )
+    @app_commands.default_permissions(mention_everyone=True)
     async def sudo(self, inter: discord.Interaction, message: str) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
 
         await inter.response.send_message("Done.")
         await inter.channel.send(message)
@@ -168,12 +156,8 @@ class Moderator(commands.Cog):
         name="kick",
         description="Kicks a user.",
     )
+    @app_commands.default_permissions(kick_members=True)
     async def kick(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
-
 
         await user.kick(reason=str(reason))
         
@@ -194,11 +178,8 @@ class Moderator(commands.Cog):
         name="ban",
         description="Bans a user.",
     )
+    @app_commands.default_permissions(ban_members=True)
     async def ban(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
 
         await user.ban(reason=str(reason), delete_message_days=0)
         await user.send(f"You've been banned from {inter.guild.name}\nLLLLLLLLL")
@@ -219,15 +200,12 @@ class Moderator(commands.Cog):
         name="purge",
         description="Purges an amount of messages.",
     )
+    @app_commands.default_permissions(manage_messages=True)
     async def purge(self, inter: discord.Interaction, limit: int) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
 
         if limit > 50:
             embed: discord.Embed = discord.Embed(title="Too many messages.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
             return
 
         await inter.channel.purge(limit=(limit+1))
@@ -248,11 +226,8 @@ class Moderator(commands.Cog):
         name="nick",
         description="Changes the nick of a user.",
     )
+    @app_commands.default_permissions(manage_nicknames=True)
     async def nick(self, inter: discord.Interaction, user: discord.Member, nick: str) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
 
         new_user = await user.edit(nick=nick)
         
@@ -275,12 +250,12 @@ class Moderator(commands.Cog):
     async def warn(self, inter: discord.Interaction, user: discord.Member, reason: str) -> None:
         if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
             embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
             return
         
         if (user == inter.user) or (user.bot):
             embed: discord.Embed = discord.Embed(title="Invalid User.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
+            await inter.response.send_message(embed=embed, ephemeral=True)
             return 
         
         embed: discord.Embed = discord.Embed(
@@ -299,11 +274,8 @@ class Moderator(commands.Cog):
         name="lockdown",
         description="Locks down a channel",
     )
+    @app_commands.default_permissions(manage_channels=True)
     async def lock(self, inter: discord.Interaction) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         await inter.channel.set_permissions(
             inter.guild.default_role, 
@@ -327,11 +299,8 @@ class Moderator(commands.Cog):
         name="unlock",
         description="Unlocks a channel",
     )
+    @app_commands.default_permissions(manage_channels=True)
     async def unlock(self, inter: discord.Interaction) -> None:
-        if get(inter.guild.roles, id=RoleIDs.modRoleID) not in inter.user.roles:
-            embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
-            await inter.response.send_message(embed=embed)
-            return
         
         await inter.channel.set_permissions(
             inter.guild.default_role, 

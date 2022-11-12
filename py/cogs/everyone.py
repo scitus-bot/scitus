@@ -50,9 +50,7 @@ class Everyone(commands.Cog):
     async def report(self, inter: discord.Interaction, member: discord.Member, reason: Optional[str] = "") -> None:
         report = self.bot.get_channel(ChannelIDs.report)
         
-        await inter.response.send_message("Reported Successfully!")
-        await inter.delete_original_response()
-        
+        await inter.response.send_message("Reported Successfully!", ephemeral=True)
             
         embed=discord.Embed(title="Report", color=0xff0000)
         embed.set_thumbnail(url=inter.guild.icon.url)
