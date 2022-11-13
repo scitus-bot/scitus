@@ -293,7 +293,7 @@ class Moderator(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-    # unlockdown
+    # unlockdown.
     
     @app_commands.command(
         name="unlock",
