@@ -1,162 +1,80 @@
+""" 
+Commands List:
+    ping
+    sus
+    report
+    avatar
+    remindme
+"""
+
+
+from typing import Optional
 import discord
+from discord import app_commands
 from discord.ext import commands
-from discord.ext.commands import BucketType
-from random import randint
-from pasta import ListsPas
-from asyncio import sleep
-
-"""
-Ping
-Sus  
-report
-"""
-
-
-# making a function to handle the errors bc i didnt do that before for some reason
-async def handleError(message, error): # im glad this works
-    if isinstance(error, commands.CommandOnCooldown):
-        msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-        await message.channel.send(msg)
-
-    elif isinstance(error, commands.MissingRequiredArgument):
-        rnd = randint(0, len(ListsPas.helpPastas) - 1)
-        msg = ListsPas.helpPastas[rnd]
-        await message.channel.send(msg)
-    
-    else:
-        print(error)
+from pasta import ChannelIDs
 
 
 
-#--------------------------------------------------------------------------------------------------------------------------
 class Everyone(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-        self._last_member = None
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-    # ping
-    
-    @commands.command(
-        case_insensitive=True,
-        help="Pings the bot to check if its online",
-        brief="Responds with 'pong'",
-        )
-    @commands.cooldown(1, 5, BucketType.guild)
-    async def ping(self, ctx): 
-        """ Responds with 'pong' """
-        await ctx.channel.send("pong")
 
-
-    @ping.error
-    async def ping_error(self, ctx, error):
-        await handleError(ctx, error)
-    
-
-#--------------------------------------------------------------------------------------------------------------------------
-    #sus
-
-    @commands.command(
-        case_insensitive=True,
-        help="ඞ",
-        brief="ඞ",
-        )
-    @commands.cooldown(1, 5, BucketType.user)
-    async def sus(self, ctx):
-        """ Responds with an among us looking character """
-        await ctx.message.delete()
-        await ctx.channel.send("ඞ") 
-    
-
-    @sus.error
-    async def sus_error(self, ctx, error):
-        await handleError(ctx, error)
-
-
-#--------------------------------------------------------------------------------------------------------------------------
-    # report
-
-    @commands.command(
-        case_insensitive=True,
-        help="Use to report people, format like this: Mention the person / Reason", 
-        brief="Used to report people."
-        )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def report(self, ctx, userID, *, reason):
-        """ Allows any user to report another user """
-        reported = userID
-        reporter = ctx.author.id
-        report = ctx.guild.get_channel(904829118477111366)
-
-        await report.send(f"Reporter: <@!{reporter}> \nReported: {reported} \nReason: {reason}")
-
-        await ctx.message.delete()
-        await ctx.channel.send("User has been reported!")
-
-    
-    @report.error
-    async def report_error(self, ctx, error):
-        await handleError(ctx, error)
-    
-    
-#----------------------------------------------------------------------------------------------------------------
-    # avatar
-
-    @commands.command(
-        case_insensiive=True,
-        help="Gets a person's avatar.",
-        )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def avatar(self, ctx, user : discord.Member):
-        """ Responds with the avatar of the user mentioned """
-        await ctx.channel.send(user.avatar_url)
-
-
-    @avatar.error
-    async def avatar_error(self, ctx, error):
-        await handleError(ctx, error)
-
-
-#----------------------------------------------------------------------------------------------------------------
-    # remindme
-    # hopefully since the bot is self hosted this shouldn't break as much
-
-    @commands.command(
-        help="Reminds you about something after a certain amount of time",
+    @app_commands.command(
+        name="ping",
+        description="Pings the bot to check if it's online."
     )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def remindme(self, ctx, time: str, *, reason="nothing"):
-        # m, h, d
-        # im going to assume that raising an exception also stops it (and i dont need to add a return)
-        if len(time) < 2: raise commands.MissingRequiredArgument
-
-        unt = time[-1]
-        try:
-            sec = int(time[:1])
-        except ValueError:
-            raise commands.MissingRequiredArgument
-
-        if unt == "m":
-            sec *= 60
-        elif unt == "h":
-            sec *= 3600
-        elif unt == "d":
-            sec *= (3600 * 24)
-
-
-        await ctx.channel.send(f"Alright {ctx.author.mention}, I'll remind you about '{reason}' in {sec} seconds.")
-        await sleep(sec)
-        await ctx.channel.send(f"{ctx.author.mention} you wanted to be reminded about \n'{reason}'")
-
+    async def ping(self, inter: discord.Interaction) -> None:
+        await inter.response.send_message("Pong!")
     
-    @remindme.error
-    async def remindme_error(self, ctx, error):
-        await handleError(ctx, error)
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="sus",
+        description="sus",
+    )
+    async def sus(self, inter: discord.Interaction) -> None:
+        await inter.response.send_message("ඞ")
+        
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="report",
+        description="Use to report someone anonymously.",
+    )
+    async def report(self, inter: discord.Interaction, member: discord.Member, reason: Optional[str] = "") -> None:
+        report = self.bot.get_channel(ChannelIDs.report)
+        
+        await inter.response.send_message("Reported Successfully!", ephemeral=True)
+            
+        embed=discord.Embed(title="Report", color=0xff0000)
+        embed.set_thumbnail(url=inter.guild.icon.url)
+        embed.add_field(name="User Reported:", value=member.mention, inline=False)
+        embed.add_field(name="Reason:", value=reason, inline=False)
+        embed.add_field(name="Reported By:", value=inter.user.mention, inline=True)
+        await report.send(embed=embed)
+            
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="avatar",
+        description="Gets the avatar of a user."
+    )
+    async def avatar(self, inter: discord.Interaction, member: Optional[discord.Member] = None) -> None:
+        member = member or inter.user
+        
+        embed = discord.Embed(title="Avatar", description=f"{member.name}'s avatar.", color=0xEEDB83) 
+        embed.set_image(url=member.avatar.url)
+        await inter.response.send_message(embed=embed)
 
 
-#----------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------
 
-#necesseties
-def setup(bot):
-    bot.add_cog(Everyone(bot))
+async def setup(bot: commands.Bot) -> None:
+    await bot.add_cog(Everyone(bot))

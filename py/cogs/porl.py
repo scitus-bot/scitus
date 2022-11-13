@@ -1,18 +1,16 @@
-import discord
-from discord.ext import commands
-from discord.utils import get
-from discord.ext.commands import BucketType
-from random import randint
-from pasta import ListsPas, RoleIDs, UserIDs
-import subprocess 
-import sys
-import git
-
 """
 Die
 Respawn
 """
 
+import discord
+from discord.ext import commands
+from discord.utils import get
+from discord import app_commands
+from random import randint
+from pasta import ListsPas, RoleIDs, UserIDs
+import subprocess 
+import sys
 
 
 
@@ -36,24 +34,23 @@ async def handleError(message, error): # im glad this works
 #--------------------------------------------------------------------------------------------------------------------------
 
 class Porl(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+
+    def is_porl() -> None:
+        def predicate(interaction: discord.Interaction) -> bool:
+            return interaction.user.id == UserIDs.porlUserID or interaction.user.id == UserIDs.ninAltUserID
+        return app_commands.check(predicate)
 
 #--------------------------------------------------------------------------------------------------------------------------
     #respawn command (when i inevitably lose all my roles)
 
-    @commands.command(
-        help="Adds the admin/mod/personal role back to me if it ever gets removed.",
-        brief="Gives roles back to Porl.",
-        )
-    @commands.cooldown(1, 60, BucketType.user)
-    async def respawn(self, ctx):
-        if ctx.author.id == 545959964921823247:
-            await ctx.channel.send("Stop using this command!!")
-
-        if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
-            await ctx.channel.send("You are not the chosen one")
-            return
+    @app_commands.command(
+        name="respawn",
+        description="Gives me roles (testing).",
+    )
+    @is_porl()
+    async def respawn(self, inter: discord.Interaction) -> None:
 
         roleIds = [
             RoleIDs.adminRoleID,
@@ -62,29 +59,21 @@ class Porl(commands.Cog):
             ] 
 
         for roleId in roleIds:
-            await ctx.author.add_roles(get(ctx.author.guild.roles, id=roleId))
+            await inter.user.add_roles(get(inter.guild.roles, id=roleId))
 
-        await ctx.channel.send("https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif")
+        await inter.response.send_message("https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif")
 
-
-    @respawn.error
-    async def respawn_error(self, ctx, error):
-        await handleError(ctx, error)
-        
 
 #--------------------------------------------------------------------------------------------------------------------------
     #removes my roles
     #for testing purposes
 
-    @commands.command(
-        help="Removes admin/mod/personal role. Used for testing.",
-        brief="Removes roles, used for testing.",
-        )
-    @commands.cooldown(1, 60, BucketType.user)
-    async def die(self, ctx):
-        if ctx.author.id != UserIDs.porlUserID and ctx.author.id != UserIDs.ninAltUserID:
-            await ctx.channel.send("You are not the chosen one")
-            return
+    @app_commands.command(
+        name="die",
+        description="Removes my roles (testing).",
+    )
+    @is_porl()
+    async def die(self, inter: discord.Interaction) -> None:
 
         roleIds = [
             RoleIDs.adminRoleID, 
@@ -94,85 +83,81 @@ class Porl(commands.Cog):
             ] 
 
         for roleId in roleIds:
-            await ctx.author.remove_roles(get(ctx.author.guild.roles, id=roleId))
+            await inter.user.remove_roles(get(inter.guild.roles, id=roleId))
 
-        await ctx.channel.send("https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1")
-
-
-    @die.error
-    async def die_error(self, ctx, error):
-        await handleError(ctx, error)
+        await inter.response.send_message("https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
 # update command # real
     
-    @commands.command(
-        help="Updates the bot",
-    )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def update(self, ctx):
-        if ctx.author.id != UserIDs.porlUserID:
-            return
+    # @commands.command(
+    #     help="Updates the bot",
+    # )
+    # @commands.cooldown(1, 20, BucketType.user)
+    # async def update(self, ctx):
+    #     if ctx.author.id != UserIDs.porlUserID:
+    #         return
 
-        await ctx.channel.send("Updating the bot...")
+    #     await ctx.channel.send("Updating the bot...")
 
 
-        try:
-            subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
-            # saves the last commit into a file
-            with open("last_sha.txt", "w") as op:
-                repo = git.Repo("~/scitus")
-                sha = repo.head.object.hexsha[:7]
-                op.write(str(sha))
-        except:
-            await ctx.channel.send(f"Error encountered.")
-        else:
-            sys.exit()  # to prevent any possible clashes 
+    #     try:
+    #         subprocess.Popen(["./scitusupdate.sh"]) # runs the script saved on the server
+    #         # saves the last commit into a file
+    #         with open("last_sha.txt", "w") as op:
+    #             repo = git.Repo("~/scitus")
+    #             sha = repo.head.object.hexsha[:7]
+    #             op.write(str(sha))
+    #     except:
+    #         await ctx.channel.send(f"Error encountered.")
+    #     else:
+    #         sys.exit()  # to prevent any possible clashes 
 
-    @update.error
-    async def update_error(self, ctx, error):
-        await handleError(ctx, error)
+    # @update.error
+    # async def update_error(self, ctx, error):
+    #     await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     # logout command
 
-    @commands.command(
-        help="Logs out the bot",
+    @app_commands.command(
+        name="logout",
+        description="Logs out the bot.",
     )
-    async def logout(self, ctx):
-        if ctx.author.id != UserIDs.porlUserID:
-            await ctx.channel.send("Stop being stupid.")
-        await ctx.channel.send("Logging out the bot...")
+    @is_porl()
+    async def logout(self, inter: discord.Interaction) -> None:
+            
+        embed: discord.Embed = discord.Embed(
+            title="Success", 
+            colour=discord.Colour.green(),
+            description=f"Logging out the bot.",
+        )
+        await inter.response.send_message(embed=embed)
         sys.exit()
-
-
-    @logout.error
-    async def logout_error(self, ctx, error):
-        await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     # version command
 
-    @commands.command(
-        help="Returns the last short sha that the bot was updated on."
-    )
-    @commands.cooldown(1, 20, BucketType.user)
-    async def version(self, ctx):
-        with open("last_sha.txt", "r") as rf:
-            sha = rf.read()
-            await ctx.channel.send(f"The last commit that the bot was updated on is: {sha}")
+    # @commands.command(
+    #     help="Returns the last short sha that the bot was updated on."
+    # )
+    # @commands.cooldown(1, 20, BucketType.user)
+    # async def version(self, ctx):
+    #     with open("last_sha.txt", "r") as rf:
+    #         sha = rf.read()
+    #         await ctx.channel.send(f"The last commit that the bot was updated on is: {sha}")
 
 
-    @version.error
-    async def version_error(self, ctx, error):
-        await handleError(ctx, error)
+    # @version.error
+    # async def version_error(self, ctx, error):
+    #     await handleError(ctx, error)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
 
 # adds the cog to the main.py and allows it to be used
-def setup(bot):
-    bot.add_cog(Porl(bot))
+async def setup(bot: commands.Bot) -> None:
+    await bot.add_cog(Porl(bot))
