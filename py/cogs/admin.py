@@ -197,7 +197,7 @@ class Admin(commands.Cog):
 
 
         try:
-            subprocess.Popen(["sudo ./update.sh"]) # runs the script saved on the server
+            subprocess.Popen(["./update.sh"]) # runs the script saved on the server
             # saves the last commit into a file
             # with open("last_sha.txt", "w") as op:
             #     repo = git.Repo("~/scitus")
