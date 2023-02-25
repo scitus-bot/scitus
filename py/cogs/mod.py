@@ -216,7 +216,7 @@ class Moderator(commands.Cog):
             description=f"**{limit}** messages cleared.",
         )
         embed.set_footer(text=f"Purged by {inter.user.name}")
-        await inter.response.send_message(embed=embed)
+        await inter.channel.send(embed=embed)
         
 
 #--------------------------------------------------------------------------------------------------------------------------
