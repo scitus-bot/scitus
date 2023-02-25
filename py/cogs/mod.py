@@ -19,7 +19,7 @@ from typing import Optional
 
 
 # im going to use this function as a general error handling thing
-async def handleError(message, error): 
+async def handleError(message: discord.Interaction, error: Exception) -> None: 
     """ Multi-use error handler """
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
