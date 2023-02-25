@@ -221,7 +221,7 @@ class Admin(commands.Cog):
         """ Gets the last short hash of the commit """
         
         rep: Repo = Repo("home/nathan/scitus/")
-        print(rep.head.commit)
+        await inter.response.send_message(rep.head.commit)
 
 
 
