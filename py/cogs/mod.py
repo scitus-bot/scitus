@@ -320,6 +320,5 @@ class Moderator(commands.Cog):
 #--------------------------------------------------------------------------------------------------------------------------
 
   
-# this bit is just necessary i should probably look into why
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Moderator(bot))

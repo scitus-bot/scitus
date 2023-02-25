@@ -12,19 +12,24 @@ class Voice(commands.Cog):
         
         
     @app_commands.command(
-        name="play_sound",
-        description="Plays a sound in vc",
+        name="join-voice",
+        description="joins the vc the user is in",
     )
-    async def mlg(self, inter: discord.Interaction) -> None:
+    async def join(self, inter: discord.Interaction) -> None:
+        # shit does not want to work lmaoo
         # discord.opus.load_opus("opus")
-        channel = inter.user.voice.channel
+        channel = inter.user.voice.voice_channel
         
         if channel:
             voice = await channel.connect()
-            voice.play(discord.FFmpegPCMAudio("mlg.mp3"))
-            await inter.response.send_message("playing sound")
-            await sleep(10)
-            await voice.disconnect()
+            
+    @app_commands.command(
+        name="leave-voice",
+        description="leaves the current voice channel",
+    )
+    async def join(self, inter: discord.Interaction) -> None:
+        if self.bot.voice.voice_channel:
+            pass
             
             
 

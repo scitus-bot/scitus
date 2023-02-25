@@ -39,6 +39,7 @@ def rqget_monthly(gamemode: str, p1: str, year: int, month: int) -> dict:
     return hjs
 
 def stat_string(hive: dict) -> str:
+    # sometimes hive doesnt give out the death stat 
     try: deaths = hive["deaths"]
     except: deaths = hive["played"] - hive["victories"]
     kills = hive["kills"]

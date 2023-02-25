@@ -1,3 +1,5 @@
+from random import choice
+
 """ 
 Commands List:
     ping
@@ -28,7 +30,7 @@ class Everyone(commands.Cog):
         description="Pings the bot to check if it's online."
     )
     async def ping(self, inter: discord.Interaction) -> None:
-        await inter.response.send_message("Pong!")
+        await inter.response.send_message(f"Pong! ({self.bot.latency})")
     
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -75,6 +77,18 @@ class Everyone(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="rng",
+        description="RNG"
+    )
+    async def button(self, inter: discord.Interaction, min: int, max: int, weight: Optional[int] = 0) -> None:
+        pass
+        
+    
+    
+    
+
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Everyone(bot))
