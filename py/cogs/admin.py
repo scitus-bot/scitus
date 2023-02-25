@@ -221,7 +221,7 @@ class Admin(commands.Cog):
         """ Gets the last short hash of the commit """
         
         try:
-            rep: Repo = Repo("home/nathan/scitus/")
+            rep: Repo = Repo("scitus/")
             await inter.response.send_message(rep.head.commit)
         except Exception as e:
             await inter.response.send_message(e)
