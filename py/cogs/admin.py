@@ -5,6 +5,7 @@ from discord.utils import get
 from pasta import RoleIDs
 import subprocess
 import sys
+from git import Repo
 
 #No "has_role"s
 
@@ -207,6 +208,21 @@ class Admin(commands.Cog):
             await inter.channel.send(f"Error: {e}")
         else:
             sys.exit()  # to prevent any possible clashes 
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+#version
+
+    @app_commands.command(
+        name="version",
+        description="Gets the last short commit hash that the bot is running on.",
+    )
+    async def version(self, inter: discord.Interaction) -> None:
+        """ Gets the last short hash of the commit """
+        
+        rep: Repo = Repo("home/nathan/scitus/")
+        print(rep.head.commit)
+
 
 
 #--------------------------------------------------------------------------------------------------------------------------
