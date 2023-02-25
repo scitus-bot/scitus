@@ -220,11 +220,14 @@ class Admin(commands.Cog):
     async def version(self, inter: discord.Interaction) -> None:
         """ Gets the last short hash of the commit """
         
-        try:
-            rep: Repo = Repo("scitus/")
-            await inter.response.send_message(rep.head.commit)
-        except Exception as e:
-            await inter.response.send_message(e)
+        rep: Repo = Repo("scitus/")
+        
+        embed: discord.Embed = discord.Embed(
+            title=f"Version: {str(rep.head.commit)[:7]}", 
+            colour=discord.Colour.green(),
+        )
+        embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
+        await inter.response.send_message(embed=embed)
 
 
 
