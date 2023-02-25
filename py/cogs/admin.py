@@ -194,7 +194,7 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     async def update(self, inter: discord.Interaction) -> None:
 
-        await inter.response.send_message("Updating the bot...")
+        await inter.response.send_message("Updating the bot...", ephemeral=True)
 
 
         try:
@@ -220,8 +220,11 @@ class Admin(commands.Cog):
     async def version(self, inter: discord.Interaction) -> None:
         """ Gets the last short hash of the commit """
         
-        rep: Repo = Repo("home/nathan/scitus/")
-        await inter.response.send_message(rep.head.commit)
+        try:
+            rep: Repo = Repo("home/nathan/scitus/")
+            await inter.response.send_message(rep.head.commit)
+        except Exception as e:
+            await inter.response.send_message(e)
 
 
 
