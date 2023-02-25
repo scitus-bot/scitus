@@ -30,7 +30,7 @@ class Everyone(commands.Cog):
         description="Pings the bot to check if it's online."
     )
     async def ping(self, inter: discord.Interaction) -> None:
-        await inter.response.send_message(f"Pong! ({self.bot.latency})")
+        await inter.response.send_message(f"Pong! ({round(self.bot.latency * 1000)}ms)")
     
 
 #--------------------------------------------------------------------------------------------------------------------------
