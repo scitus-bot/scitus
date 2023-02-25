@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import requests as r
 load_dotenv()
 TOKEN: str = os.environ.get("TOKEN")
+WH_URL: str = os.environ.get("url")
 
 intents: discord.Intents = discord.Intents.all()
 # client: discord.Client = discord.Client(intents=intents)
@@ -171,7 +172,7 @@ async def on_message(msg: discord.Message) -> None:
     if "jesus" in msgC or "hesus" in msgC:
         await msg.delete()
         # need to put this url into a .env soonr 
-        url: str = "https://discord.com/api/webhooks/980381281584050176/wrTXmrcryAQHhYEPqfem7cXv_Ag_pFaK4dtjSFTv5bL-QSqoGkFX2AhMRmJJ4QUEjU4w"
+        url: str = WH_URL
         quran: str = msgC.replace("jesus", "Allah")
         quran: str = quran.replace("hesus", "Allah")
 
