@@ -17,7 +17,6 @@ bot: commands.Bot = commands.Bot(
     intents=intents,
 )
 
-#h
 
 initial_extensions: list[str] = [
     "cogs.everyone",        # everyone commands
