@@ -3,6 +3,8 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
 from pasta import RoleIDs
+import subprocess
+import sys
 
 #No "has_role"s
 
@@ -179,6 +181,32 @@ class Admin(commands.Cog):
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+# update command # real
+
+    @app_commands.command(
+        name="update",
+        description="Updates the bot to the latest version on github",
+    )
+    @app_commands.default_permissions(administrator=True)
+    async def update(self, inter: discord.Interaction) -> None:
+
+        await inter.response.send_message("Updating the bot...")
+
+
+        try:
+            subprocess.Popen(["./update.sh"]) # runs the script saved on the server
+            # saves the last commit into a file
+            # with open("last_sha.txt", "w") as op:
+            #     repo = git.Repo("~/scitus")
+            #     sha = repo.head.object.hexsha[:7]
+            #     op.write(str(sha))
+        except Exception as e:
+            await inter.channel.send(f"Error: {e}")
+        else:
+            sys.exit()  # to prevent any possible clashes 
 
 
 #--------------------------------------------------------------------------------------------------------------------------
