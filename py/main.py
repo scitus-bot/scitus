@@ -60,7 +60,10 @@ async def on_ready() -> None:
     )
     
     # loading in the commands that are kept in other files
-    await load_cogs(initial_extensions)
+    try:
+        await load_cogs(initial_extensions)
+    except Exception as e:
+        print(f"{e}")
     
     await bot.tree.sync()
     
