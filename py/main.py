@@ -171,24 +171,24 @@ async def on_message(msg: discord.Message) -> None:
 # if jesus is in a message then copy the message text but replace jesus with allah and then post the message using a webhook
 # copying the original users pfp and username
 
-    if "jesus" in msgC or "hesus" in msgC:
-        await msg.delete()
-        # need to put this url into a .env soonr 
-        url: str = WH_URL
-        quran: str = msgC.replace("jesus", "Allah")
-        quran: str = quran.replace("hesus", "Allah")
+    # if "jesus" in msgC or "hesus" in msgC:
+    #     await msg.delete()
+    #     # need to put this url into a .env soonr 
+    #     url: str = WH_URL
+    #     quran: str = msgC.replace("jesus", "Allah")
+    #     quran: str = quran.replace("hesus", "Allah")
 
-        data: dict = {
-            "content": quran,
-            "username": str(msg.author.name),
-            "avatar_url": str(msg.author.display_avatar.url),
-        }
+    #     data: dict = {
+    #         "content": quran,
+    #         "username": str(msg.author.name),
+    #         "avatar_url": str(msg.author.display_avatar.url),
+    #     }
 
-        result: r.Response = r.post(url, json=data)
-        try:
-            result.raise_for_status()
-        except r.exceptions.HTTPError as err:
-            print(err)
+    #     result: r.Response = r.post(url, json=data)
+    #     try:
+    #         result.raise_for_status()
+    #     except r.exceptions.HTTPError as err:
+    #         print(err)
 
 
 
