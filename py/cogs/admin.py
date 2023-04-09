@@ -253,7 +253,7 @@ class Admin(commands.Cog):
             colour=discord.Colour.green(),
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
-        await inter.edit_original_response(embed=embed)
+        await inter.edit_original_response(content=None, embed=embed)
 #--------------------------------------------------------------------------------------------------------------------------
 
 #necessities
