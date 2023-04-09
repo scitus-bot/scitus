@@ -78,6 +78,8 @@ class Admin(commands.Cog):
     )
     @app_commands.default_permissions(manage_roles=True)
     async def delete(self, inter: discord.Interaction, role: discord.Role) -> None:
+        
+        
         if get(inter.guild.roles, id=RoleIDs.adminRoleID) not in inter.user.roles:
             embed: discord.Embed = discord.Embed(title="Invalid Permissions.", colour=0xff0000)
             await inter.response.send_message(embed=embed)
@@ -104,6 +106,9 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     async def giveall(self, inter: discord.Interaction, role: discord.Role) -> None:
         
+        await inter.response.send_message("Doing .. ... ")
+        
+        
         # giving all non-bot users a role
         for member in inter.guild.members:
             if not member.bot:
@@ -118,7 +123,7 @@ class Admin(commands.Cog):
             description=f"{role.name} successfully given to everyone.",
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
-        await inter.response.send_message(embed=embed)
+        await inter.edit_original_response(content=None, embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -130,6 +135,9 @@ class Admin(commands.Cog):
     )
     @app_commands.default_permissions(administrator=True)
     async def removeall(self, inter: discord.Interaction, role: discord.Role) -> None:
+        
+        await inter.response.send_message("Doing .. ... ")
+        
         
         # removing a role from all non-bot users
         for member in inter.guild.members:
@@ -144,7 +152,8 @@ class Admin(commands.Cog):
             description=f"**{role.name}** successfully removed from everyone.",
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
-        await inter.response.send_message(embed=embed)
+        await inter.edit_original_response(content=None, embed=embed)
+
 
 
 #--------------------------------------------------------------------------------------------------------------------------

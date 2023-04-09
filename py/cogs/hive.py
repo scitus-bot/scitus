@@ -72,6 +72,8 @@ class Hive(commands.Cog):
             await inter.edit_original_response(embed=embed)
             return
         
+        # worst thing ive ever written ( i do NOT care .. . .... )
+        
         if year and month:
             #treasurewars
             try:
@@ -159,8 +161,8 @@ class Hive(commands.Cog):
         emb.add_field(name="Treasure Wars", value=twstring)
         emb.add_field(name="Skywars", value=swstring)
         emb.add_field(name="Survival Games", value=sgstring)
-        emb.add_field(name="Capture Flag", value=ctfstring)
-        emb.set_footer(text="No Bridge stats yet, and some KDRs may not be 100% accurate.")
+        emb.add_field(name="Capture the Flag", value=ctfstring)
+        emb.set_footer(text="No Bridge stats ever, and some KDRs may not be 100% accurate.")
 
 
         await inter.edit_original_response(content=None, embed=emb)
