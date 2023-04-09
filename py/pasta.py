@@ -60,7 +60,7 @@ class ListsPas:
     # words that get you muted automatically 
     autoMutePas = [
         "nigg", 
-        "fag", 
+        "faggot", 
         "tranny", 
         "retard",
         ] 
