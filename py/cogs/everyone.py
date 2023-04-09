@@ -85,8 +85,21 @@ class Everyone(commands.Cog):
     async def button(self, inter: discord.Interaction, min: int, max: int, weight: Optional[int] = 0) -> None:
         pass
         
-    
-    
+#--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="info",
+        description="Gets the server info."
+    )
+    async def info(self, inter: discord.Interaction) -> None:
+        
+        embed = discord.Embed(title="Server", description=f"{inter.guild.name}'s Info", color=0xEEDB83) 
+        
+        infoStr: str = f"Member count: {inter.guild.member_count}\nCreated at: {inter.guild.created_at}"
+        
+        embed.add_field(name="Server Info", value=infoStr)
+        embed.set_image(url=inter.guild.icon.url)
+        await inter.response.send_message(embed=embed)
     
 
 
