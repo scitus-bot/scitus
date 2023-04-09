@@ -182,7 +182,10 @@ class Moderator(commands.Cog):
     async def ban(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
 
         await user.ban(reason=str(reason), delete_message_days=0)
-        await user.send(f"You've been banned from {inter.guild.name}\nLLLLLLLLL")
+        try:
+            await user.send(f"You've been banned from {inter.guild.name}\nLLLLLLLLL")
+        except app_commands.errors.CommandInvokeError:
+            pass # user was a bot/blocked scitus
         
         embed: discord.Embed = discord.Embed(
             title="Success", 
