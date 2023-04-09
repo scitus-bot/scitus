@@ -213,7 +213,7 @@ class Admin(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-#version
+    #version
 
     @app_commands.command(
         name="version",
@@ -239,9 +239,11 @@ class Admin(commands.Cog):
         name="sync_channels",
         description="Syncs channel permissions to the channel category",
     )
+    @app_commands.default_permissions(administrator=True)
     async def sync_channels(self, inter: discord.Interaction, category: discord.CategoryChannel) -> None:
         """ Syncs """
-        await inter.response.send_message(category.channels)
+        for channel in category.channels:
+            await channel.edit(sync_permissions=True)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
