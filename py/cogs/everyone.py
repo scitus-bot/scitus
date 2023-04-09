@@ -93,7 +93,7 @@ class Everyone(commands.Cog):
     )
     async def info(self, inter: discord.Interaction) -> None:
         
-        embed = discord.Embed(title="Server", description=f"{inter.guild.name}'s Info", color=0xEEDB83) 
+        embed = discord.Embed(title=f"{inter.guild.name}'s Info", color=0xEEDB83) 
         
         infoStr: str = f"Member count: {inter.guild.member_count}\nCreated at: {inter.guild.created_at}"
         
