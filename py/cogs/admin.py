@@ -7,6 +7,8 @@ import subprocess
 import sys
 from git import Repo
 
+
+
 #No "has_role"s
 
 
@@ -229,6 +231,17 @@ class Admin(commands.Cog):
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="sync_channels",
+        description="Syncs channel permissions to the channel category",
+    )
+    async def sync_channels(self, inter: discord.Interaction, category: discord.CategoryChannel) -> None:
+        """ Syncs """
+        await inter.response.send_message(category.channels)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
