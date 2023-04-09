@@ -245,7 +245,12 @@ class Admin(commands.Cog):
         for channel in category.channels:
             await channel.edit(sync_permissions=True)
 
-
+        embed: discord.Embed = discord.Embed(
+            title="Syncing complete!", 
+            colour=discord.Colour.green(),
+        )
+        embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
+        await inter.response.send_message(embed=embed)
 #--------------------------------------------------------------------------------------------------------------------------
 
 #necessities
