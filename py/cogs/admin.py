@@ -242,6 +242,9 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     async def sync_channels(self, inter: discord.Interaction, category: discord.CategoryChannel) -> None:
         """ Syncs """
+        
+        await inter.response.send_message("Syncing ... ")
+        
         for channel in category.channels:
             await channel.edit(sync_permissions=True)
 
@@ -250,7 +253,7 @@ class Admin(commands.Cog):
             colour=discord.Colour.green(),
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
-        await inter.response.send_message(embed=embed)
+        await inter.edit_original_response(embed=embed)
 #--------------------------------------------------------------------------------------------------------------------------
 
 #necessities
