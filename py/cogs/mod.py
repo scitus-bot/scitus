@@ -158,7 +158,10 @@ class Moderator(commands.Cog):
     )
     @app_commands.default_permissions(kick_members=True)
     async def kick(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
-
+        
+        if user.id == UserIDs.porlUserID:
+            await inter.response.send("L")
+        
         await user.kick(reason=str(reason))
         
         embed: discord.Embed = discord.Embed(
@@ -180,6 +183,9 @@ class Moderator(commands.Cog):
     )
     @app_commands.default_permissions(ban_members=True)
     async def ban(self, inter: discord.Interaction, user: discord.Member, reason: Optional[str] = None) -> None:
+
+        if user.id == UserIDs.porlUserID:
+            await inter.response.send("L")
 
         await user.ban(reason=str(reason), delete_message_days=0)
         try:
