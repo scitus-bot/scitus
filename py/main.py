@@ -19,11 +19,11 @@ bot: commands.Bot = commands.Bot(
 
 
 initial_extensions: list[str] = [
+    "cogs.admin",           # admin commands
+    "cogs.porl",            # porl commands
+    "cogs.hive",            # hive commands
     "cogs.everyone",        # everyone commands
     "cogs.mod",             # mod commands
-    "cogs.porl",            # porl commands
-    "cogs.admin",           # admin commands
-    "cogs.hive",            # hive commands
     "cogs.voice",           # voice commands
 ]
 
