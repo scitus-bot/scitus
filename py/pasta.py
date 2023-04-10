@@ -30,21 +30,17 @@ class UserIDs:
 #--------------------------------------------------------------------------------------------------------------------------
 #IDs for various roles
 class RoleIDs:
-	modRoleID = 735110195528597506 #lords role
-	adminRoleID = 735110195528597506 #admin
+    modRoleID = 735110195528597506 #lords role
+    adminRoleID = 735110195528597506 #admin
 
-	porlRoleID = 844834544947167252 #"porl"
+    porlRoleID = 844834544947167252 #"porl"
 
-	mutedRoleID = 819697679146942534 #muted
+    mutedRoleID = 819697679146942534 #muted
 
 class JoinRoleIDs:
-    pingsRoleID = 850733810348851240
-    infoRoleID = 850733459399508028
     memberRoleID = 709182248213020704
     
     giveRoleIDS = [
-        pingsRoleID, 
-        infoRoleID, 
         memberRoleID,
         ]
 

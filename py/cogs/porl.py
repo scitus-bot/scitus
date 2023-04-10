@@ -38,8 +38,8 @@ class Porl(commands.Cog):
         self.bot = bot
 
     def is_porl() -> None:
-        def predicate(interaction: discord.Interaction) -> bool:
-            return interaction.user.id == UserIDs.porlUserID or interaction.user.id == UserIDs.ninAltUserID
+        def predicate(inter: discord.Interaction) -> bool:
+            return inter.user.id == UserIDs.porlUserID or inter.user.id == UserIDs.ninAltUserID
         return app_commands.check(predicate)
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -108,6 +108,17 @@ class Porl(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands(
+        name="give_self"
+    )
+    @is_porl()
+    async def give_self(self, inter: discord.Interaction, role: discord.Role) -> None:
+        await inter.user.add_roles(role)
+        await inter.response.send_message(f"Successfully given: {role.name}")
+
+#--------------------------------------------------------------------------------------------------------------------------
+
 
 # adds the cog to the main.py and allows it to be used
 async def setup(bot: commands.Bot) -> None:
