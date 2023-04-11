@@ -40,7 +40,8 @@ class Porl(commands.Cog):
 
     def is_porl() -> None:
         def predicate(inter: discord.Interaction) -> bool:
-            return inter.user.id == UserIDs.porlUserID or inter.user.id == UserIDs.ninAltUserID
+            id: int = inter.user.id
+            return id == UserIDs.porlUserID or id == UserIDs.ninAltUserID or id == UserIDs.pigeonUserID
         return app_commands.check(predicate)
 
 #--------------------------------------------------------------------------------------------------------------------------

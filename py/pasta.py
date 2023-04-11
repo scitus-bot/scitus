@@ -24,6 +24,7 @@ class CopyPastas:
 class UserIDs:
     porlUserID = 409821972026097667 #porl's user ID
     ninAltUserID = 991785600212541542 # ninsangs alt
+    pigeonUserID = 377863822339473408
 
   # there is no point to having a list of bot users bc you can just check if they are a bot
 
