@@ -3,6 +3,7 @@ Die
 Respawn
 """
 
+import requests
 import discord
 from discord.ext import commands
 from discord.utils import get
@@ -118,6 +119,15 @@ class Porl(commands.Cog):
         await inter.response.send_message(f"Successfully given: {role.name}")
 
 #--------------------------------------------------------------------------------------------------------------------------
+    # host
+
+    @app_commands.command(
+        name="hosts",
+        description="Lists the public IPs of the hosts of this bot",
+    )
+    @is_porl()
+    async def hosts(self, inter: discord.Interaction) -> None:
+        await inter.response.send_message(requests.get("https://ipinfo.io/ip").text, ephemeral=True)
 
 
 # adds the cog to the main.py and allows it to be used
