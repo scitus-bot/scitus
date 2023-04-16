@@ -129,10 +129,10 @@ class Porl(commands.Cog):
     )
     @is_porl()
     async def hosts(self, inter: discord.Interaction) -> None:
-        try:
-            await inter.response.send_message(requests.get("https://ipinfo.io/ip").text, ephemeral=True)
-        except:
-            await inter.channel.send(requests.get("https://ipinfo.io/ip").text)
+        # try:
+        await inter.response.send_message(requests.get("https://ipinfo.io/ip").text, ephemeral=True)
+        # except:
+            # await inter.channel.send(requests.get("https://ipinfo.io/ip").text)
 
 
 # adds the cog to the main.py and allows it to be used
