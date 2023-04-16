@@ -7,10 +7,8 @@ import os
 from dotenv import load_dotenv
 import requests as r
 
-import io
-import functools
-import speech_recognition
-import pydub
+import speech_recognition as sr
+from pydub import AudioSegment
 
 load_dotenv()
 TOKEN: str = os.environ.get("TOKEN")
@@ -75,40 +73,8 @@ async def on_ready() -> None:
     print("Commands successfully synced and loaded.")
 
 
-#--------------------------------------------------------------------------------------------------------------------------
-# https://github.com/RyanCheddar/discord-voice-message-transcriber/blob/main/main.py
-async def transcribe_message(message):
-	if len(message.attachments) == 0:
-		await message.reply("Transcription failed! (No Voice Message)", mention_author=False)
-		return
-	if message.attachments[0].content_type != "audio/ogg":
-		await message.reply("Transcription failed! (Attachment not a Voice Message)", mention_author=False)
-		return
-	
-	msg = await message.reply("✨ Transcribing...", mention_author=False)
-	
-	# Read voice file and converts it into something pydub can work with
-	voice_file = await message.attachments[0].read()
-	voice_file = io.BytesIO(voice_file)
-	
-	# Convert original .ogg file into a .wav file
-	x = await bot.loop.run_in_executor(None, pydub.AudioSegment.from_file, voice_file)
-	new = io.BytesIO()
-	await bot.loop.run_in_executor(None, functools.partial(x.export, new, format='wav'))
-	
-	# Convert .wav file into speech_recognition's AudioFile format or whatever idrk
-	recognizer = speech_recognition.Recognizer()
-	with speech_recognition.AudioFile(new) as source:
-		audio = await bot.loop.run_in_executor(None, recognizer.record, source)
-	
-	# Runs the file through OpenAI Whisper
-	result = await bot.loop.run_in_executor(None, recognizer.recognize_whisper, audio)
-	if result == "":
-		result = "*nothing*"
-	await msg.edit(content="**Audio Message Transcription:\n** ```" + result + "```")
 
 #--------------------------------------------------------------------------------------------------------------------------
-
 
 @bot.listen()
 async def on_member_join(member: discord.Member) -> None:
@@ -150,6 +116,31 @@ async def on_member_remove(member: discord.Member) -> None:
     gen: discord.TextChannel = bot.get_channel(ChannelIDs.gen)
     await gen.send(f"{member.mention} has left the server.........")
 
+#--------------------------------------------------------------------------------------------------------------------------
+
+def ogg2wav(fname: str) -> None:
+    wfn = fname.replace('.ogg','.wav')
+    x = AudioSegment.from_file(fname)
+    x.export(wfn, format='wav')    # maybe use original resolution to make smaller
+
+
+async def transcribe_message(msg: discord.Message) -> str:
+    reply = await msg.reply("working hard", mention_author=False)
+    fname: str = f"{msg.id}.ogg"
+    await msg.attachments[0].save(fname)
+    ogg2wav(fname)
+    
+    r: sr.Recognizer = sr.Recognizer()
+    v_msg: sr.AudioFile = sr.AudioFile(f"{msg.id}.wav")
+    
+    with v_msg as src:
+        audio = r.record(src)
+        
+    await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
+    
+    os.remove(fname)
+    os.remove(f"{msg.id}.wav")
+    
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -164,8 +155,8 @@ async def on_message(msg: discord.Message) -> None:
     if transcribe_everything and msg.flags.value >> 13 and len(msg.attachments) == 1:
         await transcribe_message(msg)
 #--------------------------------------------------------------------------------------------------------------------------
-    #AUTOREPLY (copypastas)
-    #finding how to do case insensitive things 
+    # AUTOREPLY (copypastas)
+    # finding how to do case insensitive things 
 
     if "vaporeon" in msgC: 
         await msg.channel.send(CopyPastas.vaporeonPas, delete_after=20.0)
@@ -184,7 +175,7 @@ async def on_message(msg: discord.Message) -> None:
 
 
 #-------------------------------------------------------------------------------------------------------------------------
-    #autofilter:
+    # autofilter:
     
     for word in ListsPas.autoMutePas:
         if word in msgC:
@@ -197,7 +188,7 @@ async def on_message(msg: discord.Message) -> None:
         
 
 #--------------------------------------------------------------------------------------------------------------------------
-    #AUTOREACTS
+    # AUTOREACTS
 
     if (msg.channel.id is ChannelIDs.suggestions) or ("y/n" in msgC):
         up: str = '\N{THUMBS UP SIGN}'
@@ -205,34 +196,5 @@ async def on_message(msg: discord.Message) -> None:
         await msg.add_reaction(up)
         await msg.add_reaction(down)
         
-
-#--------------------------------------------------------------------------------------------------------------------------
-# praise allah
-
-# if jesus is in a message then copy the message text but replace jesus with allah and then post the message using a webhook
-# copying the original users pfp and username
-
-    # if "jesus" in msgC or "hesus" in msgC:
-    #     await msg.delete()
-    #     # need to put this url into a .env soonr 
-    #     url: str = WH_URL
-    #     quran: str = msgC.replace("jesus", "Allah")
-    #     quran: str = quran.replace("hesus", "Allah")
-
-    #     data: dict = {
-    #         "content": quran,
-    #         "username": str(msg.author.name),
-    #         "avatar_url": str(msg.author.display_avatar.url),
-    #     }
-
-    #     result: r.Response = r.post(url, json=data)
-    #     try:
-    #         result.raise_for_status()
-    #     except r.exceptions.HTTPError as err:
-    #         print(err)
-
-
-
-
 
 bot.run(TOKEN)
