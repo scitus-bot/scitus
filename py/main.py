@@ -142,7 +142,7 @@ async def transcribe_message(msg: discord.Message) -> str:
     try:
         await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
     except sr.exceptions.UnknownValueError:
-        await reply.edit(content="I am super homophobic and racist.")
+        await reply.edit(content="```I am super homophobic and racist.```")
     
     
 
