@@ -127,7 +127,7 @@ def ogg2wav(fname: str) -> None:
 async def transcribe_message(msg: discord.Message) -> str:
     reply = await msg.reply("working hard", mention_author=False)
     fname: str = f"{msg.id}.ogg"
-    await msg.attachments[0].save(fname)
+    await msg.attachments[0].save(f"scitus/py/{fname}")
     ogg2wav(fname)
     
     r: sr.Recognizer = sr.Recognizer()
