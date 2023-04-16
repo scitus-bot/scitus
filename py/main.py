@@ -136,8 +136,8 @@ async def transcribe_message(msg: discord.Message) -> str:
     with v_msg as src:
         audio = r.record(src)
         
-    os.remove(fname)
-    os.remove(f"{msg.id}.wav")
+    # os.remove(fname)
+    # os.remove(f"{msg.id}.wav")
     
     await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
     
