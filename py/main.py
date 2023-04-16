@@ -139,7 +139,10 @@ async def transcribe_message(msg: discord.Message) -> str:
     os.remove(f"scitus/py/{fname}")
     os.remove(f"scitus/py/{msg.id}.wav")
     
-    await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
+    try:
+        await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
+    except sr.exceptions.UnknownValueError:
+        await reply.edit(content="I am super homophobic and racist.")
     
     
 
