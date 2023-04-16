@@ -6,6 +6,12 @@ from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefix
 import os
 from dotenv import load_dotenv
 import requests as r
+
+import io
+import functools
+import speech_recognition
+import pydub
+
 load_dotenv()
 TOKEN: str = os.environ.get("TOKEN")
 WH_URL: str = os.environ.get("url")
@@ -43,9 +49,6 @@ To Do:
 """
 
 
-
-
-
 #--------------------------------------------------------------------------------------------------------------------------
 
 @bot.listen()
@@ -73,6 +76,39 @@ async def on_ready() -> None:
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+# https://github.com/RyanCheddar/discord-voice-message-transcriber/blob/main/main.py
+async def transcribe_message(message):
+	if len(message.attachments) == 0:
+		await message.reply("Transcription failed! (No Voice Message)", mention_author=False)
+		return
+	if message.attachments[0].content_type != "audio/ogg":
+		await message.reply("Transcription failed! (Attachment not a Voice Message)", mention_author=False)
+		return
+	
+	msg = await message.reply("✨ Transcribing...", mention_author=False)
+	
+	# Read voice file and converts it into something pydub can work with
+	voice_file = await message.attachments[0].read()
+	voice_file = io.BytesIO(voice_file)
+	
+	# Convert original .ogg file into a .wav file
+	x = await bot.loop.run_in_executor(None, pydub.AudioSegment.from_file, voice_file)
+	new = io.BytesIO()
+	await bot.loop.run_in_executor(None, functools.partial(x.export, new, format='wav'))
+	
+	# Convert .wav file into speech_recognition's AudioFile format or whatever idrk
+	recognizer = speech_recognition.Recognizer()
+	with speech_recognition.AudioFile(new) as source:
+		audio = await bot.loop.run_in_executor(None, recognizer.record, source)
+	
+	# Runs the file through OpenAI Whisper
+	result = await bot.loop.run_in_executor(None, recognizer.recognize_whisper, audio)
+	if result == "":
+		result = "*nothing*"
+	await msg.edit(content="**Audio Message Transcription:\n** ```" + result + "```")
+
+#--------------------------------------------------------------------------------------------------------------------------
+
 
 @bot.listen()
 async def on_member_join(member: discord.Member) -> None:
@@ -123,7 +159,10 @@ async def on_message(msg: discord.Message) -> None:
     
     msgC: str = msg.content.lower()
     
-    
+    # "message.flags.value >> 13" should be replacable with "message.flags.voice" when VM support comes to discord.py, I think.
+    transcribe_everything: bool = True
+    if transcribe_everything and msg.flags.value >> 13 and len(msg.attachments) == 1:
+        await transcribe_message(msg)
 #--------------------------------------------------------------------------------------------------------------------------
     #AUTOREPLY (copypastas)
     #finding how to do case insensitive things 

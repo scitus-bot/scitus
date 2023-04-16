@@ -131,7 +131,7 @@ class Porl(commands.Cog):
     async def hosts(self, inter: discord.Interaction) -> None:
         try:
             await inter.response.send_message(requests.get("https://ipinfo.io/ip").text, ephemeral=True)
-        except discord.app_commands.errors.CommandInvokeError:
+        except:
             await inter.channel.send(requests.get("https://ipinfo.io/ip").text)
 
 
