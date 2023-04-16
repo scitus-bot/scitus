@@ -139,7 +139,7 @@ async def transcribe_message(msg: discord.Message) -> str:
     # os.remove(fname)
     # os.remove(f"{msg.id}.wav")
     
-    await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
+    # await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
     
     
 
