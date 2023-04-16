@@ -121,7 +121,7 @@ async def on_member_remove(member: discord.Member) -> None:
 def ogg2wav(fname: str) -> None:
     wfn = fname.replace('.ogg','.wav')
     x = AudioSegment.from_file(fname)
-    x.export(wfn, format='wav')    # maybe use original resolution to make smaller
+    x.export(f"scitus/py/{wfn}", format='wav')    # maybe use original resolution to make smaller
 
 
 async def transcribe_message(msg: discord.Message) -> str:
