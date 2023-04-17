@@ -1,21 +1,19 @@
-# attempting to rewrite scitus using the new discord.py 2.0 along with slash commands
-import discord
+from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta, nextJoJo, nextChap
+from discord.ext import commands, tasks
 from discord import app_commands
-from discord.ext import commands
-from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta
-import os
-from dotenv import load_dotenv
-import requests as r
-
 import speech_recognition as sr
+from dotenv import load_dotenv
 from pydub import AudioSegment
+import discord
+import os
+import requests as r
+import time
 
 load_dotenv()
 TOKEN: str = os.environ.get("TOKEN")
 WH_URL: str = os.environ.get("url")
 
 intents: discord.Intents = discord.Intents.all()
-# client: discord.Client = discord.Client(intents=intents)
 bot: commands.Bot = commands.Bot(
     command_prefix=prefixPasta,
     intents=intents,
@@ -53,15 +51,6 @@ To Do:
 async def on_ready() -> None:
     print(f"Logged on as {bot.user}")
     
-    # changing the status of the client
-    
-    await bot.change_presence(
-        activity=discord.Activity(
-            type=discord.ActivityType.playing,
-            name="peace and love 😎✌️🌟❤️🎶🌈☮️",
-            )
-    )
-    
     # loading in the commands that are kept in other files
     try:
         await load_cogs(initial_extensions)
@@ -71,6 +60,9 @@ async def on_ready() -> None:
     await bot.tree.sync()
     
     print("Commands successfully synced and loaded.")
+    
+    if not loop.is_running():
+        loop.start()
 
 
 
@@ -200,5 +192,38 @@ async def on_message(msg: discord.Message) -> None:
         await msg.add_reaction(up)
         await msg.add_reaction(down)
         
+        
+#--------------------------------------------------------------------------------------------------------------------------
+
+def sec2days(sec: int) -> str:
+    min: int = (sec) // 60
+    hrs: int = (min) // 60
+    day: int = (hrs) // 24
+    min -= hrs*60
+    hrs -= day*24
+    ret_str: str = ""
+    
+    ret_str = f"{day} day(s), {hrs} hour(s), {min} minute(s)"
+    
+    return ret_str
+
+@tasks.loop(minutes=1)
+async def loop() -> None:
+    alarm: int = nextJoJo
+    time_now: float = time.time()
+    diff: int = round(alarm - time_now)
+    
+    if diff < 60:
+        bot.change_presence(
+            activity=discord.Game(name=f"JOJOLands ch. {nextChap} is here!")
+        )
+    else:
+        bot.change_presence(
+            activity=discord.Game(name=f"{sec2days(diff)} until JOJOLands ch. {nextChap}!")
+        )
+        
+    
+    
+
 
 bot.run(TOKEN)

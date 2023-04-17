@@ -4,6 +4,8 @@
 #"copypastas" is a class from the file pasta.py
 #print(copypastas.vaporeonPas)
 prefixPasta = "," #only change this if you want to change the prefix
+nextJoJo = 1681830000
+nextChap = 3
 
 #--------------------------------------------------------------------------------------------------------------------------
 class CopyPastas:
