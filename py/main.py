@@ -215,10 +215,12 @@ async def loop() -> None:
     
     if diff < 60:
         await bot.change_presence(
+            status=discord.Status.online,
             activity=discord.Game(name=f"JOJOLands ch. {nextChap} is here!")
         )
     else:
         await bot.change_presence(
+            status=discord.Status.invisible,
             activity=discord.Game(name=f"{sec2days(diff)} until JOJOLands ch. {nextChap}!")
         )
         
