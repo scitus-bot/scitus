@@ -208,7 +208,7 @@ def sec2days(sec: int) -> str:
     
     return ret_str
 
-@tasks.loop(seconds=1)
+@tasks.loop(seconds=5)
 async def loop() -> None:
     alarm: int = pasta.nextJoJo
     time_now: float = time.time()
