@@ -1,4 +1,5 @@
-from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta, nextJoJo, nextChap
+from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta
+import pasta
 from discord.ext import commands, tasks
 from discord import app_commands
 import speech_recognition as sr
@@ -209,19 +210,19 @@ def sec2days(sec: int) -> str:
 
 @tasks.loop(minutes=1)
 async def loop() -> None:
-    alarm: int = nextJoJo
+    alarm: int = pasta.nextJoJo
     time_now: float = time.time()
     diff: int = round(alarm - time_now)
     
     if diff < 60:
         await bot.change_presence(
             status=discord.Status.dnd,
-            activity=discord.Game(name=f"JOJOLands ch. {nextChap} is here!")
+            activity=discord.Game(name=f"JOJOLands ch. {pasta.nextChap} is here!")
         )
     else:
         await bot.change_presence(
             status=discord.Status.dnd,
-            activity=discord.Game(name=f"{sec2days(diff)} until JOJOLands ch. {nextChap}!")
+            activity=discord.Game(name=f"{sec2days(diff)} until JOJOLands ch. {pasta.nextChap}!")
         )
         
     

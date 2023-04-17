@@ -7,6 +7,10 @@ prefixPasta = "," #only change this if you want to change the prefix
 nextJoJo = 1681830000
 nextChap = 3
 
+def update_jojo(new_time: int, new_chap: int) -> None:
+    nextJoJo = new_time
+    nextChap = new_chap
+
 #--------------------------------------------------------------------------------------------------------------------------
 class CopyPastas:
 	#These copypastas are the triggers for the words or smt

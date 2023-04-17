@@ -10,6 +10,7 @@ from discord.utils import get
 from discord import app_commands
 from random import randint
 from pasta import ListsPas, RoleIDs, UserIDs
+import pasta
 import subprocess 
 import sys
 
@@ -134,6 +135,17 @@ class Porl(commands.Cog):
         # except:
             # await inter.channel.send(requests.get("https://ipinfo.io/ip").text)
 
+#--------------------------------------------------------------------------------------------------------------------------
+    # update jojos
+    @app_commands.command(
+        name="jojo_update",
+    )
+    @is_porl()
+    async def jojo_update(self, inter: discord.Interaction, new_time: int, new_chap: int) -> None:
+        pasta.update_jojo(new_time, new_chap)
+        
+        await inter.response.send_message("JOJOLands status updated (see results within next 60s)")
+        
 
 # adds the cog to the main.py and allows it to be used
 async def setup(bot: commands.Bot) -> None:
