@@ -204,17 +204,17 @@ def sec2days(sec: int) -> str:
     hrs -= day*24
     ret_str: str = ""
     
-    ret_str = f"{day} day(s), {hrs} hour(s), {min} minute(s)"
+    ret_str = f"{day} day(s), {hrs} hour(s), {min} minute(s), and {sec%60} second(s)"
     
     return ret_str
 
-@tasks.loop(minutes=1)
+@tasks.loop(seconds=1)
 async def loop() -> None:
     alarm: int = pasta.nextJoJo
     time_now: float = time.time()
     diff: int = round(alarm - time_now)
     
-    if diff < 60:
+    if diff < 0:
         await bot.change_presence(
             status=discord.Status.dnd,
             activity=discord.Game(name=f"JOJOLands ch. {pasta.nextChap} is here!")
