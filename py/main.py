@@ -85,7 +85,7 @@ async def on_member_join(member: discord.Member) -> None:
     general: discord.TextChannel = guild.get_channel(ChannelIDs.gen)
     ruleID: int = ChannelIDs.rules
     
-    await general.send(f"Welcome {member.mention}, hope you have a good time in the server! Check out <#{ruleID}> for the rules!")
+    await general.send(f"Welcome {member.mention}, hope you have a good time in the server!")
     
     if member.bot: # dont want the hassle of dming bots and assigning roles and etc
         botRole = discord.utils.get(guild.roles, id=709182248213020705)
