@@ -1,5 +1,4 @@
 import os
-import requests as r
 import time
 
 import discord
@@ -10,7 +9,7 @@ from pydub import AudioSegment
 import speech_recognition as sr
 
 import pasta
-from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta
+from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs
 
 # loading in environmental variables
 load_dotenv()
@@ -21,7 +20,6 @@ WH_URL: str = os.environ.get("url")
 # initialising the bot
 intents: discord.Intents = discord.Intents.all()
 bot: commands.Bot = commands.Bot(
-    command_prefix=prefixPasta,
     intents=intents,
 )
 
