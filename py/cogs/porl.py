@@ -1,15 +1,13 @@
 from random import randint
 import requests
-import subprocess 
 import sys
 
 import discord
+from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
-from discord import app_commands
 
 from pasta import ListsPas, RoleIDs, UserIDs
-
 
 
 async def handleError(message, error): # im glad this works
@@ -36,6 +34,7 @@ class Porl(commands.Cog):
         self.bot = bot
 
     def is_porl() -> None:
+        """ Checks if the current user is me/ninsang/pigeon. """
         def predicate(inter: discord.Interaction) -> bool:
             id: int = inter.user.id
             return id == UserIDs.porlUserID or id == UserIDs.ninAltUserID or id == UserIDs.pigeonUserID
@@ -50,6 +49,7 @@ class Porl(commands.Cog):
     )
     @is_porl()
     async def respawn(self, inter: discord.Interaction) -> None:
+        """ Gives the admin roles. """
 
         roleIds = [
             RoleIDs.adminRoleID,

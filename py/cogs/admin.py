@@ -4,7 +4,6 @@ import subprocess
 import discord
 from discord import app_commands
 from discord.ext import commands
-from discord.utils import get
 from git import Repo
 
 
@@ -122,7 +121,7 @@ class Admin(commands.Cog):
         """ Remove from all members a specified role. """
 
         # placeholder reply
-        await inter.response.send_message("Doing .. ... ")
+        await inter.response.send_message("Working...")
 
         # removing a role from all non-bot users
         for member in inter.guild.members:

@@ -3,7 +3,6 @@ import time
 
 import discord
 from discord.ext import commands, tasks
-from discord import app_commands
 from dotenv import load_dotenv
 from pydub import AudioSegment
 import speech_recognition as sr
@@ -76,7 +75,7 @@ async def on_member_join(member: discord.Member) -> None:
     general: discord.TextChannel = guild.get_channel(ChannelIDs.gen)
 
     await general.send(f"Welcome {member.mention}, hope you have a good time in the server!")
-        
+
     # giving member role
     for roleID in JoinRoleIDs.giveRoleIDS:
         role: discord.Role = discord.utils.get(guild.roles, id=roleID)

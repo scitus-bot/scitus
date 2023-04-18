@@ -3,9 +3,8 @@ import requests as rq
 from typing import Optional
 
 import discord
-from discord.utils import get
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 
 from pasta import ListsPas
 
@@ -60,6 +59,7 @@ class Hive(commands.Cog):
         self._last_member = None
 
 
+#--------------------------------------------------------------------------------------------------------------------------
 
     @app_commands.command(
         name="stats",
@@ -75,39 +75,33 @@ class Hive(commands.Cog):
             return
         
         # worst thing ive ever written ( i do NOT care .. . .... )
+        # this is literally my frankensteins monster
         
         if year and month:
             #treasurewars
             try:
                 hjs = rqget_monthly("wars", player, year, month) 
-
                 twstring = stat_string(hjs)
             except:
                 twstring = "**N/A**"
 
-
             #skywars
             try:
                 hjs = rqget_monthly("sky", player, year, month) 
-
                 swstring = stat_string(hjs)
             except:
                 swstring = "**N/A**"
 
-
             #Survival Games
             try:
                 hjs = rqget_monthly("sg", player, year, month) 
-
                 sgstring = stat_string(hjs)
             except:
                 sgstring = "**N/A**"
-                
             
             # ctf
             try:
                 hjs = rqget_monthly("ctf", player, year, month) 
-
                 ctfstring = stat_string(hjs)
             except:
                 ctfstring = "**N/A**"
@@ -116,42 +110,33 @@ class Hive(commands.Cog):
             #treasurewars
             try:
                 hjs = rqget("wars", player)
-
                 twstring = stat_string(hjs)
             except:
                 twstring = "**N/A**"
 
-
             #skywars
             try:
                 hjs = rqget("sky", player)
-
                 swstring = stat_string(hjs)
             except:
                 swstring = "**N/A**"
 
-
             #Survival Games
             try:
                 hjs = rqget("sg", player)
-                
                 sgstring = stat_string(hjs)
             except:
                 sgstring = "**N/A**"
-                
             
             # ctf
             try:
                 hjs = rqget("ctf", player)
-
                 ctfstring = stat_string(hjs)
             except:
                 ctfstring = "**N/A**"
         
-
-
-        # creating the embed
         
+        # creating the embed
         if year and month:
             desc = f"{player}'s Hive stats for {month}/{year}."
         else:
@@ -166,11 +151,8 @@ class Hive(commands.Cog):
         emb.add_field(name="Capture the Flag", value=ctfstring)
         emb.set_footer(text="No Bridge stats ever, and some KDRs may not be 100% accurate.")
 
-
         await inter.edit_original_response(content=None, embed=emb)
   
 
-
-#necesseties
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Hive(bot))
