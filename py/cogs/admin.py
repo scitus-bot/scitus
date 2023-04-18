@@ -7,8 +7,6 @@ from discord.ext import commands
 from discord.utils import get
 from git import Repo
 
-from pasta import RoleIDs
-
 
 CDOWN = 20 # cooldown time
 
@@ -83,7 +81,7 @@ class Admin(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-  # applyall
+    # applyall
 
     @app_commands.command(
         name="applyall",
@@ -138,7 +136,7 @@ class Admin(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-# create role
+    # create role
 
     @app_commands.command(
         name="createrole",
@@ -146,14 +144,12 @@ class Admin(commands.Cog):
     )
     @app_commands.default_permissions(manage_roles=True)
     async def createrole(self, inter: discord.Interaction, name: str, hex: str) -> None:
-        
+        """ Creates a new role. """
+
         clr = discord.Colour(int(hex, base=16))
         await inter.guild.create_role(name=name, colour=clr)
-        embed: discord.Embed = discord.Embed(
-            title="Success", 
-            colour=discord.Colour.green(),
-            description=f"**{name}** successfully created.",
-        )
+
+        embed: discord.Embed = success_embed(f"**{name}** successfully created.")
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -167,12 +163,11 @@ class Admin(commands.Cog):
     )
     @app_commands.default_permissions(administrator=True)
     async def sync(self, inter: discord.Interaction) -> None:
-        
+        """ Syncs commands with the API (???). """
+
         await self.bot.tree.sync()
-        embed: discord.Embed = discord.Embed(
-            title="Syncing complete!", 
-            colour=discord.Colour.green(),
-        )
+
+        embed: discord.Embed = success_embed("Syncong complete.")
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -186,17 +181,14 @@ class Admin(commands.Cog):
     )
     @app_commands.default_permissions(administrator=True)
     async def update(self, inter: discord.Interaction) -> None:
+        """ Updating the bot on the Raspberry Pi. """
 
         await inter.response.send_message("Updating the bot...", ephemeral=True)
 
+        # want to try and prevent it from deleting itself if there is an obvious error in the code that will prevent it from running
 
         try:
-            subprocess.Popen(["./update.sh"]) # runs the script saved on the server
-            # saves the last commit into a file
-            # with open("last_sha.txt", "w") as op:
-            #     repo = git.Repo("~/scitus")
-            #     sha = repo.head.object.hexsha[:7]
-            #     op.write(str(sha))
+            subprocess.Popen(["./update.sh"])   # runs the script saved on the server
         except Exception as e:
             await inter.channel.send(f"Error: {e}")
         else:
@@ -204,7 +196,7 @@ class Admin(commands.Cog):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-    #version
+    # version
 
     @app_commands.command(
         name="version",

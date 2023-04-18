@@ -20,6 +20,7 @@ WH_URL: str = os.environ.get("url")
 # initialising the bot
 intents: discord.Intents = discord.Intents.all()
 bot: commands.Bot = commands.Bot(
+    command_prefix=None,
     intents=intents,
 )
 
@@ -64,18 +65,18 @@ async def on_ready() -> None:
 
 @bot.listen()
 async def on_member_join(member: discord.Member) -> None:
+    guild: discord.Guild = member.guild
+
     if member.bot: # cant dm bots/dont add the wrong roles to them
-        botRole = discord.utils.get(guild.roles, id=709182248213020705)
-        await member.add_roles(botRole)
+        bot_role = discord.utils.get(guild.roles, id=709182248213020705)
+        await member.add_roles(bot_role)
         return
 
     # welcome message
-    guild: discord.Guild = member.guild
     general: discord.TextChannel = guild.get_channel(ChannelIDs.gen)
-    ruleID: int = ChannelIDs.rules
-    
+
     await general.send(f"Welcome {member.mention}, hope you have a good time in the server!")
-    
+        
     # giving member role
     for roleID in JoinRoleIDs.giveRoleIDS:
         role: discord.Role = discord.utils.get(guild.roles, id=roleID)
