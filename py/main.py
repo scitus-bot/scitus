@@ -19,6 +19,7 @@ WH_URL: str = os.environ.get("url")
 # initialising the bot
 intents: discord.Intents = discord.Intents.all()
 bot: commands.Bot = commands.Bot(
+    command_prefix=".",
     intents=intents,
 )
 
