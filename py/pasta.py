@@ -2,6 +2,7 @@
 import discord
 
 def success_embed(desc: str = None) -> discord.Embed:
+    """ Generates a basic embed for successful processes. """
     embed: discord.Embed = discord.Embed(
         title="Success",
         colour=discord.Colour.green(),
@@ -10,6 +11,7 @@ def success_embed(desc: str = None) -> discord.Embed:
     return embed
 
 def fail_embed(desc: str = None) -> discord.Embed:
+    """ Generates a basic embed for failed processes. """
     embed: discord.Embed = discord.Embed(
         title="Failure",
         colour=discord.Colour.red(),

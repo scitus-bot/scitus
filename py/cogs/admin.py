@@ -6,16 +6,9 @@ from discord import app_commands
 from discord.ext import commands
 from git import Repo
 
+from pasta import success_embed
 
 CDOWN = 20 # cooldown time
-
-def success_embed(desc: str = None) -> discord.Embed:
-    embed: discord.Embed = discord.Embed(
-        title="Success",
-        colour=discord.Colour.green(),
-        description=desc,
-    )
-    return embed
 
 
 #--------------------------------------------------------------------------------------------------------------------------

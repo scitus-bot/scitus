@@ -7,14 +7,6 @@ Ideas:
  
     MAKE A DASHBOARD
 
-    make it so i cant be banned/kicked :troll:
-
-  Basically copy the entirety of Dyno
-  
-
-
-Fix:
-  random ratelimiting
 
 Copypasta triggers:
   meow 
