@@ -1,13 +1,14 @@
+from random import randint
 import requests
+import subprocess 
+import sys
+
 import discord
 from discord.ext import commands
 from discord.utils import get
 from discord import app_commands
-from random import randint
+
 from pasta import ListsPas, RoleIDs, UserIDs
-import pasta
-import subprocess 
-import sys
 
 
 

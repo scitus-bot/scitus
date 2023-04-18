@@ -1,17 +1,17 @@
-"""
-kdr (skywars)
-"""
+from random import randint
+import requests as rq
+from typing import Optional
+
 import discord
 from discord.utils import get
 from discord.ext import commands
 from discord import app_commands
-import requests as rq
-from random import randint
+
 from pasta import ListsPas
-from typing import Optional
 
 
-async def handleError(message, error): # im glad this works
+async def handleError(message, error):
+    """ Handling errors for the command. """
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
         await message.channel.send(msg)
@@ -29,17 +29,19 @@ async def handleError(message, error): # im glad this works
 
 
 def rqget(gamemode: str, p1: str) -> dict:
-    apirq = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}")
-    hjs = apirq.json()
+    """ Return the dictionary for the players stats in a given gamemode. """
+    apirq: rq.Response = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}", timeout=30)
+    hjs: dict = apirq.json()
     return hjs
 
 def rqget_monthly(gamemode: str, p1: str, year: int, month: int) -> dict:
-    apirq = rq.get(f"https://api.playhive.com/v0/game/monthly/player/{gamemode}/{p1}/{year}/{month}")
-    hjs = apirq.json()
+    """ Return the dictionary for the players monthly stats in a given gamemode. """
+    apirq: rq.Response = rq.get(f"https://api.playhive.com/v0/game/monthly/player/{gamemode}/{p1}/{year}/{month}", timeout=30)
+    hjs: dict = apirq.json()
     return hjs
 
 def stat_string(hive: dict) -> str:
-    # sometimes hive doesnt give out the death stat 
+    """ Returns the really long string with all the stats in it. """
     try: deaths = hive["deaths"]
     except: deaths = hive["played"] - hive["victories"]
     kills = hive["kills"]

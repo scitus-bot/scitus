@@ -12,7 +12,7 @@ CDOWN = 20 # cooldown time
 
 def success_embed(desc: str = None) -> discord.Embed:
     embed: discord.Embed = discord.Embed(
-        title="Success", 
+        title="Success",
         colour=discord.Colour.green(),
         description=desc,
     )
@@ -34,18 +34,21 @@ class Admin(commands.Cog):
     )
     @app_commands.default_permissions(manage_roles=True)
     async def colour(self, inter: discord.Interaction, role: discord.Role, hex: str) -> None:
+        """ Changes the colour of a specified role. """
 
         clr = discord.Colour(int(hex, base=16))
         await role.edit(colour=clr)
-        
-        embed: discord.Embed = success_embed(f"**{role.name}**'s colour successfully changed to **{hex}**.")
+
+        embed: discord.Embed = success_embed(
+            f"**{role.name}**'s colour successfully changed to **{hex}**."
+        )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
     # change role name
-    
+
     @app_commands.command(
         name="editname",
         description="Changes the name of a role.",
@@ -53,9 +56,9 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(manage_roles=True)
     async def name(self, inter: discord.Interaction, role: discord.Role, name: str) -> None:
         """ Changes the name of a specified role. """
-        
+
         await role.edit(name=name)
-        
+
         embed: discord.Embed = success_embed(f"Role name successfully changed to **{name}**.")
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
@@ -63,7 +66,7 @@ class Admin(commands.Cog):
 
 #--------------------------------------------------------------------------------------------------------------------------
     # delete role
-    
+
     @app_commands.command(
         name="deleterole",
         description="Deletes a given role.",
@@ -71,11 +74,11 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(manage_roles=True)
     async def delete(self, inter: discord.Interaction, role: discord.Role) -> None:
         """ Deletes a specified role. """
-        
-        roleName: str = role.name
+
+        role_name: str = role.name
         await role.delete()
 
-        embed: discord.Embed = success_embed(f"**{roleName}** successfully deleted.")
+        embed: discord.Embed = success_embed(f"**{role_name}** successfully deleted.")
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -93,14 +96,14 @@ class Admin(commands.Cog):
 
         # placeholder response
         await inter.response.send_message("Working...")
-        
+
         # giving all non-bot users a role
         for member in inter.guild.members:
             if not member.bot:
                 await member.add_roles(role)
             else:
                 print(f"{member.name} is a bot")
-                
+
 
         embed: discord.Embed = success_embed(f"{role.name} successfully given to everyone.")                
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
@@ -120,14 +123,14 @@ class Admin(commands.Cog):
 
         # placeholder reply
         await inter.response.send_message("Doing .. ... ")
-        
+
         # removing a role from all non-bot users
         for member in inter.guild.members:
             if not member.bot:
                 await member.remove_roles(role)
             else:
                 print(f"{member.name} is a bot")
-        
+
 
         embed: discord.Embed = success_embed(f"**{role.name}** successfully removed from everyone.")
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)

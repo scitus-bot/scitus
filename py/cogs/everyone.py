@@ -1,19 +1,9 @@
-from random import choice
-
-""" 
-Commands List:
-    ping
-    sus
-    report
-    avatar
-    remindme
-"""
-
-
 from typing import Optional
+
 import discord
 from discord import app_commands
 from discord.ext import commands
+
 from pasta import ChannelIDs
 
 
@@ -21,7 +11,6 @@ from pasta import ChannelIDs
 class Everyone(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-
 
 #--------------------------------------------------------------------------------------------------------------------------
 

@@ -1,21 +1,12 @@
-"""
-List of commands:
-  -Silence
-  -Free
-  -Sudo
-  -Someone 
-  -purge
-  -nick
-"""
-
+from random import randint
+from typing import Optional
 
 import discord
 from discord.utils import get
 from discord.ext import commands
 from discord import app_commands
-from random import randint
+
 from pasta import ListsPas, RoleIDs, UserIDs
-from typing import Optional
 
 
 # im going to use this function as a general error handling thing
