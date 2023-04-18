@@ -125,9 +125,9 @@ async def transcribe_message(msg: discord.Message) -> str:
     
     # respond to the message with the transcribed text
     try:
-        await reply.edit(content=f"```{str(r.recognize_google(audio))}```", message_author=False)
+        await reply.edit(content=f"```{str(r.recognize_google(audio))}```", mention_author=False)
     except sr.exceptions.UnknownValueError: # if any sound cannot be recognised by the ai
-        await reply.edit(content="```I am super not cool.```", message_author=False)
+        await reply.edit(content="```I am super homophobic.```", mention_author=False)
     
 
 @bot.listen()
