@@ -10,16 +10,18 @@ import os
 import requests as r
 import time
 
+# loading in environmental variables
 load_dotenv()
 TOKEN: str = os.environ.get("TOKEN")
 WH_URL: str = os.environ.get("url")
 
+
+# initialising the bot
 intents: discord.Intents = discord.Intents.all()
 bot: commands.Bot = commands.Bot(
     command_prefix=prefixPasta,
     intents=intents,
 )
-
 
 initial_extensions: list[str] = [
     "cogs.admin",           # admin commands
@@ -35,17 +37,6 @@ async def load_cogs(exts: list[str]) -> None:
         await bot.load_extension(ext)
 
 
-
-""" 
-To Do:
-    Message filter
-    On join + leave
-    On message silly things
-        jesus -> allah
-        
-"""
-
-
 #--------------------------------------------------------------------------------------------------------------------------
 
 @bot.listen()
@@ -58,10 +49,9 @@ async def on_ready() -> None:
     except Exception as e:
         print(f"{e}")
     
-    await bot.tree.sync()
-    
     print("Commands successfully synced and loaded.")
     
+    # jojolands update
     if not loop.is_running():
         loop.start()
 
@@ -71,32 +61,24 @@ async def on_ready() -> None:
 
 @bot.listen()
 async def on_member_join(member: discord.Member) -> None:
+    if member.bot: # cant dm bots/dont add the wrong roles to them
+        botRole = discord.utils.get(guild.roles, id=709182248213020705)
+        await member.add_roles(botRole)
+        return
 
     # welcome message
-    
     guild: discord.Guild = member.guild
     general: discord.TextChannel = guild.get_channel(ChannelIDs.gen)
     ruleID: int = ChannelIDs.rules
     
     await general.send(f"Welcome {member.mention}, hope you have a good time in the server!")
     
-    if member.bot: # dont want the hassle of dming bots and assigning roles and etc
-        botRole = discord.utils.get(guild.roles, id=709182248213020705)
-        await member.add_roles(botRole)
-        return
-    
-    
-#--------------------------------------------------------------------------------------------------------------------------
-    # give roles
-
+    # giving member role
     for roleID in JoinRoleIDs.giveRoleIDS:
         role: discord.Role = discord.utils.get(guild.roles, id=roleID)
         await member.add_roles(role)
     
-    
-#--------------------------------------------------------------------------------------------------------------------------
-    # silly little image
-
+    # send them a welcome image
     await member.send("https://images-ext-1.discordapp.net/external/AQAbFMaLzdhzzS8lX2tGQ-5mejo6KqycKl8Z5tK-BFU/https/media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
 
 
@@ -112,48 +94,49 @@ async def on_member_remove(member: discord.Member) -> None:
 #--------------------------------------------------------------------------------------------------------------------------
 
 def ogg2wav(fname: str) -> None:
-    wfn = fname.replace('.ogg','.wav')
+    """ Converts an .ogg to a .wav file"""
+    wfn = fname.replace(".ogg",".wav")
     x = AudioSegment.from_file(f"scitus/py/{fname}")
-    x.export(f"scitus/py/{wfn}", format='wav')    # maybe use original resolution to make smaller
+    x.export(f"scitus/py/{wfn}", format="wav")
 
 
 async def transcribe_message(msg: discord.Message) -> str:
-    reply = await msg.reply("working hard", mention_author=False)
+    """ Transcribes a discord voice message to text using google ai API """
+    # placeholder message
+    reply = await msg.reply("working....", mention_author=False)
+    #  save the .ogg file locally and convert it to a .wav locally
     fname: str = f"{msg.id}.ogg"
     await msg.attachments[0].save(f"scitus/py/{fname}")
     ogg2wav(fname)
     
+    # no idea 
     r: sr.Recognizer = sr.Recognizer()
     v_msg: sr.AudioFile = sr.AudioFile(f"scitus/py/{msg.id}.wav")
+    with v_msg as src: audio = r.record(src)
     
-    with v_msg as src:
-        audio = r.record(src)
-        
+    # delete the files after theyre downloaded to stop them from taking up space
     os.remove(f"scitus/py/{fname}")
     os.remove(f"scitus/py/{msg.id}.wav")
     
+    # respond to the message with the transcribed text
     try:
-        await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
-    except sr.exceptions.UnknownValueError:
-        await reply.edit(content="```I am super homophobic and racist.```")
+        await reply.edit(content=f"```{str(r.recognize_google(audio))}```", message_author=False)
+    except sr.exceptions.UnknownValueError: # if any sound cannot be recognised by the ai
+        await reply.edit(content="```I am super not cool.```", message_author=False)
     
-    
-
-#--------------------------------------------------------------------------------------------------------------------------
 
 @bot.listen()
 async def on_message(msg: discord.Message) -> None:
     if msg.author.bot: return
-    
-    msgC: str = msg.content.lower()
-    
-    # "message.flags.value >> 13" should be replacable with "message.flags.voice" when VM support comes to discord.py, I think.
+
+    # i lowkey dk    
     transcribe_everything: bool = True
     if transcribe_everything and msg.flags.value >> 13 and len(msg.attachments) == 1:
         await transcribe_message(msg)
-#--------------------------------------------------------------------------------------------------------------------------
+
+
     # AUTOREPLY (copypastas)
-    # finding how to do case insensitive things 
+    msgC: str = msg.content.lower()
 
     if "vaporeon" in msgC: 
         await msg.channel.send(CopyPastas.vaporeonPas, delete_after=20.0)
@@ -171,7 +154,6 @@ async def on_message(msg: discord.Message) -> None:
         await msg.channel.send(CopyPastas.doggoPas, delete_after=20.0)
 
 
-#-------------------------------------------------------------------------------------------------------------------------
     # autofilter:
     
     for word in ListsPas.autoMutePas:
@@ -184,7 +166,6 @@ async def on_message(msg: discord.Message) -> None:
             await msg.channel.send(f"{msg.author.mention} you can't send that!")
         
 
-#--------------------------------------------------------------------------------------------------------------------------
     # AUTOREACTS
 
     if (msg.channel.id is ChannelIDs.suggestions) or ("y/n" in msgC):
@@ -195,8 +176,10 @@ async def on_message(msg: discord.Message) -> None:
         
         
 #--------------------------------------------------------------------------------------------------------------------------
+# loop for fun stuff (like a countdown)
 
 def sec2days(sec: int) -> str:
+    """ Converts an amount of seconds into a nice string """
     min: int = (sec) // 60
     hrs: int = (min) // 60
     day: int = (hrs) // 24
@@ -210,6 +193,7 @@ def sec2days(sec: int) -> str:
 
 @tasks.loop(seconds=4)
 async def loop() -> None:
+    """ Countdown to the next jojolands chapter """
     alarm: int = pasta.nextJoJo
     time_now: float = time.time()
     diff: int = round(alarm - time_now)
@@ -225,8 +209,5 @@ async def loop() -> None:
             activity=discord.Game(name=f"{sec2days(diff)} until JOJOLands ch. {pasta.nextChap}!")
         )
         
-    
-    
-
 
 bot.run(TOKEN)
