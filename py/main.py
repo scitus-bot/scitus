@@ -1,14 +1,16 @@
-from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta
-import pasta
-from discord.ext import commands, tasks
-from discord import app_commands
-import speech_recognition as sr
 from dotenv import load_dotenv
-from pydub import AudioSegment
-import discord
 import os
 import requests as r
 import time
+
+import discord
+from discord.ext import commands, tasks
+from discord import app_commands
+from pydub import AudioSegment
+import speech_recognition as sr
+
+import pasta
+from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs, prefixPasta
 
 # loading in environmental variables
 load_dotenv()
