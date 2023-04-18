@@ -22,8 +22,8 @@ def fail_embed(desc: str = None) -> discord.Embed:
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-nextJoJo = 1681830000
-nextChap = 3
+nextJoJo = 1684508400
+nextChap = 4
 
 def update_jojo(new_time: int, new_chap: int) -> None:
     nextJoJo = new_time
