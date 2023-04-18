@@ -1,4 +1,21 @@
 #This is a file that contains copypastas/user IDs/role IDs
+import discord
+
+def success_embed(desc: str = None) -> discord.Embed:
+    embed: discord.Embed = discord.Embed(
+        title="Success",
+        colour=discord.Colour.green(),
+        description=desc,
+    )
+    return embed
+
+def fail_embed(desc: str = None) -> discord.Embed:
+    embed: discord.Embed = discord.Embed(
+        title="Failure",
+        colour=discord.Colour.red(),
+        description=desc,
+    )
+    return embed
 
 nextJoJo = 1681830000
 nextChap = 3
