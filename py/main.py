@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os
 import requests as r
 import time
@@ -6,6 +5,7 @@ import time
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
+from dotenv import load_dotenv
 from pydub import AudioSegment
 import speech_recognition as sr
 
@@ -35,6 +35,7 @@ initial_extensions: list[str] = [
 ]
 
 async def load_cogs(exts: list[str]) -> None:
+    """ Load in commands from other files """
     for ext in exts:
         await bot.load_extension(ext)
 
@@ -43,8 +44,10 @@ async def load_cogs(exts: list[str]) -> None:
 
 @bot.listen()
 async def on_ready() -> None:
+    """ When the bot is first started, runs once """
+
     print(f"Logged on as {bot.user}")
-    
+
     # loading in the commands that are kept in other files
     try:
         await load_cogs(initial_extensions)

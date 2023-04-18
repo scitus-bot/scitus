@@ -54,7 +54,10 @@ class Everyone(commands.Cog):
         
         await inter.response.send_message("Reported Successfully!", ephemeral=True)
             
-        embed=discord.Embed(title="Report", color=0xff0000)
+        embed=discord.Embed(
+            title="Report", 
+            color=0xff0000,
+            )
         embed.set_thumbnail(url=inter.guild.icon.url)
         embed.add_field(name="User Reported:", value=member.mention, inline=False)
         embed.add_field(name="Reason:", value=reason, inline=False)
@@ -75,15 +78,6 @@ class Everyone(commands.Cog):
         embed.set_image(url=member.avatar.url)
         await inter.response.send_message(embed=embed)
 
-
-#--------------------------------------------------------------------------------------------------------------------------
-
-    @app_commands.command(
-        name="rng",
-        description="RNG"
-    )
-    async def button(self, inter: discord.Interaction, min: int, max: int, weight: Optional[int] = 0) -> None:
-        pass
         
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -93,10 +87,13 @@ class Everyone(commands.Cog):
     )
     async def info(self, inter: discord.Interaction) -> None:
         
-        embed = discord.Embed(title=f"{inter.guild.name}'s Info", color=0xEEDB83) 
         
         infoStr: str = f"Member count: {inter.guild.member_count}\nCreated at: {inter.guild.created_at}"
         
+        embed = discord.Embed(
+            title=f"{inter.guild.name}'s Info",
+             color=0xEEDB83,
+             ) 
         embed.add_field(name="Server Info", value=infoStr)
         embed.set_image(url=inter.guild.icon.url)
         await inter.response.send_message(embed=embed)
