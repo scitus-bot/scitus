@@ -51,9 +51,9 @@ async def on_ready() -> None:
         await load_cogs(initial_extensions)
     except Exception as e:
         print(f"{e}")
-    
+
     print("Commands successfully synced and loaded.")
-    
+
     # jojolands update
     if not loop.is_running():
         loop.start()
@@ -64,6 +64,8 @@ async def on_ready() -> None:
 
 @bot.listen()
 async def on_member_join(member: discord.Member) -> None:
+    """ When a member joins. """
+
     guild: discord.Guild = member.guild
 
     if member.bot: # cant dm bots/dont add the wrong roles to them
@@ -183,15 +185,15 @@ async def on_message(msg: discord.Message) -> None:
 
 def sec2days(sec: int) -> str:
     """ Converts an amount of seconds into a nice string """
-    min: int = (sec) // 60
-    hrs: int = (min) // 60
+    mns: int = (sec) // 60
+    hrs: int = (mns) // 60
     day: int = (hrs) // 24
-    min -= hrs*60
+    mns -= hrs*60
     hrs -= day*24
     ret_str: str = ""
-    
-    ret_str = f"{day} day(s), {hrs} hour(s), {min} minute(s), and {sec%60} second(s)"
-    
+
+    ret_str = f"{day} day(s), {hrs} hour(s), {mns} minute(s), and {sec%60} second(s)"
+
     return ret_str
 
 @tasks.loop(seconds=4)
