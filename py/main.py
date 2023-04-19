@@ -205,7 +205,7 @@ async def loop() -> None:
     
     # To make it count on each minute rather than a few seconds off
     if diff % 4 != 0:
-        time.sleep(diff % 4)
+        time.sleep((diff % 4) + 1)
     
     if diff < 0:
         await bot.change_presence(
