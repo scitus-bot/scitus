@@ -203,6 +203,10 @@ async def loop() -> None:
     time_now: float = time.time()
     diff: int = round(alarm - time_now)
     
+    # To make it count on each minute rather than a few seconds off
+    if diff % 4 != 0:
+        time.sleep(diff % 4)
+    
     if diff < 0:
         await bot.change_presence(
             status=discord.Status.dnd,
