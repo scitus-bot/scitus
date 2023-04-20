@@ -62,6 +62,7 @@ class Everyone(commands.Cog):
             self, inter: discord.Interaction,
             member: Optional[discord.Member] = None) -> None:
         """ Returns a user's avatar """
+        await inter.response.send_message("....")
         
         member = member or inter.user
         
@@ -71,7 +72,7 @@ class Everyone(commands.Cog):
             color=0xEEDB83
         ) 
         embed.set_image(url=member.avatar.url)
-        await inter.response.send_message(embed=embed)
+        await inter.edit_original_response(content=None, embed=embed)
 
         
 #--------------------------------------------------------------------------------------------------------------------------
