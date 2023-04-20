@@ -83,9 +83,6 @@ async def on_member_join(member: discord.Member) -> None:
         role: discord.Role = discord.utils.get(guild.roles, id=roleID)
         await member.add_roles(role)
     
-    # send them a welcome image
-    await member.send("https://images-ext-1.discordapp.net/external/AQAbFMaLzdhzzS8lX2tGQ-5mejo6KqycKl8Z5tK-BFU/https/media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
-
 
 #--------------------------------------------------------------------------------------------------------------------------
 
