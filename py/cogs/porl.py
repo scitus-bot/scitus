@@ -60,7 +60,9 @@ class Porl(commands.Cog):
         for roleId in roleIds:
             await inter.user.add_roles(get(inter.guild.roles, id=roleId))
 
-        await inter.response.send_message("https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif")
+        await inter.response.send_message(
+            "https://cdn.discordapp.com/attachments/709182248741503093/856158394292895754/swag.gif"
+        )
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +86,9 @@ class Porl(commands.Cog):
         for roleId in roleIds:
             await inter.user.remove_roles(get(inter.guild.roles, id=roleId))
 
-        await inter.response.send_message("https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1")
+        await inter.response.send_message(
+            "https://cdn.discordapp.com/emojis/814109742607630397.gif?v=1"
+        )
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -126,7 +130,10 @@ class Porl(commands.Cog):
     )
     @is_porl()
     async def hosts(self, inter: discord.Interaction) -> None:
-        await inter.response.send_message(requests.get("https://ipinfo.io/ip").text, ephemeral=True)
+        await inter.response.send_message(
+            requests.get("https://ipinfo.io/ip").text,
+            ephemeral=True
+        )
 
 
 # adds the cog to the main.py and allows it to be used
