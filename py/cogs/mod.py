@@ -249,6 +249,7 @@ class Moderator(commands.Cog):
             self, inter: discord.Interaction,
             user: discord.Member, reason: str) -> None:
         """ Warns a user """
+        await inter.response.send_message(".....")
         
         # cannot warn without the mod role
         mod_role: discord.Role = get(inter.guild.roles, id=RoleIDs.modRoleID)
@@ -267,7 +268,7 @@ class Moderator(commands.Cog):
             f"{user.mention} has been warned for '{reason}'"
         )
         embed.set_footer(text=f"Warned by {inter.user.mention}")
-        await inter.response.send_message(embed=embed)
+        await inter.edit_original_response(content=None, embed=embed)
 
 
 #--------------------------------------------------------------------------------------------------------------------------
