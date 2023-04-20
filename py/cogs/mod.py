@@ -264,9 +264,9 @@ class Moderator(commands.Cog):
             return 
         
         embed: discord.Embed = success_embed(
-            f"{user.mention} has been warned."
+            f"{user.mention} has been warned for '{reason}'"
         )
-        embed.set_footer(text=f"Warned by {inter.user.name}")
+        embed.set_footer(text=f"Warned by {inter.user.mention}")
         await inter.response.send_message(embed=embed)
 
 
