@@ -95,7 +95,7 @@ class Everyone(commands.Cog):
         embed = discord.Embed(
             title=f"{inter.guild.name}'s Info",
             color=0xEEDB83,
-        ) 
+        )
         embed.add_field(name="Server Info", value=infoStr)
         embed.set_image(url=inter.guild.icon.url)
         await inter.response.send_message(embed=embed)
@@ -107,7 +107,7 @@ class Everyone(commands.Cog):
         name="buttoncommand",
     )
     async def buttoncommand(self, inter: discord.Interaction) -> None:
-        await inter.response.send_message("button", view=MyView)
+        await inter.response.send_message("button", view=MyView())
 
 
 async def setup(bot: commands.Bot) -> None:
