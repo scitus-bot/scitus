@@ -22,8 +22,8 @@ def fail_embed(desc: str = None) -> discord.Embed:
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-nextJoJo = 1681830000
-nextChap = 3
+nextJoJo = 1684422000
+nextChap = 4
 
 def update_jojo(new_time: int, new_chap: int) -> None:
     nextJoJo = new_time
@@ -58,9 +58,12 @@ class UserIDs:
 class RoleIDs:
     modRoleID = 735110195528597506      # lords role
     adminRoleID = 735110195528597506    # admin
+    modRoleID = 735110195528597506      # lords role
+    adminRoleID = 735110195528597506    # admin
 
     porlRoleID = 844834544947167252     # "porl"
 
+    mutedRoleID = 819697679146942534    # muted
     mutedRoleID = 819697679146942534    # muted
 
 class JoinRoleIDs:
@@ -76,7 +79,7 @@ class ListsPas:
         "Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
         "wanker", 
         "holy fucking shit, are you genuinely blind? no? then how about you fucking use the fucking help command huh? \ndipshit ass",
-        ] # when people dont use the commands correctly
+    ] # when people dont use the commands correctly
 
     # words that get you muted automatically 
     autoMutePas = [
@@ -84,13 +87,12 @@ class ListsPas:
         "faggot", 
         "tranny", 
         "retard",
-        ] 
+       ] 
 
-    # autoDelPas = []
 
 class ChannelIDs:
     report = 904829118477111366
     gen = 709182248741503093
-    selfroles = 855505466598621224 # selfroles are so hard wtf i dont get it
+    selfroles = 855505466598621224  # selfroles are so hard wtf i dont get it
     rules = 715714389231272056
     suggestions = 747194071075782756

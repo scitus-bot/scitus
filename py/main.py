@@ -19,7 +19,7 @@ WH_URL: str = os.environ.get("url")
 # initialising the bot
 intents: discord.Intents = discord.Intents.all()
 bot: commands.Bot = commands.Bot(
-    command_prefix=None,
+    command_prefix=".",
     intents=intents,
 )
 
@@ -83,9 +83,6 @@ async def on_member_join(member: discord.Member) -> None:
         role: discord.Role = discord.utils.get(guild.roles, id=roleID)
         await member.add_roles(role)
     
-    # send them a welcome image
-    await member.send("https://images-ext-1.discordapp.net/external/AQAbFMaLzdhzzS8lX2tGQ-5mejo6KqycKl8Z5tK-BFU/https/media.discordapp.net/attachments/709182248741503093/905499003754541116/c9de64f4432ebbc2fde22a968dbff7dd.png")
-
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -125,9 +122,9 @@ async def transcribe_message(msg: discord.Message) -> str:
     
     # respond to the message with the transcribed text
     try:
-        await reply.edit(content=f"```{str(r.recognize_google(audio))}```", message_author=False)
-    except sr.exceptions.UnknownValueError:     # if any sound cannot be recognised by the ai
-        await reply.edit(content="```I am super not cool.```", message_author=False)
+        await reply.edit(content=f"```{str(r.recognize_google(audio))}```")
+    except sr.exceptions.UnknownValueError: # if any sound cannot be recognised by the ai
+        await reply.edit(content="```I am super homophobic.```")
     
 
 @bot.listen()
@@ -203,6 +200,10 @@ async def loop() -> None:
     alarm: int = pasta.nextJoJo
     time_now: float = time.time()
     diff: int = round(alarm - time_now)
+    
+    # To make it count on each minute rather than a few seconds off
+    if diff % 4 != 0:
+        time.sleep((diff % 4))
     
     if diff < 0:
         await bot.change_presence(

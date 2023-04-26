@@ -65,7 +65,10 @@ class Hive(commands.Cog):
         name="stats",
         description="Stats for the Hive server.",
     )
-    async def stats(self, inter: discord.Interaction, player: str, year: Optional[int] = None, month: Optional[int] = None) -> None:
+    async def stats(
+            self, inter: discord.Interaction,
+            player: str, year: Optional[int] = None,
+            month: Optional[int] = None) -> None:
         
         await inter.response.send_message("Processing....")
         
@@ -142,16 +145,25 @@ class Hive(commands.Cog):
         else:
             desc = f"{player}'s Hive stats."
         
-        emb: discord.Embed = discord.Embed(title=player, description=desc, colour=discord.Colour(int("ffad14", base=16)))
-        emb.set_author(name=inter.user, icon_url=inter.user.display_avatar.url)
-        emb.set_thumbnail(url="https://static.wikia.nocookie.net/youtube/images/d/df/HiveGames.jpg/revision/latest?cb=20210726032229")
-        emb.add_field(name="Treasure Wars", value=twstring)
-        emb.add_field(name="Skywars", value=swstring)
-        emb.add_field(name="Survival Games", value=sgstring)
-        emb.add_field(name="Capture the Flag", value=ctfstring)
-        emb.set_footer(text="No Bridge stats ever, and some KDRs may not be 100% accurate.")
+        embed: discord.Embed = discord.Embed(
+            title=player,
+            description=desc,
+            colour=0xffad14,
+        )
+        embed.set_author(
+            name=inter.user,
+            icon_url=inter.user.display_avatar.url
+        )
+        embed.set_thumbnail(
+            url="https://static.wikia.nocookie.net/youtube/images/d/df/HiveGames.jpg/revision/latest?cb=20210726032229"
+        )
+        embed.add_field(name="Treasure Wars", value=twstring)
+        embed.add_field(name="Skywars", value=swstring)
+        embed.add_field(name="Survival Games", value=sgstring)
+        embed.add_field(name="Capture the Flag", value=ctfstring)
+        embed.set_footer(text="No Bridge stats ever, and some KDRs may not be 100% accurate.")
 
-        await inter.edit_original_response(content=None, embed=emb)
+        await inter.edit_original_response(content=None, embed=embed)
   
 
 async def setup(bot: commands.Bot) -> None:

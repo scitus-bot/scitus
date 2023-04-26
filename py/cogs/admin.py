@@ -51,7 +51,9 @@ class Admin(commands.Cog):
 
         await role.edit(name=name)
 
-        embed: discord.Embed = success_embed(f"Role name successfully changed to **{name}**.")
+        embed: discord.Embed = success_embed(
+            f"Role name successfully changed to **{name}**."
+        )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -70,7 +72,9 @@ class Admin(commands.Cog):
         role_name: str = role.name
         await role.delete()
 
-        embed: discord.Embed = success_embed(f"**{role_name}** successfully deleted.")
+        embed: discord.Embed = success_embed(
+            f"**{role_name}** successfully deleted."
+        )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -97,7 +101,9 @@ class Admin(commands.Cog):
                 print(f"{member.name} is a bot")
 
 
-        embed: discord.Embed = success_embed(f"{role.name} successfully given to everyone.")
+        embed: discord.Embed = success_embed(
+            f"{role.name} successfully given to everyone."
+        )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.edit_original_response(content=None, embed=embed)
 
@@ -124,7 +130,9 @@ class Admin(commands.Cog):
                 print(f"{member.name} is a bot")
 
 
-        embed: discord.Embed = success_embed(f"**{role.name}** successfully removed from everyone.")
+        embed: discord.Embed = success_embed(
+            f"**{role.name}** successfully removed from everyone."
+            )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.edit_original_response(content=None, embed=embed)
 
@@ -144,7 +152,9 @@ class Admin(commands.Cog):
         clr = discord.Colour(int(hex, base=16))
         await inter.guild.create_role(name=name, colour=clr)
 
-        embed: discord.Embed = success_embed(f"**{name}** successfully created.")
+        embed: discord.Embed = success_embed(
+            f"**{name}** successfully created."
+        )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -162,7 +172,9 @@ class Admin(commands.Cog):
 
         await self.bot.tree.sync()
 
-        embed: discord.Embed = success_embed("Syncong complete.")
+        embed: discord.Embed = success_embed(
+            "Syncing complete."
+        )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
 
@@ -180,7 +192,9 @@ class Admin(commands.Cog):
 
         await inter.response.send_message("Updating the bot...", ephemeral=True)
 
-        # want to try and prevent it from deleting itself if there is an obvious error in the code that will prevent it from running
+        # want to try and prevent it from deleting itself 
+        # if there is an obvious error in the code that will 
+        # prevent it from running
 
         try:
             subprocess.Popen(["./update.sh"])   # runs the script saved on the server
@@ -226,15 +240,13 @@ class Admin(commands.Cog):
         for channel in category.channels:
             await channel.edit(sync_permissions=True)
 
-        embed: discord.Embed = discord.Embed(
-            title="Syncing complete!",
-            colour=discord.Colour.green(),
+        embed: discord.Embed = success_embed(
+            "Syncing complete!"
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.edit_original_response(content=None, embed=embed)
 
 #--------------------------------------------------------------------------------------------------------------------------
-
 #necessities
 
 async def setup(bot: commands.Bot) -> None:
