@@ -126,15 +126,16 @@ async def transcribe_message(msg: discord.Message) -> str:
     # respond to the message with the transcribed text
     try:
         await reply.edit(content=f"```{str(r.recognize_google(audio))}```", message_author=False)
-    except sr.exceptions.UnknownValueError: # if any sound cannot be recognised by the ai
+    except sr.exceptions.UnknownValueError:     # if any sound cannot be recognised by the ai
         await reply.edit(content="```I am super not cool.```", message_author=False)
     
 
 @bot.listen()
 async def on_message(msg: discord.Message) -> None:
-    if msg.author.bot: return
+    if msg.author.bot:
+        return
 
-    # i lowkey dk    
+    # i lowkey dk
     transcribe_everything: bool = True
     if transcribe_everything and msg.flags.value >> 13 and len(msg.attachments) == 1:
         await transcribe_message(msg)

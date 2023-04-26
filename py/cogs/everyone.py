@@ -7,6 +7,11 @@ from discord.ext import commands
 from pasta import ChannelIDs
 
 
+class MyView(discord.ui.View): 
+    @discord.ui.button(label="Click me!", style=discord.ButtonStyle.primary, emoji="😎") 
+    async def button_callback(self, button, interaction):
+        await interaction.response.send_message("You clicked the button!") 
+
 
 class Everyone(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -86,7 +91,15 @@ class Everyone(commands.Cog):
         embed.add_field(name="Server Info", value=infoStr)
         embed.set_image(url=inter.guild.icon.url)
         await inter.response.send_message(embed=embed)
-    
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+    @app_commands.command(
+        name="buttoncommand",
+    )
+    async def buttoncommand(self, inter: discord.Interaction) -> None:
+        await inter.response.send_message("button", view=MyView)
 
 
 async def setup(bot: commands.Bot) -> None:

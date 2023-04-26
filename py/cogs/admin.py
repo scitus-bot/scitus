@@ -97,7 +97,7 @@ class Admin(commands.Cog):
                 print(f"{member.name} is a bot")
 
 
-        embed: discord.Embed = success_embed(f"{role.name} successfully given to everyone.")                
+        embed: discord.Embed = success_embed(f"{role.name} successfully given to everyone.")
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.edit_original_response(content=None, embed=embed)
 
@@ -184,10 +184,9 @@ class Admin(commands.Cog):
 
         try:
             subprocess.Popen(["./update.sh"])   # runs the script saved on the server
+            sys.exit()  # to prevent any possible clashes 
         except Exception as e:
             await inter.channel.send(f"Error: {e}")
-        else:
-            sys.exit()  # to prevent any possible clashes 
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -221,20 +220,19 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     async def sync_channels(self, inter: discord.Interaction, category: discord.CategoryChannel) -> None:
         """ Syncs """
-        
+
         await inter.response.send_message("Syncing ... ")
-        
+
         for channel in category.channels:
             await channel.edit(sync_permissions=True)
 
         embed: discord.Embed = discord.Embed(
-            title="Syncing complete!", 
+            title="Syncing complete!",
             colour=discord.Colour.green(),
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.edit_original_response(content=None, embed=embed)
 
-        
 #--------------------------------------------------------------------------------------------------------------------------
 
 #necessities

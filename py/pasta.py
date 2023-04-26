@@ -56,12 +56,12 @@ class UserIDs:
 #--------------------------------------------------------------------------------------------------------------------------
 #IDs for various roles
 class RoleIDs:
-    modRoleID = 735110195528597506 #lords role
-    adminRoleID = 735110195528597506 #admin
+    modRoleID = 735110195528597506      # lords role
+    adminRoleID = 735110195528597506    # admin
 
-    porlRoleID = 844834544947167252 #"porl"
+    porlRoleID = 844834544947167252     # "porl"
 
-    mutedRoleID = 819697679146942534 #muted
+    mutedRoleID = 819697679146942534    # muted
 
 class JoinRoleIDs:
     memberRoleID = 709182248213020704
@@ -71,7 +71,6 @@ class JoinRoleIDs:
         ]
 
 #--------------------------------------------------------------------------------------------------------------------------
-#It will not slow things down, I am now going to make a class for lists
 class ListsPas:
     helpPastas = [
         "Do you have a brain, huh? Do you realise something as simple as a help command may be of help, right? You idiot. It's called a help command for a reason, you massive brainless pile of human garbage. When's the last time you took a shower, huh? You stink. Brush your teeth, too. Use the help command while you're at it. Maybe next time you won't make an error as simple as not giving enough arguments.", #courtesy of CJ
