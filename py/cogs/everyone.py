@@ -1,4 +1,8 @@
 from typing import Optional
+import os
+from pdf2image import convert_from_path
+from time import time
+
 
 import discord
 from discord import app_commands
@@ -11,6 +15,13 @@ class MyView(discord.ui.View):
     @discord.ui.button(label="Click me!", style=discord.ButtonStyle.primary, emoji="😎") 
     async def button_callback(self, button, interaction):
         await interaction.response.send_message("You clicked the button!") 
+
+def pdf_to_image(file_name: str) -> None:
+    pages: list = convert_from_path(file_name, 500)
+    for count, page in enumerate(pages):
+        page.save(f"{count}.jpg", "JPEG")
+
+    
 
 
 class Everyone(commands.Cog):
@@ -108,6 +119,33 @@ class Everyone(commands.Cog):
     )
     async def buttoncommand(self, inter: discord.Interaction) -> None:
         await inter.response.send_message("button", view=MyView())
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # LaTeX
+
+
+    @app_commands.command(
+        name="LaTeX",
+        description="Generates an image using LaTeX from a given prompt that uses LaTeX syntax."
+    )
+    async def latex(self, inter: discord.Interaction, translate: str) -> None:
+        start: str = r"\documentclass{article}" + r"\begin{document}" + "\\begin{math}\n"
+        end: str = r"\end{math}" + "\\end{document}\n"
+
+        file_name: str = f"latex{time()}"
+
+        with open(f"{file_name}.tex", "w") as file:
+            file.write(start)
+            file.write(translate)
+            file.write(end)
+
+        os.system(f"pdflatex {file_name}.tex")
+        pdf_to_image(f"{file_name}.pdf")
+        
+
+        await inter.response.send_message(file=discord.File(f"{file_name}.jpg"))
+
 
 
 async def setup(bot: commands.Bot) -> None:
