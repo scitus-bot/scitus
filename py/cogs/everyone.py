@@ -165,9 +165,18 @@ class Everyone(commands.Cog):
         
         im1.save(f"crop{fname}.jpg")
         
+        
+        embed: discord.Embed = discord.Embed(
+            title="LaTeX output",
+            color=0xEEDB83
+        )
+        file = discord.File(f"crop{fname}.jpg", filename=f"crop{fname}.jpg")
+        embed.set_image(url=f"attachment://crop{fname}.jpg")
+        await inter.edit_original_response(content=None, embed=embed)
         await inter.edit_original_response(
             content="** **",
-            file=discord.File(f"crop{fname}.jpg")
+            file=file,
+            embed=embed            
         )
         
         # Removing all the files made
