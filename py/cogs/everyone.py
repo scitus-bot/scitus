@@ -1,6 +1,7 @@
 from typing import Optional
 import os
 from pdf2image import convert_from_path
+from PIL import Image
 from time import time
 
 
@@ -129,24 +130,55 @@ class Everyone(commands.Cog):
         name="LaTeX",
         description="Generates an image using LaTeX from a given prompt that uses LaTeX syntax."
     )
-    async def latex(self, inter: discord.Interaction, translate: str) -> None:
-        start: str = r"\documentclass{article}" + r"\begin{document}" + "\\begin{math}\n"
-        end: str = r"\end{math}" + "\\end{document}\n"
-
-        file_name: str = f"latex{time()}"
-
-        with open(f"{file_name}.tex", "w") as file:
-            file.write(start)
-            file.write(translate)
-            file.write(end)
-
-        os.system(f"pdflatex {file_name}.tex")
-        pdf_to_image(f"{file_name}.pdf")
+    async def latex(self, inter: discord.Interaction, prompt: str) -> None:
+        """ Convert a text prompt to a generated LaTeX file """
+        await inter.response.send_message("Processing....")
         
-
-        await inter.response.send_message(file=discord.File(f"{file_name}.jpg"))
-
-
-
+        # Generates a unique file name (in case multiple being processed at the same time)
+        fname: str = str(round(time()))
+        
+        
+        # Writing to the latex file
+        with open(f"{fname}.tex", "w") as l:
+            l.write(
+                ("\\documentclass{slides}\n"
+                "\\begin{document}\n\\begin{center}\n"
+                "\\thispagestyle{empty}\n\\begin{math}\n")
+            )
+            l.write(prompt)
+            l.write(
+                ("\n\\end{math}\n\\end{center}\n\\end{document}")
+            )
+            
+        
+        # Compiling latex to pdf
+        os.system(f"pdflatex -quiet {fname}.tex")
+        
+        
+        # Converting pdf to an image
+        images: list = convert_from_path(f"{fname}.pdf", 500)
+        images[0].save(f"image{fname}.jpg", "JPEG")
+        
+        # Cropping and sending the generated image
+        im = Image.open(f"image{fname}.jpg")
+        im1 = im.crop((0, 1240, 4133, 3446))
+        
+        im1.save(f"crop{fname}.jpg")
+        
+        await inter.edit_original_response(
+            content=None,
+            file=discord.File(f"crop{fname}.jpg")
+        )
+        
+        # Removing all the files made
+        os.remove(f"{fname}.aux")
+        os.remove(f"{fname}.log")
+        os.remove(f"{fname}.pdf")
+        os.remove(f"{fname}.tex")
+        os.remove(f"image{fname}.jpg")
+        os.remove(f"crop{fname}.jpg")
+        
+    
+    
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Everyone(bot))
