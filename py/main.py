@@ -52,6 +52,7 @@ async def on_ready() -> None:
     except Exception as e:
         print(f"{e}")
 
+    await bot.tree.sync()
     print("Commands successfully synced and loaded.")
 
     # jojolands update
