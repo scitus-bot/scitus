@@ -143,11 +143,11 @@ class Everyone(commands.Cog):
             l.write(
                 ("\\documentclass{slides}\n"
                 "\\begin{document}\n\\begin{center}\n"
-                "\\thispagestyle{empty}\n\\begin{math}\n")
+                "\\thispagestyle{empty}\n\\[\n")
             )
             l.write(prompt)
             l.write(
-                ("\n\\end{math}\n\\end{center}\n\\end{document}")
+                ("\n\\]\n\\end{center}\n\\end{document}")
             )
             
         
