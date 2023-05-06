@@ -172,12 +172,12 @@ class Everyone(commands.Cog):
         )
         file = discord.File(f"crop{fname}.jpg", filename=f"crop{fname}.jpg")
         embed.set_image(url=f"attachment://crop{fname}.jpg")
-        await inter.edit_original_response(content=None, embed=embed)
-        await inter.edit_original_response(
+        await inter.channel.send(
             content="** **",
             file=file,
-            embed=embed            
+            embed=embed   
         )
+        await inter.delete_original_response()
         
         # Removing all the files made
         os.remove(f"{fname}.aux")
