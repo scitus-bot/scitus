@@ -173,7 +173,7 @@ class Everyone(commands.Cog):
         file = discord.File(f"crop{fname}.jpg", filename=f"crop{fname}.jpg")
         embed.set_image(url=f"attachment://crop{fname}.jpg")
         await inter.channel.send(
-            content="** **",
+            content=None,
             file=file,
             embed=embed   
         )
