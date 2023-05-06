@@ -167,7 +167,7 @@ class Everyone(commands.Cog):
         
         await inter.edit_original_response(
             content=None,
-            file=discord.File(f"crop{fname}.jpg")
+            # file=discord.File(f"crop{fname}.jpg")
         )
         
         # Removing all the files made
