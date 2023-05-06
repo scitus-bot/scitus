@@ -168,7 +168,8 @@ class Everyone(commands.Cog):
         
         embed: discord.Embed = discord.Embed(
             title="LaTeX output",
-            color=0xEEDB83
+            color=0xEEDB83,
+            description=prompt
         )
         file = discord.File(f"crop{fname}.jpg", filename=f"crop{fname}.jpg")
         embed.set_image(url=f"attachment://crop{fname}.jpg")
