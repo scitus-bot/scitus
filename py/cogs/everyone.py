@@ -127,7 +127,7 @@ class Everyone(commands.Cog):
 
 
     @app_commands.command(
-        name="LaTeX",
+        name="latex",
         description="Generates an image using LaTeX from a given prompt that uses LaTeX syntax."
     )
     async def latex(self, inter: discord.Interaction, prompt: str) -> None:
