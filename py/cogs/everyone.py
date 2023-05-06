@@ -166,7 +166,7 @@ class Everyone(commands.Cog):
         im1.save(f"crop{fname}.jpg")
         
         await inter.edit_original_response(
-            content=None,
+            content="** **",
             # file=discord.File(f"crop{fname}.jpg")
         )
         
