@@ -37,7 +37,7 @@ class MyView(discord.ui.View):
     ]
     )
     async def select_callback(self, inter: discord.Interaction, select): # the function called when the user is done selecting options
-        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!")
+        await inter.response.send_message(f"Awesome! I like {select.values[0]} too!")
 
 
 def pdf_to_image(file_name: str) -> None:
