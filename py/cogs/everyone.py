@@ -14,15 +14,14 @@ from pasta import ChannelIDs
 
 class MyView(discord.ui.View): 
     @discord.ui.button(label="Click me!", style=discord.ButtonStyle.primary, emoji="😎") 
-    async def button_callback(self, button, interaction):
+    async def button_callback(self, interaction: discord.Interaction, button):
         await interaction.response.send_message("You clicked the button!") 
+
 
 def pdf_to_image(file_name: str) -> None:
     pages: list = convert_from_path(file_name, 500)
     for count, page in enumerate(pages):
         page.save(f"{count}.jpg", "JPEG")
-
-    
 
 
 class Everyone(commands.Cog):
