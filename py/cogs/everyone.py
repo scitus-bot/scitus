@@ -17,6 +17,28 @@ class MyView(discord.ui.View):
     async def button_callback(self, interaction: discord.Interaction, button):
         await interaction.response.send_message("You clicked the button!") 
 
+    @discord.ui.select( # the decorator that lets you specify the properties of the select menu
+    placeholder = "Choose a Flavor!", # the placeholder text that will be displayed if nothing is selected
+    min_values = 1, # the minimum number of values that must be selected by the users
+    max_values = 1, # the maximum number of values that can be selected by the users
+    options = [ # the list of options from which users can choose, a required field
+        discord.SelectOption(
+            label="Vanilla",
+            description="Pick this if you like vanilla!"
+        ),
+        discord.SelectOption(
+            label="Chocolate",
+            description="Pick this if you like chocolate!"
+        ),
+        discord.SelectOption(
+            label="Strawberry",
+            description="Pick this if you like strawberry!"
+        )
+    ]
+    )
+    async def select_callback(self, select, interaction): # the function called when the user is done selecting options
+        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!")
+
 
 def pdf_to_image(file_name: str) -> None:
     pages: list = convert_from_path(file_name, 500)
@@ -187,6 +209,12 @@ class Everyone(commands.Cog):
         os.remove(f"image{fname}.jpg")
         os.remove(f"crop{fname}.jpg")
         
+    
+    @app_commands.command(
+        name="flabour",
+    )
+    async def flabour(self, inter: discord.Interaction) -> None:
+        await inter.response.send_message(" w", view=MyView())
     
     
 async def setup(bot: commands.Bot) -> None:
