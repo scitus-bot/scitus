@@ -14,8 +14,8 @@ from pasta import ChannelIDs
 
 class MyView(discord.ui.View): 
     @discord.ui.button(label="Click me!", style=discord.ButtonStyle.primary, emoji="😎") 
-    async def button_callback(self, interaction: discord.Interaction, button):
-        await interaction.response.send_message("You clicked the button!") 
+    async def button_callback(self, inter: discord.Interaction, button):
+        await inter.response.send_message("You clicked the button!") 
 
     @discord.ui.select( # the decorator that lets you specify the properties of the select menu
     placeholder = "Choose a Flavor!", # the placeholder text that will be displayed if nothing is selected
@@ -36,7 +36,7 @@ class MyView(discord.ui.View):
         )
     ]
     )
-    async def select_callback(self, select, interaction): # the function called when the user is done selecting options
+    async def select_callback(self, inter: discord.Interaction, select): # the function called when the user is done selecting options
         await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!")
 
 
