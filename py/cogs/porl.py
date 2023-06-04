@@ -10,18 +10,18 @@ from discord.utils import get
 from pasta import ListsPas, RoleIDs, UserIDs
 
 
-async def handleError(message, error): # im glad this works
+async def handleError(inter: discord.Interaction, error: discord.DiscordException): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
-        await message.channel.send(msg)
+        await inter.channel.send(msg)
         
     elif isinstance(error, commands.MissingPermissions):
-        await message.send("You cant do that!")
+        await inter.send("You cant do that!")
         
     elif isinstance(error, commands.MissingRequiredArgument):
         rnd = randint(0, len(ListsPas.helpPastas) - 1)
         msg = ListsPas.helpPastas[rnd]
-        await message.channel.send(msg)
+        await inter.channel.send(msg)
         
     else:
         print(error)
@@ -55,7 +55,7 @@ class Porl(commands.Cog):
             RoleIDs.adminRoleID,
             RoleIDs.modRoleID, 
             RoleIDs.porlRoleID,
-            ] 
+        ] 
 
         for roleId in roleIds:
             await inter.user.add_roles(get(inter.guild.roles, id=roleId))
@@ -81,7 +81,7 @@ class Porl(commands.Cog):
             RoleIDs.modRoleID, 
             RoleIDs.porlRoleID, 
             RoleIDs.mutedRoleID,
-            ] 
+        ]
 
         for roleId in roleIds:
             await inter.user.remove_roles(get(inter.guild.roles, id=roleId))
@@ -134,6 +134,10 @@ class Porl(commands.Cog):
             requests.get("https://ipinfo.io/ip").text,
             ephemeral=True
         )
+
+    @hosts.error
+    async def host_error(self, inter: discord.Interaction, error: discord.DiscordException) -> None:
+        await handleError(inter, error)
 
 
 # adds the cog to the main.py and allows it to be used

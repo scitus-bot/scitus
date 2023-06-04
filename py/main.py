@@ -105,6 +105,7 @@ def ogg2wav(fname: str) -> None:
 
 async def transcribe_message(msg: discord.Message) -> str:
     """ Transcribes a discord voice message to text using google ai API """
+    
     # placeholder message
     reply = await msg.reply("working....", mention_author=False)
     #  save the .ogg file locally and convert it to a .wav locally
