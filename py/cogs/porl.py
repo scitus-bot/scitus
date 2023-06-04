@@ -10,7 +10,7 @@ from discord.utils import get
 from pasta import ListsPas, RoleIDs, UserIDs
 
 
-async def handleError(inter: discord.Interaction, error: discord.DiscordException): # im glad this works
+async def handleError(inter: discord.Interaction, error: Exception): # im glad this works
     if isinstance(error, commands.CommandOnCooldown):
         msg = 'This command is on cooldown, please try again in {:.2f}s'.format(error.retry_after)
         await inter.channel.send(msg)
@@ -129,14 +129,15 @@ class Porl(commands.Cog):
         description="Lists the public IPs of the hosts of this bot",
     )
     @is_porl()
-    async def hosts(self, inter: discord.Interaction) -> None:
+    async def hosts(self, inter: discord.Interaction, num: int) -> None:
+        h = num + "a"
         await inter.response.send_message(
             requests.get("https://ipinfo.io/ip").text,
             ephemeral=True
         )
 
     @hosts.error
-    async def host_error(self, inter: discord.Interaction, error: discord.DiscordException) -> None:
+    async def host_error(self, inter: discord.Interaction, error: Exception) -> None:
         await handleError(inter, error)
 
 
