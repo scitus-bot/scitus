@@ -84,7 +84,8 @@ class Hive(commands.Cog):
             description=clean_hive_string(data["main"]["equipped_hub_title"]),
             colour=0xffad14,
         )
-        embed.set_thumbnail(str(data["main"]["equipped_avatar"]["url"]))
+        thumb_url = data['main']['equipped_avatar']['url']
+        embed.set_thumbnail(thumb_url)
         games: list = ["wars", "sg", "sky", "ctf", "bridge"]
         names: list = ["Treasure Wars", "Survival Games", "Sky Wars", "CtF", "Bridge"]
         for i in range(len(games)):
