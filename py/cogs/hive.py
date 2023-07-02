@@ -44,8 +44,8 @@ def gen_display_string(gm: str, data: dict) -> str:
         if played == 0: played = 1
         
         string: str = (
-            f"**{kills/deaths}** ({kills}K {deaths}D)\n" +
-            f"**{won*100/played}** ({won}W {played-won}L {played}P)"
+            f"**{round(kills/deaths, 2)}** ({kills}K {deaths}D)\n" +
+            f"**{round(won*100/played, 2)}** ({won}W {played-won}L {played}P)"
         )
     except TypeError:
         string = "**N/A**"
@@ -95,7 +95,7 @@ class Hive(commands.Cog):
                 value=gen_display_string(games[i], data),
                 inline=True,
             )
-        emb.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
+        # emb.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
         
         await inter.edit_original_response(
             content="",
