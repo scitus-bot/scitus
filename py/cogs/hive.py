@@ -27,37 +27,45 @@ async def handleError(message, error):
         print(error)
 
 
-def rqget(gamemode: str, p1: str) -> dict:
+def rqget(player: str) -> dict:
     """ Return the dictionary for the players stats in a given gamemode. """
-    apirq: rq.Response = rq.get(f"https://api.playhive.com/v0/game/all/{gamemode}/{p1}", timeout=30)
-    hjs: dict = apirq.json()
-    return hjs
+    apirq: rq.Response = rq.get(
+        f"https://api.playhive.com/v0/game/all/all/{player}", 
+        timeout=30
+        )
+    return apirq.json()
 
-def rqget_monthly(gamemode: str, p1: str, year: int, month: int) -> dict:
-    """ Return the dictionary for the players monthly stats in a given gamemode. """
-    apirq: rq.Response = rq.get(f"https://api.playhive.com/v0/game/monthly/player/{gamemode}/{p1}/{year}/{month}", timeout=30)
-    hjs: dict = apirq.json()
-    return hjs
+def gen_display_string(gm: str, data: dict) -> str:
+    try:
+        sub: dict = data[gm]
+        kills, deaths, played, won = sub["kills"], sub["deaths"], sub["played"], sub["victories"]
+        
+        if deaths == 0: deaths = 1
+        
+        string: str = (
+            f"**{kills/deaths}** ({kills}K {deaths}D)\n" +
+            f"**{won*100/played}** ({won}W {played-won}L {played}P)"
+        )
+    except TypeError:
+        string = "**N/A**"
+        
+    return string
 
-def stat_string(hive: dict) -> str:
-    """ Returns the really long string with all the stats in it. """
-    try: deaths = hive["deaths"]
-    except: deaths = hive["played"] - hive["victories"]
-    kills = hive["kills"]
-    wins = hive["victories"]
-    played = hive["played"]
-    
-    statString = f"**{round(kills/deaths, 2)}** ({kills}K {deaths}D)\n**{round(100*wins/played, 2)}%** ({wins}W {played-wins}L {played}P)\n\n"
-    
-    return statString
-    
-    
+def clean_hive_string(string: str) -> str:
+    """ Removes &x from the strings """
+    ret_str: list = list(string)
+    while "&" in ret_str:
+        ind = ret_str.index("&")
+        ret_str.pop(ind)
+        ret_str.pop(ind)
+        
+    return "".join(ret_str)
+
 #--------------------------------------------------------------------------------------------------------------------------
 class Hive(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self._last_member = None
-
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -65,106 +73,36 @@ class Hive(commands.Cog):
         name="stats",
         description="Stats for the Hive server.",
     )
-    async def stats(
-            self, inter: discord.Interaction,
-            player: str, year: Optional[int] = None,
-            month: Optional[int] = None) -> None:
+    async def stats(self, inter: discord.Interaction, player: str) -> None:
         
-        await inter.response.send_message("Processing....")
+        await inter.response.send_message("Fetching data....")
         
-        if (year or month) and not (year and month):
-            embed: discord.Embed = discord.Embed(title="Invalid Arguments.", colour=0xff0000)
-            await inter.edit_original_response(embed=embed)
-            return
-        
-        # worst thing ive ever written ( i do NOT care .. . .... )
-        # this is literally my frankensteins monster
-        
-        if year and month:
-            #treasurewars
-            try:
-                hjs = rqget_monthly("wars", player, year, month) 
-                twstring = stat_string(hjs)
-            except:
-                twstring = "**N/A**"
-
-            #skywars
-            try:
-                hjs = rqget_monthly("sky", player, year, month) 
-                swstring = stat_string(hjs)
-            except:
-                swstring = "**N/A**"
-
-            #Survival Games
-            try:
-                hjs = rqget_monthly("sg", player, year, month) 
-                sgstring = stat_string(hjs)
-            except:
-                sgstring = "**N/A**"
-            
-            # ctf
-            try:
-                hjs = rqget_monthly("ctf", player, year, month) 
-                ctfstring = stat_string(hjs)
-            except:
-                ctfstring = "**N/A**"
-                
-        else:
-            #treasurewars
-            try:
-                hjs = rqget("wars", player)
-                twstring = stat_string(hjs)
-            except:
-                twstring = "**N/A**"
-
-            #skywars
-            try:
-                hjs = rqget("sky", player)
-                swstring = stat_string(hjs)
-            except:
-                swstring = "**N/A**"
-
-            #Survival Games
-            try:
-                hjs = rqget("sg", player)
-                sgstring = stat_string(hjs)
-            except:
-                sgstring = "**N/A**"
-            
-            # ctf
-            try:
-                hjs = rqget("ctf", player)
-                ctfstring = stat_string(hjs)
-            except:
-                ctfstring = "**N/A**"
-        
-        
-        # creating the embed
-        if year and month:
-            desc = f"{player}'s Hive stats for {month}/{year}."
-        else:
-            desc = f"{player}'s Hive stats."
+        data = rqget(player)
         
         embed: discord.Embed = discord.Embed(
-            title=player,
-            description=desc,
+            title=f"{data['main']['username']}'s Hive stats",
+            description=clean_hive_string(data["main"]["equipped_hub_title"]),
             colour=0xffad14,
         )
-        embed.set_author(
-            name=inter.user,
-            icon_url=inter.user.display_avatar.url
+        embed.set_thumbnail(data["main"]["equipped_avatar"]["url"])
+        games: list = ["wars", "sg", "sky", "ctf", "bridge"]
+        names: list = ["Treasure Wars", "Survival Games", "Sky Wars", "CtF", "Bridge"]
+        for i in range(len(games)):
+            embed.add_field(
+                name=names[i],
+                value=gen_display_string(games[i]),
+                inline=True,
+            )
+        embed.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
+        
+        await inter.edit_original_response(
+            content="",
+            embed=embed,
         )
-        embed.set_thumbnail(
-            url="https://static.wikia.nocookie.net/youtube/images/d/df/HiveGames.jpg/revision/latest?cb=20210726032229"
-        )
-        embed.add_field(name="Treasure Wars", value=twstring)
-        embed.add_field(name="Skywars", value=swstring)
-        embed.add_field(name="Survival Games", value=sgstring)
-        embed.add_field(name="Capture the Flag", value=ctfstring)
-        embed.set_footer(text="No Bridge stats ever, and some KDRs may not be 100% accurate.")
-
-        await inter.edit_original_response(content=None, embed=embed)
-  
+            
+        
+        
+        
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Hive(bot))
