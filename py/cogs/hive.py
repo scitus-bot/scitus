@@ -85,7 +85,7 @@ class Hive(commands.Cog):
             colour=0xffad14,
         )
         thumb_url = data['main']['equipped_avatar']['url']
-        embed.set_thumbnail(embed, url=thumb_url)
+        embed.set_thumbnail(self, url=thumb_url)
         games: list = ["wars", "sg", "sky", "ctf", "bridge"]
         names: list = ["Treasure Wars", "Survival Games", "Sky Wars", "CtF", "Bridge"]
         for i in range(len(games)):
