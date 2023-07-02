@@ -91,7 +91,7 @@ class Hive(commands.Cog):
         for i in range(len(games)):
             emb.add_field(
                 name=names[i],
-                value=gen_display_string(games[i]),
+                value=gen_display_string(games[i], data),
                 inline=True,
             )
         emb.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
