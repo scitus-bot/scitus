@@ -45,7 +45,7 @@ def gen_display_string(gm: str, data: dict) -> str:
         
         string: str = (
             f"**{round(kills/deaths, 2)}** ({kills}K {deaths}D)\n" +
-            f"**{round(won*100/played, 2)}** ({won}W {played-won}L {played}P)"
+            f"**{round(won*100/played, 1)}%** ({won}W {played-won}L {played}P)"
         )
     except TypeError:
         string = "**N/A**"
