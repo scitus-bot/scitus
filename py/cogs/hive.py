@@ -41,6 +41,7 @@ def gen_display_string(gm: str, data: dict) -> str:
         kills, deaths, played, won = sub["kills"], sub["deaths"], sub["played"], sub["victories"]
         
         if deaths == 0: deaths = 1
+        if played == 0: played = 1
         
         string: str = (
             f"**{kills/deaths}** ({kills}K {deaths}D)\n" +
