@@ -79,26 +79,26 @@ class Hive(commands.Cog):
         
         data = rqget(player)
         
-        embed: discord.Embed = discord.Embed(
+        emb: discord.Embed = discord.Embed(
             title=f"{data['main']['username']}'s Hive stats",
             description=clean_hive_string(data["main"]["equipped_hub_title"]),
             colour=0xffad14,
         )
-        thumb_url = data['main']['equipped_avatar']['url']
-        embed.set_thumbnail(self, url=thumb_url)
+        thumb_url = str(data['main']['equipped_avatar']['url'])
+        emb.set_thumbnail(url=thumb_url)
         games: list = ["wars", "sg", "sky", "ctf", "bridge"]
         names: list = ["Treasure Wars", "Survival Games", "Sky Wars", "CtF", "Bridge"]
         for i in range(len(games)):
-            embed.add_field(
+            emb.add_field(
                 name=names[i],
                 value=gen_display_string(games[i]),
                 inline=True,
             )
-        embed.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
+        emb.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
         
         await inter.edit_original_response(
             content="",
-            embed=embed,
+            embed=emb,
         )
             
         
