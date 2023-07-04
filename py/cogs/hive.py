@@ -54,6 +54,7 @@ def gen_display_string(gm: str, data: dict) -> str:
 
 def clean_hive_string(string: str) -> str:
     """ Removes &x from the strings """
+    # if there is no hub title equipped
     if not string: return ""
     ret_str: list = list(string)
     while "&" in ret_str:
@@ -86,8 +87,11 @@ class Hive(commands.Cog):
             description=clean_hive_string(data["main"]["equipped_hub_title"]),
             colour=0xffad14,
         )
-        thumb_url = str(data['main']['equipped_avatar']['url'])
-        emb.set_thumbnail(url=thumb_url)
+        # in case there isnt an equipped avatar
+        if data["main"]["equipped_avatar"]:
+            thumb_url = str(data['main']['equipped_avatar']['url'])
+            emb.set_thumbnail(url=thumb_url)
+            
         games: list = ["wars", "sg", "sky", "ctf", "bridge"]
         names: list = ["Treasure Wars", "Survival Games", "Sky Wars", "CtF", "Bridge"]
         for i in range(len(games)):
@@ -96,8 +100,8 @@ class Hive(commands.Cog):
                 value=gen_display_string(games[i], data),
                 inline=True,
             )
-        # emb.set_footer(text=f"First played the Hive on <t:{data['main']['first_played']}:D>")
         
+        # edit response to add the embed
         await inter.edit_original_response(
             content="",
             embed=emb,
