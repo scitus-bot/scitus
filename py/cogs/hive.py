@@ -54,6 +54,7 @@ def gen_display_string(gm: str, data: dict) -> str:
 
 def clean_hive_string(string: str) -> str:
     """ Removes &x from the strings """
+    if not string: return ""
     ret_str: list = list(string)
     while "&" in ret_str:
         ind = ret_str.index("&")
@@ -103,8 +104,5 @@ class Hive(commands.Cog):
         )
             
         
-        
-        
-
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Hive(bot))
