@@ -9,9 +9,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from pasta import file_to_dict, pdf_to_image
+from pasta import file_to_dict, pdf_to_image, DATA
 
-data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+data = DATA
 channels: dict = file_to_dict(data + "channels.json")
 
 

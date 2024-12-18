@@ -6,9 +6,9 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
 
-from pasta import success_embed, fail_embed, file_to_dict
+from pasta import success_embed, fail_embed, file_to_dict, DATA
 
-data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+data = DATA
 
 roles: dict = file_to_dict(data + "roles.json")
 users: dict = file_to_dict(data + "users.json")

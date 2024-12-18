@@ -4,9 +4,10 @@ import json
 from pdf2image import convert_from_path
 from pydub import AudioSegment
 
-cwd = r"C:\Users\nathan\code\discord\scitus\py" + "\\"
-AudioSegment.converter = r"C:\Users\nathan\code\ffmpeg\ffmpeg.exe"
+# cwd = r"C:\Users\nathan\code\discord\scitus\py" + "\\"
+# AudioSegment.converter = r"C:\Users\nathan\code\ffmpeg\ffmpeg.exe"
 
+DATA = r"data\\"
 
 def success_embed(desc: str = None) -> discord.Embed:
     """ Generates a basic embed for successful processes. """
@@ -71,7 +72,7 @@ def sec2days(sec: int) -> str:
 
 def ogg2wav(fname: str) -> None:
     """ Converts an .ogg to a .wav file"""
-    fname = cwd + fname
+    # fname = cwd + fname
     wfn = fname.replace(".ogg",".wav")
     # print(fname)
     x = AudioSegment.from_file(fname)

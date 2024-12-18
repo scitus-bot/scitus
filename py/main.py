@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import speech_recognition as sr
 
 
-from pasta import file_to_dict, file_to_list, sec2days, ogg2wav
+from pasta import file_to_dict, file_to_list, sec2days, ogg2wav, DATA
 
 # loading in environmental variables
 load_dotenv()
@@ -40,7 +40,7 @@ async def load_cogs(exts: list[str]) -> None:
 # loading data in from files
 
 
-data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+data = DATA
 
 channels: dict = file_to_dict(data + "channels.json")
 roles: dict = file_to_dict(data + "roles.json")

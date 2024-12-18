@@ -7,10 +7,10 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
 
-from pasta import file_to_dict, file_to_list
+from pasta import file_to_dict, file_to_list, DATA
 
 
-data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+data = DATA
 
 helppastas: list = file_to_list(data + "help.txt")
 users: dict = file_to_dict(data + "users.json")
