@@ -7,7 +7,15 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
 
-from pasta import ListsPas, RoleIDs, UserIDs
+from pasta import file_to_dict, file_to_list
+
+
+data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+
+helppastas: list = file_to_list(data + "help.txt")
+users: dict = file_to_dict(data + "users.json")
+roles: dict = file_to_dict(data + "roles.json")
+
 
 
 async def handleError(inter: discord.Interaction, error: Exception): # im glad this works
@@ -19,8 +27,8 @@ async def handleError(inter: discord.Interaction, error: Exception): # im glad t
         await inter.send("You cant do that!")
         
     elif isinstance(error, commands.MissingRequiredArgument):
-        rnd = randint(0, len(ListsPas.helpPastas) - 1)
-        msg = ListsPas.helpPastas[rnd]
+        rnd = randint(0, len(helppastas) - 1)
+        msg = helppastas[rnd]
         await inter.channel.send(msg)
         
     else:
@@ -37,7 +45,7 @@ class Porl(commands.Cog):
         """ Checks if the current user is me/ninsang/pigeon. """
         def predicate(inter: discord.Interaction) -> bool:
             id: int = inter.user.id
-            return id == UserIDs.porlUserID or id == UserIDs.ninAltUserID or id == UserIDs.pigeonUserID
+            return id == users["porl"] or id == users["nin"] or id == users["pigeon"]
         return app_commands.check(predicate)
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -52,9 +60,9 @@ class Porl(commands.Cog):
         """ Gives the admin roles. """
 
         roleIds = [
-            RoleIDs.adminRoleID,
-            RoleIDs.modRoleID, 
-            RoleIDs.porlRoleID,
+            roles["admin"],
+            roles["mod"], 
+            roles["porl"],
         ] 
 
         for roleId in roleIds:
@@ -77,10 +85,10 @@ class Porl(commands.Cog):
     async def die(self, inter: discord.Interaction) -> None:
 
         roleIds = [
-            RoleIDs.adminRoleID, 
-            RoleIDs.modRoleID, 
-            RoleIDs.porlRoleID, 
-            RoleIDs.mutedRoleID,
+            roles["admin"], 
+            roles["mod"], 
+            roles["porl"], 
+            roles["muted"],
         ]
 
         for roleId in roleIds:

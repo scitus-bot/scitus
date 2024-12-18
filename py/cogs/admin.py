@@ -1,3 +1,4 @@
+from typing import Optional
 import sys
 import subprocess
 
@@ -6,7 +7,8 @@ from discord import app_commands
 from discord.ext import commands
 from git import Repo
 
-from pasta import success_embed
+import json
+from pasta import success_embed, fail_embed
 
 CDOWN = 20 # cooldown time
 
@@ -245,6 +247,51 @@ class Admin(commands.Cog):
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.edit_original_response(content=None, embed=embed)
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    # update the jojo timestamp
+    
+    @app_commands.command(
+        name="jojo_update",
+        description="Updated the JoJo countdown timer to the given timestamp"
+    )
+    @app_commands.default_permissions(administrator=True)
+    async def jojo_update(
+            self, 
+            inter: discord.Interaction, 
+            time: Optional[int], 
+            event: Optional[str]
+        ) -> None:
+        """ Updates the countdown timer """
+
+        await inter.response.send_message("Changing....")
+
+        if len(event) > 16:
+            embed: discord.Embed = fail_embed("Event name too long!")
+            embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
+            await inter.edit_original_response(content=None, embed=embed)
+            
+            return
+        
+        countdown: dict = {
+            "timestamp": time,
+            "event": event
+        }
+        
+        data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+        
+        with open(data + "jojo.json", "w") as file:
+            json.dump(countdown, file)
+            
+        embed: discord.Embed = success_embed("Successfully changed")
+        embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
+        await inter.edit_original_response(content=None, embed=embed)
+
+        
+        
+        
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 #necessities

@@ -6,7 +6,12 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
 
-from pasta import ListsPas, RoleIDs, UserIDs, success_embed, fail_embed
+from pasta import success_embed, fail_embed, file_to_dict
+
+data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+
+roles: dict = file_to_dict(data + "roles.json")
+users: dict = file_to_dict(data + "users.json")
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +40,7 @@ class Moderator(commands.Cog):
             return
         
         # muted role
-        role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)
+        role = get(inter.guild.roles, id=roles["muted"])
         
         # dont mute the user if theyre already muted
         if role in user.roles:
@@ -71,7 +76,7 @@ class Moderator(commands.Cog):
             return
         
         # the muted role
-        role = get(inter.guild.roles, id=RoleIDs.mutedRoleID)     
+        role = get(inter.guild.roles, id=roles["muted"])     
         
         # dont unmute the user if theyre not already muted
         if role not in user.roles:
@@ -140,7 +145,7 @@ class Moderator(commands.Cog):
         """ Kick a user """
         
         # cannot mute me
-        if user.id == UserIDs.porlUserID:
+        if user.id == users["porl"]:
             await inter.response.send_message(
                 embed=fail_embed("**L**")
             )
@@ -170,7 +175,7 @@ class Moderator(commands.Cog):
             user: discord.Member, reason: Optional[str] = None) -> None:
         """ Bans a user """
 
-        if user.id == UserIDs.porlUserID:
+        if user.id == users["porl"]:
             await inter.response.send_message(
                 embed=fail_embed("**L**")
             )
@@ -252,7 +257,7 @@ class Moderator(commands.Cog):
         await inter.response.send_message(".....")
         
         # cannot warn without the mod role
-        mod_role: discord.Role = get(inter.guild.roles, id=RoleIDs.modRoleID)
+        mod_role: discord.Role = get(inter.guild.roles, id=roles["mod"])
         if mod_role not in inter.user.roles:
             embed: discord.Embed = fail_embed("Invalid permissions")
             await inter.response.send_message(embed=embed, ephemeral=True)

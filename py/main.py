@@ -4,11 +4,10 @@ import time
 import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
-from pydub import AudioSegment
 import speech_recognition as sr
 
-import pasta
-from pasta import ChannelIDs, ListsPas, JoinRoleIDs, CopyPastas, RoleIDs
+
+from pasta import file_to_dict, file_to_list, sec2days, ogg2wav
 
 # loading in environmental variables
 load_dotenv()
@@ -37,6 +36,18 @@ async def load_cogs(exts: list[str]) -> None:
     for ext in exts:
         await bot.load_extension(ext)
 
+#--------------------------------------------------------------------------------------------------------------------------
+# loading data in from files
+
+
+data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+
+channels: dict = file_to_dict(data + "channels.json")
+roles: dict = file_to_dict(data + "roles.json")
+jojo: dict = file_to_dict(data + "jojo.json")
+copypastas: dict = file_to_dict(data + "copypastas.json")
+
+censor: list = file_to_list(data + "censor.txt")
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -70,17 +81,17 @@ async def on_member_join(member: discord.Member) -> None:
     guild: discord.Guild = member.guild
 
     if member.bot: # cant dm bots/dont add the wrong roles to them
-        bot_role = discord.utils.get(guild.roles, id=709182248213020705)
+        bot_role = discord.utils.get(guild.roles, id=roles["bot"])
         await member.add_roles(bot_role)
         return
 
     # welcome message
-    general: discord.TextChannel = guild.get_channel(ChannelIDs.gen)
+    general: discord.TextChannel = guild.get_channel(channels["general"])
 
     await general.send(f"Welcome {member.mention}, hope you have a good time in the server!")
 
     # giving member role
-    for roleID in JoinRoleIDs.giveRoleIDS:
+    for roleID in roles["onJoin"]:
         role: discord.Role = discord.utils.get(guild.roles, id=roleID)
         await member.add_roles(role)
     
@@ -91,16 +102,10 @@ async def on_member_join(member: discord.Member) -> None:
 async def on_member_remove(member: discord.Member) -> None:
     if member.bot: return
     
-    gen: discord.TextChannel = bot.get_channel(ChannelIDs.gen)
+    gen: discord.TextChannel = bot.get_channel(channels["general"])
     await gen.send(f"{member.mention} has left the server.........")
 
 #--------------------------------------------------------------------------------------------------------------------------
-
-def ogg2wav(fname: str) -> None:
-    """ Converts an .ogg to a .wav file"""
-    wfn = fname.replace(".ogg",".wav")
-    x = AudioSegment.from_file(f"scitus/py/{fname}")
-    x.export(f"scitus/py/{wfn}", format="wav")
 
 
 async def transcribe_message(msg: discord.Message) -> str:
@@ -110,17 +115,17 @@ async def transcribe_message(msg: discord.Message) -> str:
     reply = await msg.reply("working....", mention_author=False)
     #  save the .ogg file locally and convert it to a .wav locally
     fname: str = f"{msg.id}.ogg"
-    await msg.attachments[0].save(f"scitus/py/{fname}")
+    await msg.attachments[0].save(f"{fname}")
     ogg2wav(fname)
     
     # no idea 
     r: sr.Recognizer = sr.Recognizer()
-    v_msg: sr.AudioFile = sr.AudioFile(f"scitus/py/{msg.id}.wav")
+    v_msg: sr.AudioFile = sr.AudioFile(f"{msg.id}.wav")
     with v_msg as src: audio = r.record(src)
     
     # delete the files after theyre downloaded to stop them from taking up space
-    os.remove(f"scitus/py/{fname}")
-    os.remove(f"scitus/py/{msg.id}.wav")
+    os.remove(f"{fname}")
+    os.remove(f"{msg.id}.wav")
     
     # respond to the message with the transcribed text
     try:
@@ -144,26 +149,26 @@ async def on_message(msg: discord.Message) -> None:
     msgC: str = msg.content.lower()
 
     if "vaporeon" in msgC: 
-        await msg.channel.send(CopyPastas.vaporeonPas, delete_after=20.0)
+        await msg.channel.send(copypastas["vaporeon"], delete_after=20.0)
     
     if "gaming laptop" in msgC:
-        await msg.channel.send(CopyPastas.laptopPas, delete_after=20.0)
+        await msg.channel.send(copypastas["laptop"], delete_after=20.0)
     
     if "meow" in msgC:
-        await msg.channel.send(CopyPastas.meowPas, delete_after=20.0)
+        await msg.channel.send(copypastas["meow"], delete_after=20.0)
     
     if "downvote" in msgC:
-        await msg.channel.send(CopyPastas.downfaqPas, delete_after=20.0)
+        await msg.channel.send(copypastas["downvote"], delete_after=20.0)
     
     if "dog" in msgC and "doggo" not in msgC:
-        await msg.channel.send(CopyPastas.doggoPas, delete_after=20.0)
+        await msg.channel.send(copypastas["doggo"], delete_after=20.0)
 
 
     # autofilter:
     
-    for word in ListsPas.autoMutePas:
+    for word in censor:
         if word in msgC:
-            muteID: int = RoleIDs.mutedRoleID
+            muteID: int = roles["muted"]
             mute: discord.Role = msg.guild.get_role(muteID)
 
             await msg.author.add_roles(mute)
@@ -173,7 +178,7 @@ async def on_message(msg: discord.Message) -> None:
 
     # AUTOREACTS
 
-    if (msg.channel.id is ChannelIDs.suggestions) or ("y/n" in msgC):
+    if (msg.channel.id is channels["suggestions"]) or ("y/n" in msgC):
         up: str = '\N{THUMBS UP SIGN}'
         down: str = '\N{THUMBS DOWN SIGN}'
         await msg.add_reaction(up)
@@ -183,23 +188,13 @@ async def on_message(msg: discord.Message) -> None:
 #--------------------------------------------------------------------------------------------------------------------------
 # loop for fun stuff (like a countdown)
 
-def sec2days(sec: int) -> str:
-    """ Converts an amount of seconds into a nice string """
-    mns: int = (sec) // 60
-    hrs: int = (mns) // 60
-    day: int = (hrs) // 24
-    mns -= hrs*60
-    hrs -= day*24
-    ret_str: str = ""
-
-    ret_str = f"{day} day(s), {hrs} hour(s), {mns} minute(s), and {sec%60} second(s)"
-
-    return ret_str
 
 @tasks.loop(seconds=4)
 async def loop() -> None:
     """ Countdown to the next jojolands chapter """
-    alarm: int = pasta.nextJoJo
+    jojo = file_to_dict(data + "jojo.json")
+    # if not jojo_pinged:
+    alarm: int = jojo["timestamp"]
     time_now: float = time.time()
     diff: int = round(alarm - time_now)
     
@@ -208,14 +203,28 @@ async def loop() -> None:
         time.sleep((diff % 4))
     
     if diff < 0:
+        # jojo_pinged = True
         await bot.change_presence(
             status=discord.Status.dnd,
-            activity=discord.Game(name=f"JOJOLands ch. {pasta.nextChap} is here!")
+            activity=discord.Game(name=f"{jojo['event']} is here!")
         )
+        
+        # general = bot.get_channel(
+        #     ChannelIDs.gen
+        # )
+        
+        # porl = bot.get_user(
+        #     pasta.UserIDs.porlUserID
+        # )
+        
+        # await general.send(
+        #     f"JOJOLands ch. {pasta.nextChap} is here! {porl.mention}"
+        # )
+        
     else:
         await bot.change_presence(
             status=discord.Status.dnd,
-            activity=discord.Game(name=f"{sec2days(diff)} until JOJOLands ch. {pasta.nextChap}!")
+            activity=discord.Game(name=f"{sec2days(diff)} until {jojo['event']}!")
         )
         
 

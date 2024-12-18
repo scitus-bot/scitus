@@ -9,7 +9,11 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from pasta import ChannelIDs
+from pasta import file_to_dict, pdf_to_image
+
+data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+channels: dict = file_to_dict(data + "channels.json")
+
 
 
 class MyView(discord.ui.View): 
@@ -40,10 +44,7 @@ class MyView(discord.ui.View):
         await inter.response.send_message(f"Awesome! I like {select.values[0]} too!", ephemeral=True)
 
 
-def pdf_to_image(file_name: str) -> None:
-    pages: list = convert_from_path(file_name, 500)
-    for count, page in enumerate(pages):
-        page.save(f"{count}.jpg", "JPEG")
+
 
 
 class Everyone(commands.Cog):
@@ -70,11 +71,14 @@ class Everyone(commands.Cog):
         description="Use to report someone anonymously.",
     )
     async def report(
-            self, inter: discord.Interaction,
-            member: discord.Member, reason: Optional[str] = "") -> None:
+            self, 
+            inter: discord.Interaction,
+            member: discord.Member, 
+            reason: Optional[str] = ""
+        ) -> None:
         """ Reports a user """
         
-        report = self.bot.get_channel(ChannelIDs.report)
+        report = self.bot.get_channel(channels["report"])
         
         await inter.response.send_message("Reported Successfully!", ephemeral=True)
             
@@ -97,8 +101,10 @@ class Everyone(commands.Cog):
         description="Gets the avatar of a user."
     )
     async def avatar(
-            self, inter: discord.Interaction,
-            member: Optional[discord.Member] = None) -> None:
+            self, 
+            inter: discord.Interaction,
+            member: Optional[discord.Member] = None
+        ) -> None:
         """ Returns a user's avatar """
         await inter.response.send_message("....")
         
@@ -162,13 +168,14 @@ class Everyone(commands.Cog):
         # Writing to the latex file
         with open(f"{fname}.tex", "w") as l:
             l.write(
-                ("\\documentclass{slides}\n"
-                "\\begin{document}\n\\begin{center}\n"
-                "\\thispagestyle{empty}\n\\[\n")
+                ("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}\n"
+                 "\\usepackage{amssymb}\n"
+                "\\begin{document}\n"
+                "$\\displaystyle\n")
             )
             l.write(prompt)
             l.write(
-                ("\n\\]\n\\end{center}\n\\end{document}")
+                ("\n$\n\\end{document}")
             )
             
         
@@ -177,14 +184,14 @@ class Everyone(commands.Cog):
         
         
         # Converting pdf to an image
-        images: list = convert_from_path(f"{fname}.pdf", 500)
+        images: list = convert_from_path(f"{fname}.pdf", 1000)
         images[0].save(f"image{fname}.jpg", "JPEG")
         
         # Cropping and sending the generated image
-        im = Image.open(f"image{fname}.jpg")
-        im1 = im.crop((0, 1240, 4133, 3446))
+        # im = Image.open(f"image{fname}.jpg")
+        # im1 = im.crop((0, 1240, 4133, 3446))
         
-        im1.save(f"crop{fname}.jpg")
+        # im1.save(f"crop{fname}.jpg")
         
         
         embed: discord.Embed = discord.Embed(
@@ -192,8 +199,8 @@ class Everyone(commands.Cog):
             color=0xEEDB83,
             description=prompt
         )
-        file = discord.File(f"crop{fname}.jpg", filename=f"crop{fname}.jpg")
-        embed.set_image(url=f"attachment://crop{fname}.jpg")
+        file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
+        embed.set_image(url=f"attachment://image{fname}.jpg")
         await inter.channel.send(
             content=None,
             file=file,
@@ -207,7 +214,7 @@ class Everyone(commands.Cog):
         os.remove(f"{fname}.pdf")
         os.remove(f"{fname}.tex")
         os.remove(f"image{fname}.jpg")
-        os.remove(f"crop{fname}.jpg")
+        # os.remove(f"crop{fname}.jpg")
         
 
     

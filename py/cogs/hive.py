@@ -6,7 +6,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from pasta import ListsPas
+from pasta import file_to_list
+
+data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+helppastas: list = file_to_list(data + "help.txt")
 
 
 async def handleError(message, error):
@@ -19,8 +22,8 @@ async def handleError(message, error):
         await message.send("You cant do that!")
         
     elif isinstance(error, commands.MissingRequiredArgument):
-        rnd = randint(0, len(ListsPas.helpPastas) - 1)
-        msg = ListsPas.helpPastas[rnd]
+        rnd = randint(0, len(helppastas) - 1)
+        msg = helppastas[rnd]
         await message.channel.send(msg)
         
     else:
