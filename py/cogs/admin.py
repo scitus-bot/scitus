@@ -199,7 +199,7 @@ class Admin(commands.Cog):
         # prevent it from running
 
         try:
-            subprocess.Popen(["~/update.sh"])   # runs the script saved on the server
+            subprocess.Popen(["/home/nathan/update.sh"])   # runs the script saved on the server
             sys.exit()  # to prevent any possible clashes 
         except Exception as e:
             await inter.channel.send(f"Error: {e}")
