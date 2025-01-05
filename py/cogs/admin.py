@@ -8,7 +8,7 @@ from discord.ext import commands
 from git import Repo
 
 import json
-from pasta import success_embed, fail_embed
+from pasta import success_embed, fail_embed, DATA
 
 CDOWN = 20 # cooldown time
 
@@ -279,7 +279,7 @@ class Admin(commands.Cog):
             "event": event
         }
         
-        data = r"C:\Users\nathan\code\discord\scitus\data" + "\\"
+        data = DATA
         
         with open(data + "jojo.json", "w") as file:
             json.dump(countdown, file)
