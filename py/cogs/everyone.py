@@ -60,7 +60,16 @@ class Everyone(commands.Cog):
     )
     async def ping(self, inter: discord.Interaction) -> None:
         """ Responds with the bot's latency """
-        await inter.response.send_message(f"Pong! ({round(self.bot.latency * 1000)}ms)")
+        
+        latency: str = f"[{round(self.bot.latency *1000)}ms]"
+        
+        embed: discord.Embed = discord.Embed(
+            title="Pong!",
+            color=0xEEDB83,
+            description=latency
+        )
+        
+        await inter.response.send_message(embed=embed)
         
 
 #--------------------------------------------------------------------------------------------------------------------------
