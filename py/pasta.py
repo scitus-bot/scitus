@@ -7,7 +7,7 @@ from pydub import AudioSegment
 # cwd = r"C:\Users\nathan\code\discord\scitus\py" + "\\"
 # AudioSegment.converter = r"C:\Users\nathan\code\ffmpeg\ffmpeg.exe"
 
-DATA = r"data\\"
+DATA = r"data/"
 
 def success_embed(desc: str = None) -> discord.Embed:
     """ Generates a basic embed for successful processes. """
