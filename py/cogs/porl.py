@@ -162,6 +162,8 @@ class Porl(commands.Cog):
             ephemeral=True
         )
         
+        sys.exit()
+        
     @shutdown.error
     async def shutdown_error(self, inter: discord.Interaction, error: Exception) -> None:
         await handleError(inter, error)
