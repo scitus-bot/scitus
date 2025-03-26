@@ -152,7 +152,7 @@ class Porl(commands.Cog):
     # shutdown
     
     @app_commands.command(
-        name="Shutdown",
+        name="shutdown",
         description="Shuts down the bot"
     )
     @is_porl()
