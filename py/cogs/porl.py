@@ -147,6 +147,26 @@ class Porl(commands.Cog):
     @hosts.error
     async def host_error(self, inter: discord.Interaction, error: Exception) -> None:
         await handleError(inter, error)
+        
+# ----------------------------------------------------------------------------------------------------
+    # shutdown
+    
+    @app_commands.command(
+        name="shutdown",
+        description="Shuts down the bot"
+    )
+    @is_porl()
+    async def shutdown(self, inter: discord.Interaction) -> None:
+        await inter.response.send_message(
+            "Quitting...",
+            ephemeral=True
+        )
+        
+        sys.exit()
+        
+    @shutdown.error
+    async def shutdown_error(self, inter: discord.Interaction, error: Exception) -> None:
+        await handleError(inter, error)
 
 
 # adds the cog to the main.py and allows it to be used
