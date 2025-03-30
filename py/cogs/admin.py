@@ -29,12 +29,12 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(manage_roles=True)
     async def colour(self, inter: discord.Interaction, role: discord.Role, hex: str) -> None:
         """ Changes the colour of a specified role. """
-
+        old_colour = role.color
         clr = discord.Colour(int(hex, base=16))
         await role.edit(colour=clr)
 
         embed: discord.Embed = success_embed(
-            f"**{role.name}**'s colour successfully changed to **{hex}**."
+            f"**{role.name}**'s colour successfully changed from **{old_colour}** to **{hex}**."
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
@@ -50,11 +50,16 @@ class Admin(commands.Cog):
     @app_commands.default_permissions(manage_roles=True)
     async def name(self, inter: discord.Interaction, role: discord.Role, name: str) -> None:
         """ Changes the name of a specified role. """
-
+        
+        # gets the old name of the role
+        old_name = role.name
+        
+        # change name
         await role.edit(name=name)
 
+        # embed
         embed: discord.Embed = success_embed(
-            f"Role name successfully changed to **{name}**."
+            f"Role name successfully changed from **{old_name}** to **{name}**."
         )
         embed.set_author(name=inter.user.name, icon_url=inter.user.avatar.url)
         await inter.response.send_message(embed=embed)
