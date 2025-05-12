@@ -14,6 +14,21 @@ roles: dict = file_to_dict(data + "roles.json")
 users: dict = file_to_dict(data + "users.json")
 
 
+""" 
+Commands:
+    - Mute
+    - Unmute
+    - @someone
+    - sudo
+    - kick
+    - ban
+    - purge
+    - nick
+    - warn
+    - lockdown
+    -unlockdown
+"""
+
 #--------------------------------------------------------------------------------------------------------------------------
 class Moderator(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
