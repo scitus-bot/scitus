@@ -25,10 +25,11 @@ bot: commands.Bot = commands.Bot(
 initial_extensions: list[str] = [
     "cogs.admin",           # admin commands
     "cogs.porl",            # porl commands
-    "cogs.hive",            # hive commands # they changed the api a bunch 
+    # "cogs.hive",            # hive commands # they changed the api a bunch 
     "cogs.everyone",        # everyone commands
     "cogs.mod",             # mod commands
-    "cogs.voice",           # voice commands
+    # "cogs.voice",           # voice commands
+    "cogs.latex",           # latex commands
 ]
 
 async def load_cogs(exts: list[str]) -> None:
