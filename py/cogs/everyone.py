@@ -193,7 +193,7 @@ class Everyone(commands.Cog):
         
         
         # Converting pdf to an image
-        images: list = convert_from_path(f"{fname}.pdf", 1000)
+        images: list[Image.Image] = convert_from_path(f"{fname}.pdf", 1000)
         images[0].save(f"image{fname}.jpg", "JPEG")
         
         # Cropping and sending the generated image
