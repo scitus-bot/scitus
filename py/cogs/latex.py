@@ -65,7 +65,7 @@ class Latex(commands.Cog):
             color=0xEEDB83,
             description=prompt,
         )
-        embed.set_author(inter.user.display_name)
+        embed.set_author(str(inter.user.display_name), icon_url=inter.user.avatar.url)
         
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         embed.set_image(url=f"attachment://image{fname}.jpg")
