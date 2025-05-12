@@ -63,20 +63,22 @@ class Latex(commands.Cog):
         embed: discord.Embed = discord.Embed(
             title="LaTeX output",
             color=0xEEDB83,
-            description=prompt
+            description=prompt,
         )
+        embed.set_author(inter.user.display_name)
         
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         embed.set_image(url=f"attachment://image{fname}.jpg")
         
-        await inter.response.defer()
-        
         # sending
-        await inter.edit_original_response(
+        await inter.channel.send(
             content=None,
             file=file,
             embed=embed   
         )
+        
+        # deleting original response
+        await inter.delete_original_response()
         
         # Removing all the files made
         os.remove(f"{fname}.aux")
