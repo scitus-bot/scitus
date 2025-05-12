@@ -144,7 +144,7 @@ class Moderator(commands.Cog):
             user: discord.Member, reason: Optional[str] = None) -> None:
         """ Kick a user """
         
-        # cannot mute me
+        # cannot kick me
         if user.id == users["porl"]:
             await inter.response.send_message(
                 embed=fail_embed("**L**")
@@ -175,20 +175,23 @@ class Moderator(commands.Cog):
             user: discord.Member, reason: Optional[str] = None) -> None:
         """ Bans a user """
 
+        # if trying to ban me
         if user.id == users["porl"]:
             await inter.response.send_message(
                 embed=fail_embed("**L**")
             )
             return
 
+        # ban the user
         await user.ban(reason=str(reason), delete_message_days=0)
-        # send a silly message
+        
+        # send them a silly message
         try:
             await user.send(
                 f"You've been banned from {inter.guild.name}\nLLLLLLLLL"
             )
-        except app_commands.errors.CommandInvokeError:
-            pass # user was a bot/blocked scitus
+        except (discord.app_commands.errors.CommandInvokeError, discord.errors.HTTPException) as e:
+            print("Unable to message user (blocked or bot account)")
         
         
         embed: discord.Embed = success_embed(

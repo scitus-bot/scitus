@@ -25,7 +25,7 @@ bot: commands.Bot = commands.Bot(
 initial_extensions: list[str] = [
     "cogs.admin",           # admin commands
     "cogs.porl",            # porl commands
-    "cogs.hive",            # hive commands
+    "cogs.hive",            # hive commands # they changed the api a bunch 
     "cogs.everyone",        # everyone commands
     "cogs.mod",             # mod commands
     "cogs.voice",           # voice commands
