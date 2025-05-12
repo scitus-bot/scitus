@@ -82,9 +82,9 @@ async def on_member_join(member: discord.Member) -> None:
     guild: discord.Guild = member.guild
 
     if member.bot: # cant dm bots/dont add the wrong roles to them
-        bot_role = discord.utils.get(guild.roles, id=roles["bot"])
-        await member.add_roles(bot_role)
-        return
+        # bot_role = discord.utils.get(guild.roles, id=roles["bot"])
+        # await member.add_roles(bot_role)
+        pass
 
     # welcome message
     general: discord.TextChannel = guild.get_channel(channels["general"])
