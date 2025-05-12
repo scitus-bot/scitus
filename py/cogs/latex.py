@@ -66,8 +66,8 @@ class Latex(commands.Cog):
             description=prompt,
         )
         
-        print(inter.user.display_name)
-        print(str(inter.user.display_name))
+        # print(inter.user.display_name)
+        # print(str(inter.user.display_name))
         
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
         
