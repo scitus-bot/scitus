@@ -69,6 +69,8 @@ class Latex(commands.Cog):
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         embed.set_image(url=f"attachment://image{fname}.jpg")
         
+        await inter.response.defer()
+        
         # sending
         await inter.edit_original_response(
             content=None,
