@@ -171,7 +171,7 @@ class Everyone(commands.Cog):
         await inter.response.send_message("Processing....")
         
         # Generates a unique file name (in case multiple being processed at the same time)
-        fname: str = str(round(time()))
+        fname: str = str(inter.id)
         
         
         # Writing to the latex file
