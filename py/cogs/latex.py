@@ -101,16 +101,16 @@ class Latex(commands.Cog):
     # LaTeX generate command
     @app_commands.command(
         name="latexmsg",
-        description="Generates an image using LaTeX from a given prompt that uses LaTeX syntax."
+        description="Generates a latec thing from a message id"
     )
     async def latexmsg(
             self, 
             inter: discord.Interaction, 
-            message: discord.Message,
+            messageid: int,
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
-        await inter.response.send_message(message.content)
+        message = await inter.channel.fetch_message(messageid)
         print(message.content)
         print(message.id)
 
