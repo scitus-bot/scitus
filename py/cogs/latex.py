@@ -109,9 +109,81 @@ class Latex(commands.Cog):
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
-        message = await inter.channel.fetch_message(messageid)
-        print(message.content)
-        print(message.id)
+        await inter.response.send_message("Processing....")
+        
+        try:
+            message = await inter.channel.fetch_message(messageid)
+        except:
+            await inter.edit_original_response("Failed to get message. Check your message ID?")
+        
+        # Generates a unique file name (in case multiple being processed at the same time)
+        fname: str = str(inter.id)
+        
+        # getting prompt from message
+        
+        message_list: list = message.content.split("\n")
+        message_list.pop(0)
+        message_list.pop()
+
+        prompt = "\n".join(message_list)
+
+
+        
+        # Writing to the latex file
+        with open(f"{fname}.tex", "w") as l:
+            l.write(
+                ("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}\n"
+                 "\\usepackage{amssymb}\n"
+                "\\begin{document}\n"
+                "$\\displaystyle\n")
+            )
+            l.write(prompt)
+            l.write(
+                ("\n$\n\\end{document}")
+            )
+            
+        
+        # Compiling latex to pdf
+        os.system(f"pdflatex -quiet {fname}.tex")
+        
+        
+        # Converting pdf to an image
+        images: list[Image.Image] = convert_from_path(f"{fname}.pdf", 1000)
+        images[0].save(f"image{fname}.jpg", "JPEG")
+        
+        
+        # getting embed
+        embed: discord.Embed = discord.Embed(
+            title="LaTeX output",
+            color=0xEEDB83,
+            description=prompt,
+        )
+        
+        # print(inter.user.display_name)
+        # print(str(inter.user.display_name))
+        
+        embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
+        
+        file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
+        embed.set_image(url=f"attachment://image{fname}.jpg")
+        
+        # sending
+        await inter.channel.send(
+            content=None,
+            file=file,
+            embed=embed   
+        )
+        
+        # deleting original response
+        await inter.delete_original_response()
+        
+        # Removing all the files made
+        os.remove(f"{fname}.aux")
+        os.remove(f"{fname}.log")
+        os.remove(f"{fname}.pdf")
+        os.remove(f"{fname}.tex")
+        os.remove(f"image{fname}.jpg")
+        # os.remove(f"crop{fname}.jpg")
 
         
         
