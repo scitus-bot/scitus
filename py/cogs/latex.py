@@ -27,7 +27,6 @@ class Latex(commands.Cog):
             self, 
             inter: discord.Interaction, 
             prompt: str,
-            mode: Optional[str] = "maths"
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
@@ -106,7 +105,7 @@ class Latex(commands.Cog):
     async def latexmsg(
             self, 
             inter: discord.Interaction, 
-            messageid: int,
+            messageid: str,
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
