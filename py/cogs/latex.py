@@ -133,13 +133,13 @@ class Latex(commands.Cog):
         with open(f"{fname}.tex", "w") as l:
             l.write(
                 ("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}\n"
-                 "\\usepackage{amssymb}\n"
-                "\\begin{document}\n"
-                "$\\displaystyle\n")
+                 "\\usepackage[utf8]{inputenc}\n"
+                 "\\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}\n"
+                "\\begin{document}\n")
             )
             l.write(prompt)
             l.write(
-                ("\n$\n\\end{document}")
+                ("\n\\end{document}")
             )
             
         
