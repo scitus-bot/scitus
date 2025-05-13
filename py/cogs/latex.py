@@ -23,7 +23,7 @@ class Latex(commands.Cog):
         name="latex",
         description="Generates an image using LaTeX from a given prompt that uses LaTeX syntax."
     )
-    async def latex(
+    async def latexraw(
             self, 
             inter: discord.Interaction, 
             prompt: str,
@@ -94,6 +94,38 @@ class Latex(commands.Cog):
         os.remove(f"{fname}.tex")
         os.remove(f"image{fname}.jpg")
         # os.remove(f"crop{fname}.jpg")
+        
+        
+        
+        
+    # LaTeX generate command
+    @app_commands.command(
+        name="latex",
+        description="Generates an image using LaTeX from a given prompt that uses LaTeX syntax."
+    )
+    async def latexmsg(
+            self, 
+            inter: discord.Interaction, 
+            message: discord.Message,
+        ) -> None:
+        """ Convert a text prompt to a generated LaTeX file """
+        
+        await inter.response.send_message(message.content)
+        print(message.content)
+        print(message.id)
+
+        
+        
+    @latexmsg.error
+    async def latexmsg_error(self, inter: discord.Interaction, error: Exception) -> None:
+        if isinstance(error, discord.NotFound):
+            await inter.edit_original_response("Message not found")
+        elif isinstance(error, discord.Forbidden):
+            await inter.edit_original_response("Do not have permissions required to get message")
+
+        elif isinstance(error, discord.HTTPException):
+            await inter.edit_original_response("Retrieving the message failed. ")
+        
         
 
     
