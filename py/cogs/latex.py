@@ -134,7 +134,7 @@ class Latex(commands.Cog):
             l.write(
                 ("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}\n"
                  "\\usepackage[utf8]{inputenc}\n"
-                 "\\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}\n"
+                 "\\usepackage{latexsym,amsfonts,amssymb,amsmath}\n"
                 "\\begin{document}\n")
             )
             l.write(prompt)
@@ -156,7 +156,7 @@ class Latex(commands.Cog):
         embed: discord.Embed = discord.Embed(
             title="LaTeX output",
             color=0xEEDB83,
-            description=prompt,
+            description=message.jump_url,
         )
         
         # print(inter.user.display_name)
