@@ -59,7 +59,7 @@ def prompt_to_embed(
             lines.append("\\begin{minipage}{" + str(minipage) + "}")
             
         if preamble == "maths":
-            lines.append("\\(")
+            lines.append("\\(\\displaystyle")
             
         # write user prompt
         lines.append(prompt)
