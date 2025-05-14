@@ -62,6 +62,8 @@ def prompt_to_embed(
         # end document
         lines.append("\\end{document}")
         
+        file.writelines(lines)
+        
     # running latex
     try:
         os.system(f"{compiler} {filename}.tex")
