@@ -135,7 +135,6 @@ class Latex(commands.Cog):
         embed.description = "`" + prompt + "`"
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
         embed.set_image(url=f"attachment://image{fname}.jpg")
-        embed.set_footer("/maths")
         embed.timestamp = datetime.datetime.now()
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         
@@ -193,10 +192,10 @@ class Latex(commands.Cog):
 
         embed: discord.Embed = prompt_to_embed(fname, prompt, str(preamble.id), minipage)
         
-        embed.description = message.jump_url + f"\nUsing {preamble.mention}'s preamble."
+        embed.description = "`/latex` " + message.jump_url + f"\nUsing {preamble.mention}'s preamble."
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
         embed.set_image(url=f"attachment://image{fname}.jpg")
-        embed.set_footer("/latex")
+        # embed.set_footer("/latex")
         embed.timestamp = datetime.datetime.now()
         
         
