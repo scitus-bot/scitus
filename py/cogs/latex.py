@@ -124,7 +124,7 @@ class Latex(commands.Cog):
         """ Convert a text prompt to a generated LaTeX file """
         
         # while it is processing
-        await inter.response.send_message(content=None, embed=process_embed())
+        # await inter.response.send_message(content=None, embed=process_embed())
         
         # Generates a unique file name (in case multiple being processed at the same time)
         fname: str = str(inter.id)
@@ -140,14 +140,14 @@ class Latex(commands.Cog):
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         
         # sending
-        await inter.channel.send(
+        await inter.response.send_message(
             content=None,
             file=file,
             embed=embed
         )
         
         # deleting original response because you can't edit the file parameter of a message after its sent
-        await inter.delete_original_response()
+        # await inter.delete_original_response()
         
         # delete the image file
         os.remove(f"image{fname}.jpg")
