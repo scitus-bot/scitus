@@ -27,6 +27,15 @@ def fail_embed(desc: str = None) -> discord.Embed:
     )
     return embed
 
+def process_embed(desc: str = None) -> discord.Embed:
+    """ Generates a basic embed for processes in process """
+    embed: discord.Embed = discord.Embed(
+        title="Processing...",
+        colour=0xEEDB83,
+        description=desc
+    )
+    return embed
+
 #--------------------------------------------------------------------------------------------------------------------------
 
 def file_to_dict(filename: str) -> dict:
