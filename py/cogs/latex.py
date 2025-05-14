@@ -228,7 +228,7 @@ class Latex(commands.Cog):
     async def set(
             self, 
             inter: discord.Interaction, 
-            messageid: str = commands.parameter(description="ID of the message you want to use.")
+            messageid: str
         ) -> None:
         
         # getting content from message
