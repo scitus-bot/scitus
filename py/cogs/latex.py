@@ -7,11 +7,82 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from pasta import file_to_dict, DATA
+from pasta import file_to_dict, DATA, fail_embed
 
 data = DATA
 channels: dict = file_to_dict(data + "channels.json")
 
+
+def prompt_to_embed(
+        filename: str, 
+        prompt: str, 
+        preamble: str = None, 
+        minipage: int = None,
+        compiler: str = "pdflatex"
+    ) -> discord.Embed:
+    """ Generates a discord embed with LaTeX generated image attached 
+    Parameters
+    ----------
+    filename: str
+        The filename used for the `.tex` file, usually `inter.id`. Do not include the extension. 
+    prompt: str 
+        LaTeX code that will be used to generate the output PDF.
+    preamble: str, optional
+        Name of the `.tex` file stored in `~/data/latex/` to be used in the preamble. Defaults to `None`, in which case no preamble is used.
+    minipage: int, optional
+        This is the width of the minipage used for when LaTeX is generated from a message. Defaults to `None`, in which case no minipage is used. 
+    compiler: str, optional
+        What LaTeX compiler to use. Defaults to `pdflatex`."""
+        
+    # creating source .tex file
+    with open(f"{filename}.tex", "w") as file:
+        # list of lines then will file.writelines(lines) at the end
+        lines: list = []
+        lines.append("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}")
+        
+        # if user has passed a preamble
+        if preamble: 
+            path: str = "data/latex/" + preamble + ".tex"
+            lines.append("\\input{" + path + "}")
+            
+        # begin document
+        lines.append("\\begin{document}")
+
+        # if user has passed in a minipage length
+        if minipage:
+            lines.append("\\begin{minipage}{" + str(minipage) + "}")
+            
+        # write user prompt
+        lines.append(prompt)
+
+        # close the minipage
+        if minipage:
+            lines.append("\\end{minipage}")
+            
+        # end document
+        lines.append("\\end{document}")
+        
+    # running latex
+    try:
+        os.system(f"{compiler} {filename}.tex")
+    except Exception as e:
+        return fail_embed(e)
+    
+    # pdf to images
+    images: list[Image.Image] = convert_from_path(f"{filename}.pdf", 1000)
+    images[0].save(f"image{filename}.jpg", "JPEG")
+
+    # creating embed
+    # author and description set elsewhere
+    embed: discord.Embed = discord.Embed(
+        title="LaTeX output",
+        colour=0xEEDB83
+    )
+    
+    attachment = discord.File(f"image{filename}.jpg", filename=f"image{filename}.jpg")
+    embed.set_image(url=f"attachment://image{filename}.jpg")
+        
+    return embed
 
 class Latex(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
