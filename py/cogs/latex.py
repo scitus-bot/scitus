@@ -3,6 +3,7 @@ import os
 from pdf2image import convert_from_path
 from PIL import Image
 import datetime
+import time
 
 import discord
 from discord import app_commands
@@ -123,6 +124,9 @@ class Latex(commands.Cog):
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
+        # start time
+        ts = time.time()
+        
         # while it is processing
         # await inter.response.send_message(content=None, embed=process_embed())
         
@@ -138,6 +142,14 @@ class Latex(commands.Cog):
         embed.set_image(url=f"attachment://image{fname}.jpg")
         embed.timestamp = datetime.datetime.now()
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
+        
+        # time string
+        total = round(time.time() - ts, 3)
+
+        time_taken = f"Returned in {total}s"
+
+        embed.set_footer(time_taken)
+        
         
         # sending
         await inter.response.send_message(
@@ -167,6 +179,9 @@ class Latex(commands.Cog):
             padding: Optional[str] = "2pt"
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
+        
+        # start time
+        ts = time.time()
         
         await inter.response.send_message(content=None, embed=process_embed())
         
@@ -203,14 +218,19 @@ class Latex(commands.Cog):
         embed.set_image(url=f"attachment://image{fname}.jpg")
         # embed.set_footer("/latex")
         embed.timestamp = datetime.datetime.now()
-        
-        
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
+        
+        # timing stuff
+        total = round(time.time() - ts, 3)
+        time_taken = f"Returned in {total}s"
+        
+        embed.set_footer(time_taken)
+        
         # sending
         await inter.channel.send(
             content=None,
             file=file,
-            embed=embed   
+            embed=embed
         )
         
         # deleting original response
