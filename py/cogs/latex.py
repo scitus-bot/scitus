@@ -168,6 +168,10 @@ class Latex(commands.Cog):
         
         await inter.response.send_message(content=None, embed=process_embed())
         
+        # if they copy the messageid with the server thing
+        if "-" in messageid:
+            messageid = messageid.split("-")[1]
+        
         try:
             message = await inter.channel.fetch_message(messageid)
         except Exception as e:
@@ -236,6 +240,10 @@ class Latex(commands.Cog):
         # getting content from message
         
         await inter.response.send_message(content=None, embed=process_embed())
+
+        # if they copy the one with the server id
+        if "-" in messageid:
+            messageid = messageid.split("-")[1]
 
         try: 
             message = await inter.channel.fetch_message(messageid)
