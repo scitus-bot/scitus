@@ -18,7 +18,8 @@ def prompt_to_embed(
         filename: str, 
         prompt: str, 
         preamble: str = None, 
-        minipage: int = None,
+        minipage: str = None,
+        border: str = "2pt",
         compiler: str = "pdflatex"
     ) -> discord.Embed:
     """ Generates a discord embed with LaTeX generated image attached 
@@ -39,7 +40,7 @@ def prompt_to_embed(
     with open(f"{filename}.tex", "w") as file:
         # list of lines then will file.writelines(lines) at the end
         lines: list = []
-        lines.append("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}")
+        lines.append("\\documentclass[border={" + border + ", " + border + ", " + border + ", " + border + "}]{standalone}")
         
         # if user has passed a preamble
         if preamble: 
@@ -54,7 +55,7 @@ def prompt_to_embed(
 
         # if user has passed in a minipage length
         if minipage:
-            lines.append("\\begin{minipage}{" + str(minipage) + "mm}")
+            lines.append("\\begin{minipage}{" + str(minipage) + "}")
             
         if preamble == "maths":
             lines.append("\\(")
@@ -162,7 +163,8 @@ class Latex(commands.Cog):
             inter: discord.Interaction, 
             messageid: str,
             preamble: Optional[discord.User] = None,
-            minipage: Optional[int] = 120
+            minipage: Optional[str] = "120mm",
+            padding: Optional[str] = "2pt"
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
@@ -194,7 +196,7 @@ class Latex(commands.Cog):
         if preamble is None:
             preamble = inter.user
 
-        embed: discord.Embed = prompt_to_embed(fname, prompt, str(preamble.id), minipage)
+        embed: discord.Embed = prompt_to_embed(fname, prompt, str(preamble.id), minipage, padding)
         
         embed.description = "`/latex` " + message.jump_url + f"\nUsing {preamble.mention}'s preamble."
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
