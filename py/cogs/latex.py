@@ -2,6 +2,7 @@ from typing import Optional
 import os
 from pdf2image import convert_from_path
 from PIL import Image
+import datetime
 
 import discord
 from discord import app_commands
@@ -131,10 +132,11 @@ class Latex(commands.Cog):
         embed = prompt_to_embed(fname, prompt, preamble="maths")
         
         # setting things
-        embed.description = prompt
+        embed.description = "`" + prompt + "`"
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
         embed.set_image(url=f"attachment://image{fname}.jpg")
-        embed.set_footer("`/maths`")
+        embed.set_footer("/maths")
+        embed.timestamp = datetime.datetime.now()
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         
         # sending
@@ -191,10 +193,11 @@ class Latex(commands.Cog):
 
         embed: discord.Embed = prompt_to_embed(fname, prompt, str(preamble.id), minipage)
         
-        embed.description = message.jump_url        
+        embed.description = message.jump_url + f"\nUsing {preamble.mention}'s preamble."
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
         embed.set_image(url=f"attachment://image{fname}.jpg")
-        embed.set_footer(f"`/latex`. Using {preamble.mention} preamble. ")
+        embed.set_footer("/latex")
+        embed.timestamp = datetime.datetime.now()
         
         
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
