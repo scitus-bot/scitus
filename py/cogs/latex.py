@@ -251,7 +251,7 @@ class Latex(commands.Cog):
         # writing
         
         try:
-            filepath: str = "/data/latex/" + str(inter.user.id) + ".tex"
+            filepath: str = "data/latex/" + str(inter.user.id) + ".tex"
 
             with open(filepath, "w") as file:
                 file.write(prompt)
@@ -278,7 +278,7 @@ class Latex(commands.Cog):
             user = inter.user
         
         # get path of file
-        path: str = "/data/latex/" + str(user.id) + ".tex"
+        path: str = "data/latex/" + str(user.id) + ".tex"
 
         # check if it exists
         if not os.path.isfile(path):
