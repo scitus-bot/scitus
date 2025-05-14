@@ -53,7 +53,7 @@ def prompt_to_embed(
 
         # if user has passed in a minipage length
         if minipage:
-            lines.append("\\begin{minipage}{" + str(minipage) + "}")
+            lines.append("\\begin{minipage}{" + str(minipage) + "mm}")
             
         if preamble == "maths":
             lines.append("\\(")
@@ -261,7 +261,7 @@ class Latex(commands.Cog):
 
         await inter.edit_original_response(
             content=None, 
-            embed=success_embed("Preamble changed successfully")
+            embed=success_embed("Preamble set to " + message.jump_url)
         )
         
     @preamble_commands.command(
