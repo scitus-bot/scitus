@@ -7,7 +7,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from pasta import file_to_dict, DATA, fail_embed, process_embed
+from pasta import file_to_dict, DATA, fail_embed, process_embed, success_embed
 
 data = DATA
 channels: dict = file_to_dict(data + "channels.json")
@@ -43,7 +43,10 @@ def prompt_to_embed(
         # if user has passed a preamble
         if preamble: 
             path: str = "data/latex/" + preamble + ".tex"
-            lines.append("\\input{" + path + "}")
+            
+            # if the user has set a preamble
+            if os.path.isfile(path):
+                lines.append("\\input{" + path + "}")
             
         # begin document
         lines.append("\\begin{document}")
@@ -104,6 +107,7 @@ class Latex(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
+    preamble_commands: app_commands.Group = app_commands.Group(name="preamble", description="...")
 
     # LaTeX generate command
     @app_commands.command(
@@ -167,6 +171,7 @@ class Latex(commands.Cog):
             message = await inter.channel.fetch_message(messageid)
         except Exception as e:
             await inter.edit_original_response(content=None, embed=fail_embed(e))
+            return
         
         
         # Generates a unique file name (in case multiple being processed at the same time)
@@ -216,6 +221,83 @@ class Latex(commands.Cog):
             await inter.edit_original_response("Retrieving the message failed. ")
         
         
+    @preamble_commands.command(
+        name="set",
+        description="Let's you set a preamble from a message id. "
+    )
+    async def set(
+            self, 
+            inter: discord.Interaction, 
+            messageid: str = commands.parameter(description="ID of the message you want to use.")
+        ) -> None:
+        
+        # getting content from message
+        
+        await inter.response.send_message(content=None, embed=process_embed())
+
+        try: 
+            message = await inter.channel.fetch_message(messageid)
+        except Exception as e:
+            await inter.edit_original_response(content=None, embed=fail_embed(e))
+            return
+
+
+        message_list: list = message.content.split("\n")
+        message_list.pop(0)
+        message_list.pop()
+        
+        prompt = "\n".join(message_list)
+
+        # writing
+        
+        try:
+            filepath: str = "/data/latex/" + str(inter.user.id) + ".tex"
+
+            with open(filepath, "w") as file:
+                file.write(prompt)
+        except Exception as e:
+            await inter.edit_original_response(content=None, embed=fail_embed(e))
+            return
+
+        await inter.edit_original_response(
+            content=None, 
+            embed=success_embed("Preamble changed successfully")
+        )
+        
+    @preamble_commands.command(
+        "get",
+        description="Let's you see another user's preamble."
+    )
+    async def get(
+            self,
+            inter: discord.Interaction,
+            user: Optional[discord.User] = commands.parameter(default=None, description="Who's preamble you want to see. Defaults to yourself.")
+        ) -> None:
+        
+        # get path of file
+        path: str = "/data/latex/" + str(inter.user.id) + ".tex"
+
+        # check if it exists
+        if not os.path.isfile(path):
+            await inter.response.send_message(content=None, embed=fail_embed("No preamble found"))
+            return
+        
+        
+        # if there is a preamble
+        
+        # getting the content
+        prompt: list[str] = []
+        with open(path, "r") as file:
+            prompt = [l.strip() for l in file.readlines()]
+            
+        content = "```tex\n" + "\n".join(prompt) + "\n```"
+
+        await inter.response.send_message(content=None, embed=success_embed(content))
+
+        
+        
+        
+    
 
     
 async def setup(bot: commands.Bot) -> None:
