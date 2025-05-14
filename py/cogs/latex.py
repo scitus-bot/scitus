@@ -265,7 +265,7 @@ class Latex(commands.Cog):
         )
         
     @preamble_commands.command(
-        "get",
+        name="get",
         description="Let's you see another user's preamble."
     )
     async def get(
