@@ -282,7 +282,7 @@ class Latex(commands.Cog):
 
         # check if it exists
         if not os.path.isfile(path):
-            await inter.response.send_message(content=None, embed=fail_embed("No preamble found"))
+            await inter.response.send_message(content=None, embed=fail_embed("No preamble for " + user.mention + " found."))
             return
         
         
