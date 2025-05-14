@@ -148,7 +148,7 @@ class Latex(commands.Cog):
 
         time_taken = f"Returned in {total}s"
 
-        embed.set_footer(time_taken)
+        embed.set_footer(text=time_taken)
         
         
         # sending
@@ -224,7 +224,7 @@ class Latex(commands.Cog):
         total = round(time.time() - ts, 3)
         time_taken = f"Returned in {total}s"
         
-        embed.set_footer(time_taken)
+        embed.set_footer(text=time_taken)
         
         # sending
         await inter.channel.send(
