@@ -271,11 +271,14 @@ class Latex(commands.Cog):
     async def get(
             self,
             inter: discord.Interaction,
-            user: Optional[discord.User] = commands.parameter(default=None, description="Who's preamble you want to see. Defaults to yourself.")
+            user: Optional[discord.User] = None
         ) -> None:
         
+        if not user:
+            user = inter.user
+        
         # get path of file
-        path: str = "/data/latex/" + str(inter.user.id) + ".tex"
+        path: str = "/data/latex/" + str(user.id) + ".tex"
 
         # check if it exists
         if not os.path.isfile(path):
