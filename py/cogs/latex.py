@@ -52,8 +52,14 @@ def prompt_to_embed(
         if minipage:
             lines.append("\\begin{minipage}{" + str(minipage) + "}")
             
+        if preamble == "maths":
+            lines.append("\\(")
+            
         # write user prompt
         lines.append(prompt)
+        
+        if preamble == "maths":
+            lines.append("\\)")
 
         # close the minipage
         if minipage:
@@ -124,7 +130,7 @@ class Latex(commands.Cog):
         embed.description = prompt
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
         embed.set_image(url=f"attachment://image{fname}.jpg")
-                
+        embed.set_footer("`/maths`")
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
         
         # sending
@@ -143,74 +149,50 @@ class Latex(commands.Cog):
         
     # LaTeX generate command
     @app_commands.command(
-        name="latexmsg",
+        name="latex",
         description="Generates a latec thing from a message id"
     )
-    async def latexmsg(
+    async def latex(
             self, 
             inter: discord.Interaction, 
             messageid: str,
+            preamble: Optional[discord.User] = None,
+            minipage: Optional[int] = 120
         ) -> None:
         """ Convert a text prompt to a generated LaTeX file """
         
-        await inter.response.send_message("Processing....")
+        await inter.response.send_message(content=None, embed=process_embed())
         
         try:
             message = await inter.channel.fetch_message(messageid)
-        except:
-            await inter.edit_original_response("Failed to get message. Check your message ID?")
+        except Exception as e:
+            await inter.edit_original_response(content=None, embed=fail_embed(e))
+        
         
         # Generates a unique file name (in case multiple being processed at the same time)
         fname: str = str(inter.id)
         
-        # getting prompt from message
         
+        # getting prompt from message
+        # this doesnt work if people put their last ``` on the same line
         message_list: list = message.content.split("\n")
         message_list.pop(0)
         message_list.pop()
 
         prompt = "\n".join(message_list)
+        
+        if preamble is None:
+            preamble = inter.user
 
-
+        embed: discord.Embed = prompt_to_embed(fname, prompt, str(preamble.id), minipage)
         
-        # Writing to the latex file
-        with open(f"{fname}.tex", "w") as l:
-            l.write(
-                ("\\documentclass[border={2pt, 2pt, 2pt, 2pt}]{standalone}\n"
-                 "\\usepackage[utf8]{inputenc}\n"
-                 "\\usepackage{latexsym,amsfonts,amssymb,amsmath}\n"
-                "\\begin{document}\n")
-            )
-            l.write(prompt)
-            l.write(
-                ("\n\\end{document}")
-            )
-            
-        
-        # Compiling latex to pdf
-        os.system(f"pdflatex -quiet {fname}.tex")
-        
-        
-        # Converting pdf to an image
-        images: list[Image.Image] = convert_from_path(f"{fname}.pdf", 1000)
-        images[0].save(f"image{fname}.jpg", "JPEG")
-        
-        
-        # getting embed
-        embed: discord.Embed = discord.Embed(
-            title="LaTeX output",
-            color=0xEEDB83,
-            description=message.jump_url,
-        )
-        
-        # print(inter.user.display_name)
-        # print(str(inter.user.display_name))
-        
+        embed.description = message.jump_url        
         embed.set_author(name=str(inter.user.display_name), icon_url=inter.user.display_avatar.url)
+        embed.set_image(url=f"attachment://image{fname}.jpg")
+        embed.set_footer(f"`/latex`. Using {preamble.mention} preamble. ")
+        
         
         file = discord.File(f"image{fname}.jpg", filename=f"image{fname}.jpg")
-        embed.set_image(url=f"attachment://image{fname}.jpg")
-        
         # sending
         await inter.channel.send(
             content=None,
@@ -221,18 +203,10 @@ class Latex(commands.Cog):
         # deleting original response
         await inter.delete_original_response()
         
-        # Removing all the files made
-        os.remove(f"{fname}.aux")
-        os.remove(f"{fname}.log")
-        os.remove(f"{fname}.pdf")
-        os.remove(f"{fname}.tex")
         os.remove(f"image{fname}.jpg")
-        # os.remove(f"crop{fname}.jpg")
-
         
-        
-    @latexmsg.error
-    async def latexmsg_error(self, inter: discord.Interaction, error: Exception) -> None:
+    @latex.error
+    async def latex_error(self, inter: discord.Interaction, error: Exception) -> None:
         if isinstance(error, discord.NotFound):
             await inter.edit_original_response("Message not found")
         elif isinstance(error, discord.Forbidden):
